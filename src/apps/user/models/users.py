@@ -44,9 +44,9 @@ class User(DateModelMixin, GenericMixin[sa.UUID]):
         __name_pos="PhoneNumber",
         __type_pos=sa.String(18),
     )
-    photo: Mapped[Optional[bytes]] = mapped_column(
+    photo: Mapped[Optional[str]] = mapped_column(
         __name_pos="Photo",
-        __type_pos=sa.LargeBinary,
+        __type_pos=sa.String(100),
     )
     birthday: Mapped[Optional[datetime]] = mapped_column(
         __name_pos="Birthday",
