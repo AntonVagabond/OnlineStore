@@ -17,6 +17,11 @@ class ForbiddenResponseSchema(BaseModel, Generic[TSchema]):
     detail: str = Field(default="Нет прав доступа.")
 
 
+class NotFoundResponseSchema(BaseModel, Generic[TSchema]):
+    """Схема ответа при не найденном ресурсе."""
+    detail: str = Field(default="Данные не найдены.")
+
+
 class ServerErrorResponseSchema(BaseModel, Generic[TSchema]):
     """Схема ответа при неавторизованном запросе."""
     detail: str = Field(default="Ошибка сервера")

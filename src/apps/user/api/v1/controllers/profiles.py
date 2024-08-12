@@ -1,11 +1,12 @@
 import logging
+from typing import Union
 
 from fastapi import APIRouter
-from starlette import status
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from api.dependencies import UserDep, ProfileUOWDep, ProfileServiceDep
-from common.schemas.responses import mixins as responses
+from common.schemas.responses import mixins as response
+from modules.schemas.profile import ProfileResponseSchema
 
 profile = APIRouter(prefix="/api/v1/Profile", tags=["Profile"])
 
@@ -14,16 +15,17 @@ profile = APIRouter(prefix="/api/v1/Profile", tags=["Profile"])
     path="/",
     dependencies=...,
     summary="Получение профиля пользователя",
-    response_model=...,
     responses={
-        status.HTTP_401_UNAUTHORIZED: responses.UnauthorizedResponseSchema().model_dump(),
-        status.HTTP_403_FORBIDDEN: responses.ForbiddenResponseSchema().model_dump(),
-        status.HTTP_500_INTERNAL_SERVER_ERROR: responses.ServerErrorResponseSchema().model_dump(),
+        200: {"model": ProfileResponseSchema},
+        401: {"model": response.UnauthorizedResponseSchema},
+        403: {"model": response.ForbiddenResponseSchema},
+        404: {"model": response.NotFoundResponseSchema},
+        500: {"model": response.ServerErrorResponseSchema},
     },
 )
 async def get_user_info(
         current_user: UserDep, uow: ProfileUOWDep, service: ProfileServiceDep,
-):
+) -> Union[ProfileResponseSchema, Response]:
     """Контроллер получения информации профиля пользователя."""
     result = await service.get(uow, current_user.id)
     if result:
