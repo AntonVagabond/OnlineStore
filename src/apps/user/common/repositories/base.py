@@ -35,9 +35,14 @@ class BaseRepository(IRepository[TModel]):
 
     async def get(self, data_id: TID) -> Optional[TModel]:
         """Базовый метод репозитория для получения данных."""
-        stmt = (select(self.model)
-                .where(self.model.id == data_id)
-                .where(self.model.deleted.__eq__(False)))
+        stmt = (
+            select(self.model)
+            .filter(
+                self.model.id == data_id,
+                self.model.deleted.__eq__(False),
+                self.model.logged_out.__eq__(False),
+            )
+        )
         res = await self.session.execute(stmt)
         return res.scalar_one_or_none()
 
@@ -47,8 +52,7 @@ class BaseRepository(IRepository[TModel]):
     async def delete(self, data_id: TID) -> Optional[TID]:
         """Базовый метод репозитория для обновления статуса данных на "удалено"."""
         stmt = (update(self.model)
-                .where(self.model.id == data_id)
-                .where(self.model.deleted.__eq__(False))
+                .filter(self.model.id == data_id, self.model.deleted.__eq__(False))
                 .values(deleted=True, date_update=datetime.now())
                 .returning(self.model.id))
         res = await self.session.execute(stmt)
@@ -66,8 +70,7 @@ class BaseRepository(IRepository[TModel]):
         """Базовый метод репозитория для редактирования данных."""
         data_id: TID = data.pop("id")
         stmt = (update(self.model)
-                .where(self.model.id == data_id)
-                .where(self.model.deleted.__eq__(False))
+                .filter(self.model.id == data_id, self.model.deleted.__eq__(False))
                 .values(**data)
                 .returning(self.model.id))
         res = await self.session.execute(stmt)
@@ -76,7 +79,6 @@ class BaseRepository(IRepository[TModel]):
     async def exist(self, obj_id: TID) -> bool:
         """Базовый метод репозитория для поиска данных."""
         stmt = (select(self.model)
-                .where(self.model.id == obj_id)
-                .where(self.model.deleted.__eq__(False)))
+                .filter(self.model.id == obj_id, self.model.deleted.__eq__(False)))
         res = await self.session.execute(stmt)
         return bool(res.scalar_one_or_none())
