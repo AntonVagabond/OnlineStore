@@ -1,14 +1,13 @@
 import abc
-from typing import Type, TypeVar, Generic
+from typing import TypeVar
 
 from common.repositories.base import BaseRepository
 
 TRepository = TypeVar("TRepository", bound=BaseRepository)
 
 
-class IUnitOfWork(abc.ABC, Generic[TRepository]):
+class IUnitOfWork(abc.ABC):
     """Абстрактный класс для работы с транзакциями."""
-    repo: Type[TRepository]
 
     @abc.abstractmethod
     def __init__(self) -> None:

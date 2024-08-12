@@ -1,6 +1,6 @@
 import logging
 from types import TracebackType
-from typing import Self, TypeVar, Optional
+from typing import Self, TypeVar, Optional, Generic
 
 from fastapi import HTTPException
 
@@ -11,16 +11,18 @@ from core.database import async_session_maker
 TRepository = TypeVar("TRepository", bound=BaseRepository)
 
 
-class BaseUnitOfWork(IUnitOfWork[TRepository]):
+class BaseUnitOfWork(IUnitOfWork, Generic[TRepository]):
     """Базовый класс для работы с транзакциями."""
+    repo: Optional[TRepository]
 
     def __init__(self) -> None:
         self.__session_factory = async_session_maker
+        self.init_repo: type[TRepository] = type(TRepository)
 
     async def __aenter__(self) -> Self:
         """Базовый метод входа в контекстного менеджера."""
         self._session = self.__session_factory()
-        self.repo(self._session)
+        self.repo = self.init_repo(self._session)
         return self
 
     async def __aexit__(
