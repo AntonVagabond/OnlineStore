@@ -1,5 +1,6 @@
+from typing import Annotated
+
 from pydantic import AfterValidator
-from typing_extensions import Annotated
 
 
 class ExtendedTypes:

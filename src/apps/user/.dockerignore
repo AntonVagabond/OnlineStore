@@ -89,11 +89,3 @@ venv/
 
 # VS Code
 .vscode/
-
-
-/app.log
-/.pytest_cache
-/tests
-/test.db
-/pyproject.toml
-/apps/services/proto/

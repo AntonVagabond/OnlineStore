@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
+from api.v1.routers import all_routers_v1
 from core.config import get_settings
 from core.logger import LoggerConfig
 from utils.initializer import RoleInitializer
@@ -45,8 +46,7 @@ def custom_openapi() -> dict[str, Any]:
     openapi_schema = get_openapi(
         title="User",
         version="1.0",
-        summary="Модуль для работы с профилем пользователя и получения "
-                "списков пользователей",
+        summary="Микросервис для работы с профилем пользователя.",
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
@@ -74,7 +74,7 @@ app.add_middleware(
 # endregion -------------------------------------------------------------------------
 
 # region -------------------------------- Routing -----------------------------------
-for router in all_routers:
+for router in all_routers_v1:
     app.include_router(router)
 
 # endregion -------------------------------------------------------------------------
