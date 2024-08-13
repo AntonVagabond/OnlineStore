@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 TModel = TypeVar("TModel", bound=Base)
 
 
-class BaseRepository(Generic[TModel]):
+class BaseRepository:
     """Базовый класс репозитория."""
     model: type[TModel]
 

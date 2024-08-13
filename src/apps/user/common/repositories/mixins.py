@@ -5,17 +5,16 @@ from sqlalchemy import Select, ScalarResult
 
 from common.models.base import Base
 from common.repositories.base import BaseRepository
-from common.schemas.base import BaseModel
 from common.schemas.filters.mixins import BaseFilterSchema, DataRangeBaseFilterSchema
 
 TModel = TypeVar("TModel", bound=Base)
 TFilter = TypeVar("TFilter", bound=BaseFilterSchema)
 TFilterData = TypeVar("TFilterData", bound=DataRangeBaseFilterSchema)
-TViewSchemaForTable = TypeVar("TViewSchemaForTable", bound=BaseModel)
 
 
-class PaginatedPageRepository(BaseRepository[TModel]):
+class PaginatedPageRepository(BaseRepository):
     """Общий репозиторий для разбивки данных на страницы."""
+    model: type[TModel]
 
     def _is_there_start_and_end_date(
             self, stmt: Select, filters: TFilterData

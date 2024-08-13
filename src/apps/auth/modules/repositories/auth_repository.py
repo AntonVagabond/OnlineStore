@@ -7,8 +7,9 @@ from models.users import User
 from modules.schemas.auth_schema import UserInfoSchema
 
 
-class AuthRepository(BaseRepository[User]):
+class AuthRepository(BaseRepository):
     """Репозиторий аутентификации."""
+    model = User
 
     async def get_user_by_email(self, email: str) -> Optional[UserInfoSchema]:
         """Получить пользователя по почте."""
@@ -24,6 +25,8 @@ class AuthRepository(BaseRepository[User]):
         return None if not user else UserInfoSchema(
             id=getattr(user.id, "hex"),
             email=user.email,
+            deleted=user.deleted,
+            password_hash=user.password_hash,
         )
 
     async def authenticate_user(self, email: str) -> Optional[UserInfoSchema]:
