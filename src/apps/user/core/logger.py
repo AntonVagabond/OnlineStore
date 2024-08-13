@@ -16,7 +16,7 @@ class LoggerConfig:
     @staticmethod
     def __load_config() -> LoadData:
         """Загрузить конфиги для логирования из yml-файла."""
-        with open("core/log_config.yaml", "r") as config:
+        with open("core/log_config.yml", "r") as config:
             return yaml.load(config, Loader=yaml.FullLoader)
 
     @classmethod
@@ -27,6 +27,11 @@ class LoggerConfig:
         куда будет записываться все логи.
         Если этой директории и файла нет, то создадим их.
         """
+        # Повышаем уровень логирования для watchfiles.main, чтобы не было спама в логах,
+        # и не нагружал из-за этого систему.
+        logger = logging.getLogger('watchfiles.main')
+        logger.setLevel(logging.WARNING)
+
         if os.path.exists("logs/app.log"):
             return cls.__load_config()
         # Это проверка связана с Докером. В Докере при развёртывании приложения
