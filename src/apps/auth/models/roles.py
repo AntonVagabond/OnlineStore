@@ -20,7 +20,7 @@ class Role(Base, GenericMixin[sa.UUID]):
         __type_pos=sa.Integer,
         nullable=False,
     )
-    users: Mapped[list["Users"]] = relationship(  # type: ignore
+    users: Mapped[list["User"]] = relationship(  # type: ignore
         back_populates="role",
         lazy="raise",
     )

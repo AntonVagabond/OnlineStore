@@ -3,7 +3,7 @@ from typing import Union, Optional
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from api.dependencies import CurrentUserDep
+from api.current_user_deps import CurrentUserDep
 from modules.schemas.auth_schema import UserInfoSchema, AuthExceptionSchema
 from modules.unit_of_works.auth_uow import AuthUOW
 from core.security import Security

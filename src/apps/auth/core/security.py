@@ -27,22 +27,26 @@ class Security:
         to_encode.update(exp=expire, iat=now)
         return jwt.encode(
             payload=to_encode,
-            key=settings.private_key_path.read_text(),
-            algorithm=settings.algorithm,
+            key=settings.auth.private_key_path.read_text(),
+            algorithm=settings.auth.algorithm,
         )
 
     @classmethod
     def create_access_token(cls, email: str) -> str:
         """Создать access токен."""
         payload = {"sub": email, "type": "access"}
-        access_token = cls.__create_token(payload, settings.access_token_expire_minutes)
+        access_token = cls.__create_token(
+            payload=payload, minutes=settings.auth.access_token_expire_minutes,
+        )
         return access_token
 
     @classmethod
     def create_refresh_token(cls, email: str) -> str:
         """Создать refresh токен."""
         payload = {"sub": email, "type": "refresh"}
-        refresh_token = cls.__create_token(payload, settings.refresh_token_expire_minutes)
+        refresh_token = cls.__create_token(
+            payload=payload, minutes=settings.auth.refresh_token_expire_minutes,
+        )
         return refresh_token
 
     @staticmethod
@@ -50,6 +54,6 @@ class Security:
         """Расшифровать токен."""
         payload = jwt.decode(
             jwt=token,
-            key=settings.public_key_path.read_text(),
-            algorithms=[settings.algorithm])
+            key=settings.auth.public_key_path.read_text(),
+            algorithms=[settings.auth.algorithm])
         return payload
