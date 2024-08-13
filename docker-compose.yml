@@ -1,0 +1,29 @@
+version: "3.11"
+
+services:
+  # region --------------- APPS --------------
+  auth.api:
+    container_name: auth.api
+    build:
+      context: ./src/apps/auth
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres.api
+    restart: always
+
+  user.api:
+    container_name: user.api
+    build:
+      context: ./src/apps/user
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres.api
+    restart: always
+  # end ---------------------------------------
+
+  # region --------------- DB ----------------
+  postgres.api:
+    image: postgres:14.6-alpine
+    container_name: postgres_fastapi_store
+    restart: always
+ # end ---------------------------------------

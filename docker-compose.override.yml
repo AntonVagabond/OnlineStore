@@ -1,0 +1,77 @@
+version: "3.11"
+
+services:
+  # region --------------- APPS --------------
+  auth.api:
+    environment:
+      # Postgres connection configuration
+      PG_HOST: ${PG_HOST}
+      PG_PORT: ${PG_PORT}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DATABASE: ${PG_DATABASE_USER}
+      # Startup configuration
+      PORT: ${PORT_AUTH}
+      HOST: ${HOST_AUTH}
+      # Pagination configuration
+      PAGE_SIZE: ${PAGE_SIZE}
+      # Auth configuration
+      TOKEN_URL: ${TOKEN_URL}
+      PRIVATE_KEY_PATH: ${PRIVATE_KEY_PATH}
+      PUBLIC_KEY_PATH: ${PUBLIC_KEY_PATH}
+      ALGORITHM: ${ALGORITHM}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+      REFRESH_TOKEN_EXPIRE_MINUTES: ${REFRESH_TOKEN_EXPIRE_MINUTES}
+      # Other
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      OPENAPI_URL: ${OPENAPI_URL_AUTH}
+    volumes:
+      - online_logs:/usr/src/app/logs
+    ports:
+      - "1500:80"
+
+  user.api:
+    environment:
+      # Postgres connection configuration
+      PG_HOST: ${PG_HOST}
+      PG_PORT: ${PG_PORT}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DATABASE: ${PG_DATABASE_USER}
+      # Startup configuration
+      PORT: ${PORT_USER}
+      HOST: ${HOST_USER}
+      # Pagination configuration
+      PAGE_SIZE: ${PAGE_SIZE}
+      # Auth configuration
+      TOKEN_URL: ${TOKEN_URL}
+
+      AUTH_ENDPOINT_URL: ${AUTH_ENDPOINT_URL}
+      AUTH_URL: ${AUTH_URL}
+      # Other
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      OPENAPI_URL: ${OPENAPI_URL_USER}
+    volumes:
+      - online_logs:/usr/src/app/logs
+    ports:
+      - "1000:80"
+
+  # end ---------------------------------------
+
+  # region --------------- DB ----------------
+  postgres.api:
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    ports:
+      - "54330:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  # end ---------------------------------------
+
+volumes:
+  online_logs:
+    name: online_logs
+  postgres_data:
+    driver: local
