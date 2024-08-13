@@ -8,7 +8,7 @@ from api.dependencies import UserDep, ProfileUOWDep, ProfileServiceDep
 from common.schemas.responses import mixins as response
 from modules.schemas.profile import ProfileResponseSchema
 
-profile = APIRouter(prefix="/api/v1/Profile", tags=["Profile"])
+profile = APIRouter(prefix="/api/v1/profile", tags=["Profile"])
 
 
 @profile.get(

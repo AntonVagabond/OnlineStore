@@ -23,11 +23,11 @@ section = config.config_ini_section
 # значение, заданное здесь, будет переопределять значение, заданное в alembic.ini
 # значение передается в `ConfigParser.set`, который поддерживает интерполяцию
 # переменных с помощью pyformat (например, `%(some_value)s`).
-config.set_section_option(section, "PG_HOST", settings.pg_host)
-config.set_section_option(section, "PG_PORT", str(settings.pg_port))
-config.set_section_option(section, "PG_USER", settings.pg_user)
-config.set_section_option(section, "PG_DATABASE", settings.pg_database)
-config.set_section_option(section, "PG_PASSWORD", settings.pg_password)
+config.set_section_option(section, "PG_HOST", settings.db.pg_host)
+config.set_section_option(section, "PG_PORT", str(settings.db.pg_port))
+config.set_section_option(section, "PG_USER", settings.db.pg_user)
+config.set_section_option(section, "PG_DATABASE", settings.db.pg_database)
+config.set_section_option(section, "PG_PASSWORD", settings.db.pg_password)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

@@ -16,7 +16,7 @@ from core.security import Security
 
 settings = get_settings()
 
-auth = APIRouter(prefix="/api/v1/Auth", tags=["Auth"])
+auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 
 
 @auth.post(

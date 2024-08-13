@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:  # noqa
 # region ---------------------------- APPLICATION -----------------------------------
 app = FastAPI(
     lifespan=lifespan,
-    openapi_url=None,
+    openapi_url=settings.openapi_url,
     swagger_ui_init_oauth={
         "clientId": settings.client_id,
         "clientSecret": settings.client_secret,

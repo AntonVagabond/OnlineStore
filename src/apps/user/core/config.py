@@ -44,8 +44,6 @@ class DatabaseSettings(BaseSettings):
 class AuthSettings(BaseSettings):
     """Настройки окружения для подключения к микросервису Auth."""
     token_url: HttpUrl = Field(alias="TOKEN_URL")
-    auth_host: str = Field(alias="AUTH_HOST")
-    auth_port: int = Field(alias="AUTH_PORT")
     auth_url: HttpUrl = Field(alias="AUTH_URL")
     auth_endpoint_url: HttpUrl = Field(alias="AUTH_ENDPOINT_URL")
 

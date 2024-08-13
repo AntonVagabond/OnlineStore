@@ -45,7 +45,7 @@ class GenericMixin(MappedAsDataclass, Generic[TInt]):
             int: Integer, BigInteger: BigInteger, SmallInteger: SmallInteger, UUID: UUID,
         }
         assert cls.__type_t in type_mapping, "Тип не поддерживается."
-        if isinstance(type_mapping[cls.__type_t], sa.UUID):
+        if cls.__type_t is sa.UUID:
             return mapped_column(
                 __name_pos="Id",
                 __type_pos=type_mapping[cls.__type_t],
