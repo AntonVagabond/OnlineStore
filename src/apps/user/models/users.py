@@ -36,9 +36,9 @@ class User(DateModelMixin, GenericMixin[sa.UUID]):
         __type_pos=sa.String(256),
         unique=True,
     )
-    password_hash: Mapped[Optional[sa.Text]] = mapped_column(
+    password_hash: Mapped[Optional[bytes]] = mapped_column(
         __name_pos="PasswordHash",
-        __type_pos=sa.Text,
+        __type_pos=sa.LargeBinary,
     )
     phone_number: Mapped[Optional[str]] = mapped_column(
         __name_pos="PhoneNumber",
@@ -52,7 +52,7 @@ class User(DateModelMixin, GenericMixin[sa.UUID]):
         __name_pos="Birthday",
         __type_pos=sa.DateTime,
     )
-    role: Mapped[list["Roles"]] = relationship(  # type: ignore
+    role: Mapped["Role"] = relationship(  # type: ignore
         back_populates="users",
         lazy="raise",
         default=None,
@@ -78,6 +78,6 @@ class User(DateModelMixin, GenericMixin[sa.UUID]):
     role_id: Mapped[Optional[sa.UUID]] = mapped_column(
         "RoleId",
         sa.UUID,
-        sa.ForeignKey(column="Role.Id", ondelete="RESTRICT"),
+        sa.ForeignKey(column="RoleDB.Id", ondelete="RESTRICT"),
         default=None,
     )

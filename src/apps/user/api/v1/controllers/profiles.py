@@ -13,7 +13,6 @@ profile = APIRouter(prefix="/api/v1/Profile", tags=["Profile"])
 
 @profile.get(
     path="/",
-    dependencies=...,
     summary="Получение профиля пользователя",
     responses={
         200: {"model": ProfileResponseSchema},
@@ -25,7 +24,7 @@ profile = APIRouter(prefix="/api/v1/Profile", tags=["Profile"])
 )
 async def get_user_info(
         current_user: UserDep, uow: ProfileUOWDep, service: ProfileServiceDep,
-) -> Union[ProfileResponseSchema, Response]:
+) -> Response:
     """Контроллер получения информации профиля пользователя."""
     result = await service.get(uow, current_user.id)
     if result:

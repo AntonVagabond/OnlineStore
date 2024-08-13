@@ -31,8 +31,8 @@ class ProfileService(BaseService):
             phone_number=result.phone_number,
             email=result.email,
             is_man=result.is_man,
-            photo=...,
-            birthday=str(result.birthday),
+            photo=result.photo if result.photo else None,
+            birthday=result.birthday,
         )
 
     @classmethod
