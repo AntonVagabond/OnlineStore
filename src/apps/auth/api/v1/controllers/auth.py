@@ -79,8 +79,9 @@ async def get_new_access_token(
     return TokenInfoSchema(access_token=access_token)
 
 
-@auth.post(path="/logout/", dependencies=UserDep)
+@auth.post(path="/logout/")
 async def logout_user(
+        current_user: UserDep,  # noqa
         response: Response
 ) -> LogoutResponseSchema:
     """Контроллер для выхода из учетной записи."""
