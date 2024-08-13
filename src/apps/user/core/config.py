@@ -1,6 +1,6 @@
 import os
 from functools import lru_cache
-from typing import Union, Optional, Any
+from typing import Union, Optional, Any, ClassVar
 
 from pydantic import PostgresDsn, HttpUrl, field_validator, Field
 from pydantic_core.core_schema import FieldValidationInfo
@@ -21,6 +21,7 @@ class DatabaseSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=os.path.expanduser(".env"),
         env_file_encoding="utf-8",
+        extra="allow",
     )
 
     @field_validator("async_database_uri")
@@ -43,19 +44,22 @@ class DatabaseSettings(BaseSettings):
 class AuthSettings(BaseSettings):
     """Настройки окружения для подключения к микросервису Auth."""
     token_url: HttpUrl = Field(alias="TOKEN_URL")
+    auth_host: str = Field(alias="AUTH_HOST")
+    auth_port: int = Field(alias="AUTH_PORT")
     auth_url: HttpUrl = Field(alias="AUTH_URL")
     auth_endpoint_url: HttpUrl = Field(alias="AUTH_ENDPOINT_URL")
 
     model_config = SettingsConfigDict(
         env_file=os.path.expanduser(".env"),
         env_file_encoding="utf-8",
+        extra="allow",
     )
 
 
 class Settings(BaseSettings):
     """Настройки окружения."""
-    db = DatabaseSettings()
-    auth = AuthSettings()
+    db: ClassVar = DatabaseSettings()
+    auth: ClassVar = AuthSettings()
 
     client_id: str = Field(alias="CLIENT_ID")
     client_secret: str = Field(alias="CLIENT_SECRET")
@@ -68,6 +72,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=os.path.expanduser(".env"),
         env_file_encoding="utf-8",
+        extra="allow",
     )
 
 
