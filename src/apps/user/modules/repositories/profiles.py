@@ -10,8 +10,9 @@ from models.users import User
 RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, Role, NoneType]]
 
 
-class ProfileRepository(PaginatedPageRepository[User]):
+class ProfileRepository(PaginatedPageRepository):
     """Репозиторий профиля пользователя."""
+    model = User
 
     async def get(self, user_id: UUID) -> Optional[User]:
         """Получить профиль пользователя по идентификатору."""

@@ -20,7 +20,7 @@ RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, Role, NoneType]]
 EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 
 
-class IRepository(ABC, Generic[TModel]):
+class IRepository(ABC):
     """Абстрактная класс репозитория."""
     model: type[TModel]
 

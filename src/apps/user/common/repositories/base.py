@@ -21,8 +21,9 @@ EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 TID = TypeVar("TID", int, UUID)
 
 
-class BaseRepository(IRepository[TModel]):
+class BaseRepository(IRepository):
     """Базовый класс репозитория."""
+    model: type[TModel]
 
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
