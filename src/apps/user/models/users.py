@@ -5,7 +5,6 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from common.models.mixins import DateModelMixin, GenericMixin
-from models.roles import Role
 
 
 class User(DateModelMixin, GenericMixin[sa.UUID]):
@@ -53,7 +52,7 @@ class User(DateModelMixin, GenericMixin[sa.UUID]):
         __name_pos="Birthday",
         __type_pos=sa.DateTime,
     )
-    role: Mapped[Role] = relationship(  # type: ignore
+    role: Mapped["Role"] = relationship(  # type: ignore
         back_populates="users",
         lazy="raise",
         default=None,
