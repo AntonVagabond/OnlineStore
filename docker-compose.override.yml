@@ -23,8 +23,8 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
       REFRESH_TOKEN_EXPIRE_MINUTES: ${REFRESH_TOKEN_EXPIRE_MINUTES}
       # Other
-      CLIENT_ID: ${CLIENT_ID}
-      CLIENT_SECRET: ${CLIENT_SECRET}
+      CLIENT_ID: ${CLIENT_ID_AUTH}
+      CLIENT_SECRET: ${CLIENT_SECRET_AUTH}
       OPENAPI_URL: ${OPENAPI_URL_AUTH}
     volumes:
       - online_logs:/usr/src/app/logs
@@ -50,8 +50,8 @@ services:
       AUTH_ENDPOINT_URL: ${AUTH_ENDPOINT_URL}
       AUTH_URL: ${AUTH_URL}
       # Other
-      CLIENT_ID: ${CLIENT_ID}
-      CLIENT_SECRET: ${CLIENT_SECRET}
+      CLIENT_ID: ${CLIENT_ID_USER}
+      CLIENT_SECRET: ${CLIENT_SECRET_USER}
       OPENAPI_URL: ${OPENAPI_URL_USER}
     volumes:
       - online_logs:/usr/src/app/logs
@@ -61,7 +61,7 @@ services:
   # end ---------------------------------------
 
   # region --------------- DB ----------------
-  postgres.api:
+  postgres.db:
     environment:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
     ports:

@@ -8,7 +8,7 @@ services:
       context: ./src/apps/auth
       dockerfile: Dockerfile
     depends_on:
-      - postgres.api
+      - postgres.db
     restart: always
 
   user.api:
@@ -17,7 +17,7 @@ services:
       context: ./src/apps/user
       dockerfile: Dockerfile
     depends_on:
-      - postgres.api
+      - postgres.db
     restart: always
   # end ---------------------------------------
 
