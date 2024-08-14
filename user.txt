@@ -1,0 +1,16 @@
+# ------------ Тестовые пользователи -------------------
+
+        customer: "TestCustomer@gmail.com"
+        customer_password: "TestPassword_1111"
+
+        courier: "TestCourier@gmail.com"
+        courier_password: "TestPassword_2222"
+
+        provider: "TestProvider@gmail.com"
+        provider_password: "TestPassword_3333"
+
+        manager: "TestManager@gmail.com"
+        manager_password: "TestPassword_4444"
+
+        admin: "TestAdmin@gmail.com"
+        admin_password: "TestPassword_5555"
