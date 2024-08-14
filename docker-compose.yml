@@ -14,7 +14,7 @@ services:
   user.api:
     container_name: user.api
     build:
-      context: ./src/apps/user
+      context: src/apps/users
       dockerfile: Dockerfile
     depends_on:
       - postgres.db
