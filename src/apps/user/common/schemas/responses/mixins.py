@@ -3,6 +3,11 @@ from pydantic import Field
 from common.schemas.base import BaseModel
 
 
+class BadRequestResponseSchema(BaseModel):
+    """Схема ответа при неправильном запросе."""
+    detail: str = Field(default="Некорректные данные.")
+
+
 class UnauthorizedResponseSchema(BaseModel):
     """Схема ответа при неавторизованном запросе."""
     detail: str = Field(default="Не авторизованный пользователь.")
