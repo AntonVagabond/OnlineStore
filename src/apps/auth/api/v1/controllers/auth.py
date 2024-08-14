@@ -4,15 +4,16 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response
 
-from ...dependencies import (
-    OAuth2PasswordDep, AuthUOWDep, RefreshDep, UserDep, AuthUserServiceDep,
-)
-from modules.schemas.auth_schema import (
-    TokenInfoSchema, LogoutResponseSchema, UserInfoSchema, AuthExceptionSchema,
-)
+from common.schemas.responses import mixins as schema_response
 from core.config import get_settings
 from core.constants import REFRESH
 from core.security import Security
+from modules.schemas.auth_schema import (
+    TokenInfoSchema, LogoutResponseSchema, UserInfoSchema, AuthExceptionSchema,
+)
+from ...dependencies import (
+    OAuth2PasswordDep, AuthUOWDep, RefreshDep, UserDep, AuthUserServiceDep,
+)
 
 settings = get_settings()
 
@@ -23,9 +24,9 @@ auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
     path="/login/",
     summary="Вход в учетную запись.",
     responses={
-        400: {"detail": "Некорректные данные"},
-        401: {"detail": "Не авторизованный пользователь"},
-        500: {"detail": "Ошибка сервера"},
+        400: {"model": schema_response.BadRequestResponseSchema},
+        401: {"model": schema_response.UnauthorizedResponseSchema},
+        500: {"model": schema_response.ServerErrorResponseSchema},
     },
 )
 async def login_user(
