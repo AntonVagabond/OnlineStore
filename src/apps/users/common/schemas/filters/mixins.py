@@ -1,10 +1,8 @@
 from datetime import datetime
-from typing import Generic, TypeVar, Optional
-from uuid import UUID
+from typing import TypeVar, Optional
 
-from pydantic import Field, EmailStr, field_validator, ValidationError
+from pydantic import Field
 
-from common.enums.role import Role
 from common.schemas.base import BaseModel
 from core.config import get_settings
 
