@@ -1,6 +1,13 @@
+import uuid
+
 from pydantic import Field
 
 from common.schemas.base import BaseModel
+
+
+class SuccessIdResponseSchema(BaseModel):
+    """Схема ответа при успешном регистрации пользователя."""
+    detail: str = Field(default=uuid.uuid4())
 
 
 class BadRequestResponseSchema(BaseModel):
