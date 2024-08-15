@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Self
+from types import TracebackType
+from typing import Self, Optional
 
 from common.unit_of_works.base import BaseUnitOfWork
 from modules.repositories.profiles import ProfileRepository
