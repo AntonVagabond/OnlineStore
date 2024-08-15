@@ -78,7 +78,7 @@ class CurrentUserDep:
     @classmethod
     def get_current_user(
             cls, roles: Optional[tuple[str, ...]] = None,
-    ) -> Callable[[Any], Coroutine[Any, Any, UserInfoSchema]]:
+    ) -> Callable[[str], Coroutine[Any, Any, UserInfoSchema]]:
         """Возвращает авторизованного пользователя."""
 
         async def current_user(
