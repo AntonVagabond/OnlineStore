@@ -34,8 +34,8 @@ class BaseUnitOfWork(IUnitOfWork):
             await self.rollback()
             logging.error(
                 {
-                    "exception": exc_type,
-                    "detail": exc_val.args[0] if exc_val.args else None,
+                    "exception": exc_val.__class__.__name__,
+                    "detail": getattr(exc_val, "detail"),
                     "class": (
                         exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
                         if exc_tb.tb_next.tb_frame.f_locals.get("self") else
@@ -44,12 +44,12 @@ class BaseUnitOfWork(IUnitOfWork):
                     "user_id": (
                         exc_tb.tb_frame.f_locals["user_uuid"].hex
                         if exc_tb.tb_frame.f_locals.get("user_uuid") else
-                        None
+                        "Незарегистрированный пользователь"
                     )
                 }
             )
             await self._session.close()
-            raise HTTPException(status_code=500, detail=exc_val)
+            raise exc_type()
         await self._session.close()
 
     async def commit(self) -> None:
