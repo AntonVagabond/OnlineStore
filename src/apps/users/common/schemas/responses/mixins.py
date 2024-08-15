@@ -10,6 +10,11 @@ class SuccessIdResponseSchema(BaseModel):
     detail: str = Field(default=uuid.uuid4())
 
 
+class SuccessBoolResponseSchema(BaseModel):
+    """Схема ответа при успешном выполнении операции."""
+    detail: bool = Field(default=True)
+
+
 class BadRequestResponseSchema(BaseModel):
     """Схема ответа при неправильном запросе."""
     detail: str = Field(default="Некорректные данные.")
