@@ -2,8 +2,8 @@ from fastapi import APIRouter
 from starlette.responses import Response
 
 from api.dependencies import UserDep, ProfileUOWDep, ProfileServiceDep
-from common.schemas.api.mixins import RegisterSchema
 from modules.responses import profiles as responses
+from modules.schemas.profiles import RegisterUserSchema, UpdateUserSchema
 
 profile = APIRouter(prefix="/api/v1/profile", tags=["Profile"])
 
@@ -17,7 +17,7 @@ async def create_user(
         current_user: UserDep,  # noqa
         uow: ProfileUOWDep,
         service: ProfileServiceDep,
-        model: RegisterSchema,
+        model: RegisterUserSchema,
 ) -> Response:
     """Контроллер регистрации пользователя."""
     user_id = await service.create(uow, model)
@@ -35,3 +35,19 @@ async def get_user(
     """Контроллер получения информации профиля пользователя."""
     profile_data = await service.get(uow, current_user.id)
     return profile_data
+
+
+@profile.patch(
+    path="/edit/",
+    summary="Редактирование профиля пользователя",
+    responses=responses.EDIT_RESPONSES,
+)
+async def update_user(
+        current_user: UserDep,
+        uow: ProfileUOWDep,
+        service: ProfileServiceDep,
+        model: UpdateUserSchema,
+) -> Response:
+    """Контроллер редактирования профиля пользователя."""
+    bool_result = await service.update(uow, model, current_user.id)
+    return bool_result
