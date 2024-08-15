@@ -4,13 +4,14 @@ from typing import Generator, TypeVar, Optional
 from sqlalchemy import ScalarResult
 
 from common.models.base import Base
-from common.repositories.mixins import TViewSchemaForTable
+from common.schemas.base import BaseModel
 from common.schemas.filters.mixins import BaseFilterSchema
 from common.schemas.internal.mixins import PageViewSchema
 from common.services.base import BaseService
 
 TModel = TypeVar("TModel", bound=Base)
 TFilter = TypeVar("TFilter", bound=BaseFilterSchema)
+TViewSchemaForTable = TypeVar("TViewSchemaForTable", bound=BaseModel)
 
 
 class PaginatedPageService(BaseService):
