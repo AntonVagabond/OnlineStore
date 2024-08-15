@@ -22,7 +22,7 @@ auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 
 @auth.post(
     path="/login/",
-    summary="Вход в учетную запись.",
+    summary="Вход в учетную запись (Авторизация).",
     responses={
         400: {"model": schema_response.BadRequestResponseSchema},
         401: {"model": schema_response.UnauthorizedResponseSchema},
@@ -55,7 +55,11 @@ async def login_user(
     return TokenInfoSchema(access_token=access_token)
 
 
-@auth.post(path="/refresh/", status_code=201)
+@auth.post(
+    path="/refresh/",
+    summary="Получить новый токен доступа.",
+    status_code=201,
+)
 async def get_new_access_token(
         uow: AuthUOWDep,
         service: AuthUserServiceDep,
@@ -80,7 +84,7 @@ async def get_new_access_token(
     return TokenInfoSchema(access_token=access_token)
 
 
-@auth.post(path="/logout/")
+@auth.post(path="/logout/", summary="Выход из учетной записи.")
 async def logout_user(
         current_user: UserDep,  # noqa
         response: Response
@@ -90,7 +94,7 @@ async def logout_user(
     return LogoutResponseSchema()
 
 
-@auth.get(path="/authenticate/")
+@auth.get(path="/authenticate/", summary="Аутентификация пользователя.")
 async def auth_user(
         request: Request, service: AuthUserServiceDep,
 ) -> Union[UserInfoSchema, AuthExceptionSchema]:
