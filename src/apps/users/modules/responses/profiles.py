@@ -29,7 +29,12 @@ REGISTRATION_RESPONSES = {
 GET_RESPONSES = {
         200: {"model": ProfileResponseSchema},
         401: {"model": response.UnauthorizedResponseSchema},
-        403: {"model": response.ForbiddenResponseSchema},
-        404: {"model": response.NotFoundResponseSchema},
         500: {"model": response.ServerErrorResponseSchema},
     }
+
+EDIT_RESPONSES = {
+    200: {"model": ProfileResponseSchema},
+    401: {"model": response.UnauthorizedResponseSchema},
+    403: {"model": response.ForbiddenResponseSchema},
+    500: {"model": response.ServerErrorResponseSchema},
+}
