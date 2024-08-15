@@ -6,7 +6,7 @@ from uuid import UUID
 
 from sqlalchemy import ScalarResult
 
-from common.enums.role import Role
+from common.enums.role import RoleEnum
 from common.models.base import Base
 from common.schemas.base import BaseModel
 from common.schemas.filters.mixins import BaseFilterSchema
@@ -16,7 +16,7 @@ TSchema = TypeVar("TSchema", bound=BaseModel)
 TFilter = TypeVar("TFilter", bound=BaseFilterSchema)
 TID = TypeVar("TID", int, UUID)
 
-RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, Role, NoneType]]
+RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, RoleEnum, NoneType]]
 EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 
 

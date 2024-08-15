@@ -1,9 +1,10 @@
 from datetime import datetime
 from types import NoneType
-from typing import Optional, Union, TypeAlias
+from typing import Union, TypeAlias
 from uuid import UUID
 
-from common.enums.role import Role
+from common.enums.role import RoleEnum
+from common.exceptions import mixins as error
 from common.schemas.api.mixins import RegisterSchema
 from common.services.base import BaseService
 from core.security import hash_password
@@ -12,7 +13,7 @@ from modules.schemas.profiles import ProfileResponseSchema
 from modules.unit_of_works.profiles import ProfileUOW
 
 RegisterData: TypeAlias = dict[
-    str, Union[bytes, str, datetime, bool, Role, NoneType, int]
+    str, Union[bytes, str, datetime, bool, RoleEnum, NoneType, int]
 ]
 EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 
@@ -59,24 +60,12 @@ class ProfileService(BaseService):
         )
 
     @classmethod
-    async def get(cls, uow: ProfileUOW, user_id: UUID) -> Optional[ProfileResponseSchema]:
+    async def get(cls, uow: ProfileUOW, user_id: UUID) -> ProfileResponseSchema:
         """Получить профиль пользователя."""
         async with uow:
             current_user = await uow.repo.get(user_id)
-            return cls.__convert_result(current_user) if current_user else None
+            if current_user is None:
+                raise error.UserNotFoundException()
+            return cls.__convert_result(current_user)
 
     # endregion --------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-

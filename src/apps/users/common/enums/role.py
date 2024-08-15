@@ -1,7 +1,7 @@
 from enum import IntEnum
 
 
-class Role(IntEnum):
+class RoleEnum(IntEnum):
     """Роли пользователей."""
     CUSTOMER = 0
     COURIER = 10

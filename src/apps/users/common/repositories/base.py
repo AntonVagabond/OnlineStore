@@ -6,7 +6,7 @@ from uuid import UUID
 from sqlalchemy import insert, select, update, delete, ScalarResult
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.enums.role import Role
+from common.enums.role import RoleEnum
 from common.interfaces.abstraction_repository import IRepository
 from common.models.base import Base
 from common.schemas.base import BaseModel
@@ -16,7 +16,7 @@ TModel = TypeVar("TModel", bound=Base)
 TSchema = TypeVar("TSchema", bound=BaseModel)
 TFilter = TypeVar("TFilter", bound=BaseFilterSchema)
 
-RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, Role, NoneType]]
+RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, RoleEnum, NoneType]]
 EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 TID = TypeVar("TID", int, UUID)
 

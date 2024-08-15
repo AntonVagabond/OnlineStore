@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import Field, EmailStr, field_validator, ValidationError
 
-from common.enums.role import Role
+from common.enums.role import RoleEnum
 from common.schemas.base import BaseModel
 
 TSchema = TypeVar("TSchema", bound=BaseModel)
@@ -40,7 +40,7 @@ class StandardViewSchemaForTable(PersonSchema):
 
 class RegisterSchema(BaseModel):
     """Общая схема для регистрации."""
-    role: Role
+    role: RoleEnum = Field(default=RoleEnum.CUSTOMER, json_schema_extra={"hidden": True})
     email: EmailStr
     phone_number: str
     password_hash: str
@@ -49,8 +49,12 @@ class RegisterSchema(BaseModel):
     second_name: str
     is_man: bool = Field(default=True)
     birthday: Optional[datetime] = Field(default=None)
-    date_add: datetime = Field(default=datetime.now(), hidden=True)  # type: ignore
-    date_update: datetime = Field(default=datetime.now(), hidden=True)  # type: ignore
+    date_add: datetime = Field(
+        default=datetime.now(), json_schema_extra={"hidden": True},
+    )
+    date_update: datetime = Field(
+        default=datetime.now(), json_schema_extra={"hidden": True},
+    )
 
     @field_validator("last_name")
     def validate_last_name(cls, last_name: str) -> str:  # noqa
