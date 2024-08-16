@@ -42,7 +42,7 @@ class BaseUnitOfWork(IUnitOfWork):
                         exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
                         if exc_tb.tb_next.tb_frame.f_locals.get("self") else
                         exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
-                    ),
+                    ) if exc_tb.tb_next else "Нет класса.",
                     "user_id": (
                         exc_tb.tb_frame.f_locals["user_uuid"].hex
                         if exc_tb.tb_frame.f_locals.get("user_uuid") else
@@ -64,7 +64,7 @@ class BaseUnitOfWork(IUnitOfWork):
                         exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
                         if exc_tb.tb_next.tb_frame.f_locals.get("self") else
                         exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
-                    ),
+                    ) if exc_tb.tb_next else "Нет класса.",
                     "user_id": (
                         exc_tb.tb_frame.f_locals["user_uuid"].hex
                         if exc_tb.tb_frame.f_locals.get("user_uuid") else
