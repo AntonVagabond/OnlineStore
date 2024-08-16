@@ -1,6 +1,6 @@
 import logging
-from types import TracebackType
-from typing import Self, TypeVar, Optional, Generic
+from types import TracebackType, NoneType
+from typing import Self, TypeVar, Optional
 
 from fastapi import HTTPException
 
@@ -30,7 +30,9 @@ class BaseUnitOfWork(IUnitOfWork):
             exc_tb: Optional[TracebackType],
     ) -> None:
         """Базовый метод выхода из контекстного менеджера"""
-        if not isinstance(exc_type, HTTPException):
+
+        # Регистрируем и вызываем все кастомные исключения.
+        if not isinstance(exc_type, (HTTPException, NoneType)):
             await self.rollback()
             logging.error(
                 {
@@ -50,6 +52,8 @@ class BaseUnitOfWork(IUnitOfWork):
             )
             await self._session.close()
             raise exc_type()
+
+        #  Регистрируем и вызываем не отслеживаемые исключения.
         if exc_type:
             await self.rollback()
             logging.error(
