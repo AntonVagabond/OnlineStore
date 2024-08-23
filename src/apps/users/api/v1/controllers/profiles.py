@@ -14,7 +14,6 @@ profile = APIRouter(prefix="/api/v1/profile", tags=["Profile"])
     responses=responses.REGISTRATION_RESPONSES,
 )
 async def create_user(
-        current_user: UserDep,  # noqa
         uow: ProfileUOWDep,
         service: ProfileServiceDep,
         model: RegisterUserSchema,
