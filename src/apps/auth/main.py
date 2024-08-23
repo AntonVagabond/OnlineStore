@@ -7,10 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
 from api.v1.routers import all_routers_v1
-from core.config import get_settings
+from core.config import settings
 from core.logger import LoggerConfig
-
-settings = get_settings()
 
 
 # region ------------------------------ initialize ----------------------------------

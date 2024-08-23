@@ -4,9 +4,7 @@ from typing import Any
 import bcrypt
 import jwt
 
-from core.config import get_settings
-
-settings = get_settings()
+from .config import settings
 
 
 class Security:
