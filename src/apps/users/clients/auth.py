@@ -50,8 +50,6 @@ def get_current_user(
                 detail=f"Request failed: {error}",
             )
 
-        return CurrentUserSchema(
-            id=UUID(response_json["id"]), company_id=response_json["company_id"],
-        )
+        return CurrentUserSchema(id=UUID(response_json["id"]))
 
     return current_user
