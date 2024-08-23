@@ -8,6 +8,7 @@ from fastapi.openapi.utils import get_openapi
 
 from api.v1.routers import all_routers_v1
 from core.config import get_settings
+from core.http_client import HttpClient
 from core.logger import LoggerConfig
 from utils.initializer import RoleInitializer
 
@@ -18,7 +19,9 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:  # noqa
     await RoleInitializer.initialize()
+    HttpClient.start_client()
     yield
+    await HttpClient.close_client()
 
 
 # endregion -------------------------------------------------------------------------
