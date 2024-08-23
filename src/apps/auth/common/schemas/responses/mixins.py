@@ -1,11 +1,12 @@
 from pydantic import Field
 
+from ...const import mixins as resp_exc
 from ..base import BaseModel
 
 
-class BadRequestResponseSchema(BaseModel):
+class UserBadRequestResponseSchema(BaseModel):
     """Схема ответа при неправильном запросе."""
-    detail: str = Field(default="Некорректные данные.")
+    detail: str = Field(default=resp_exc.USER_BAD_REQUEST)
 
 
 class UnauthorizedResponseSchema(BaseModel):
