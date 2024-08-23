@@ -26,8 +26,13 @@ class UnauthorizedResponseSchema(BaseModel):
 
 
 class ForbiddenResponseSchema(BaseModel):
-    """Схема ответа при неавторизованном запросе."""
+    """Схема ответа при запрете на конечную точку."""
     detail: str = Field(default="Нет прав доступа.")
+
+
+class ForbiddenAdminResponseSchema(BaseModel):
+    """Схема ответа при запрете на конечную точку с ролью admin."""
+    detail: str = Field(default="Для этого действия требуется роль: 'admin'.")
 
 
 class NotFoundResponseSchema(BaseModel):
