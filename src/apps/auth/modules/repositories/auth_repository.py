@@ -24,9 +24,7 @@ class AuthRepository(BaseRepository):
         user = result.scalar_one_or_none()
         return None if not user else UserInfoSchema(
             id=getattr(user.id, "hex"),
-            email=user.email,
-            deleted=user.deleted,
-            password_hash=user.password_hash,
+            role_name=user.role.name,
         )
 
     async def authenticate_user(self, email: str) -> Optional[UserInfoSchema]:
