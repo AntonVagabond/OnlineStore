@@ -26,7 +26,7 @@ async def create_user(
 
 @profile.get(
     path="/",
-    summary="Получение профиля пользователя",
+    summary="Получение профиля пользователя.",
     responses=responses.GET_RESPONSES,
 )
 async def get_user(
@@ -39,7 +39,7 @@ async def get_user(
 
 @profile.patch(
     path="/edit/",
-    summary="Редактирование профиля пользователя",
+    summary="Редактирование профиля пользователя.",
     responses=responses.EDIT_RESPONSES,
 )
 async def update_user(
