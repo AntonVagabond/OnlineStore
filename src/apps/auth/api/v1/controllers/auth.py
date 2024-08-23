@@ -2,9 +2,9 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response
 
-from common.schemas.responses import mixins as schema_response
 from core.constants import REFRESH
 from core.security import Security
+from modules.responses import auth as responses
 from modules.schemas.auth_schema import (
     TokenInfoSchema, LogoutResponseSchema, UserInfoSchema,
 )
@@ -18,11 +18,7 @@ auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 @auth.post(
     path="/login/",
     summary="Вход в учетную запись (Авторизация).",
-    responses={
-        400: {"model": schema_response.BadRequestResponseSchema},
-        401: {"model": schema_response.UnauthorizedResponseSchema},
-        500: {"model": schema_response.ServerErrorResponseSchema},
-    },
+    responses=responses.LOGIN_RESPONSES,
 )
 async def login_user(
         uow: AuthUOWDep,
@@ -53,7 +49,7 @@ async def login_user(
 @auth.post(
     path="/refresh/",
     summary="Получить новый токен доступа.",
-    status_code=201,
+    responses=responses.REFRESH_RESPONSES,
 )
 async def get_new_access_token(
         uow: AuthUOWDep,
@@ -89,7 +85,11 @@ async def logout_user(
     return LogoutResponseSchema()
 
 
-@auth.get(path="/authenticate/", summary="Аутентификация пользователя.")
+@auth.get(
+    path="/authenticate/",
+    summary="Аутентификация пользователя.",
+    responses=responses.AUTH_RESPONSES,
+)
 async def auth_user(
         request: Request, service: AuthUserServiceDep,
 ) -> UserInfoSchema:
