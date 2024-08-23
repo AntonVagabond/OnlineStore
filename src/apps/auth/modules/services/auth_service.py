@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from api.current_user_deps import CurrentUserDep
+from common.exceptions.mixins import AuthBadRequestException
 from core.security import Security
 from modules.schemas.auth_schema import UserInfoSchema
 from modules.unit_of_works.auth_uow import AuthUOW
@@ -20,17 +21,13 @@ class AuthUserService:
         async with uow:
             data_user = await uow.repo.authenticate_user(form_data.username)
             if not data_user:
-                raise HTTPException(
-                    status_code=400,
-                    detail="Неверный адрес электронной почты",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
+                raise AuthBadRequestException(detail="Неверный адрес электронной почты")
             if not Security.verify_password(
                     form_data.password, hashed_password=data_user.password_hash
             ):
-                raise HTTPException(status_code=400, detail="Неверный пароль")
+                raise AuthBadRequestException(detail="Неверный пароль")
             if data_user.deleted:
-                raise HTTPException(status_code=400, detail="Пользователь удален")
+                raise AuthBadRequestException(detail="Пользователь удален")
             return data_user
 
     @staticmethod
@@ -47,12 +44,10 @@ class AuthUserService:
                 data_user = await uow.repo.authenticate_user(email)
 
                 if data_user.deleted:
-                    raise HTTPException(
-                        status_code=400, detail="Пользователь удален",
-                    )
+                    raise AuthBadRequestException(detail="Пользователь удален")
                 return data_user
             else:
-                raise HTTPException(status_code=400, detail="Неверный токен")
+                raise AuthBadRequestException(detail="Неверный токен")
 
     @staticmethod
     async def get_data_user(
