@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt import MissingRequiredClaimError, DecodeError, ExpiredSignatureError
 
 from common.exceptions import mixins as error
+from common.const import mixins as resp_exc
 from core.config import settings
 from core.security import Security
 from modules.schemas.auth_schema import UserInfoSchema
@@ -27,19 +28,12 @@ class CurrentUserDep:
         try:
             payload = Security.decode_token(token)
         except ExpiredSignatureError:
-            raise error.AuthForbiddenException(
-                detail="Срок действия вашего токена истек. "
-                       "Пожалуйста, войдите в систему еще раз."
-            )
+            raise error.AuthForbiddenException(detail=resp_exc.TOKEN_EXPIRED_FORBIDDEN)
         except DecodeError:
-            raise error.AuthForbiddenException(
-                detail="Ошибка при расшифровке токена. "
-                       "Пожалуйста, проверьте свой запрос."
-            )
+            raise error.AuthForbiddenException(detail=resp_exc.TOKEN_INVALID_FORBIDDEN)
         except MissingRequiredClaimError:
             raise error.AuthForbiddenException(
-                detail="В вашем токене нет обязательного поля. "
-                       "Пожалуйста, свяжитесь с администратором."
+                detail=resp_exc.TOKEN_REQUIRED_FIELD_FORBIDDEN,
             )
 
         if datetime.fromtimestamp(payload.get("exp")) < datetime.now():
@@ -54,7 +48,7 @@ class CurrentUserDep:
         if data_user is None:
             raise error.AuthUnauthorizedException()
         if data_user.deleted:
-            raise error.AuthBadRequestException(detail="Удалённый пользователь")
+            raise error.AuthBadRequestException(detail=resp_exc.USER_BAD_REQUEST)
 
         if roles:
             is_valid_role = any([req_role == data_user.role_name for req_role in roles])
