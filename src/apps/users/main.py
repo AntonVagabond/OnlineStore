@@ -34,6 +34,10 @@ app = FastAPI(
     swagger_ui_init_oauth={
         "clientId": settings.client_id,
         "clientSecret": settings.client_secret,
+    },
+    swagger_ui_parameters={
+        "displayRequestDuration": True,
+        "persistAuthorization": True
     }
 )
 

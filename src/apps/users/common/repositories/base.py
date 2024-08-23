@@ -49,6 +49,7 @@ class BaseRepository(IRepository):
 
     async def get_all(self, filters: TFilter) -> ScalarResult:
         """Базовый метод репозитория для получения списка данных."""
+        raise NotImplementedError()
 
     async def delete(self, data_id: TID) -> Optional[TID]:
         """Базовый метод репозитория для обновления статуса данных на "удалено"."""

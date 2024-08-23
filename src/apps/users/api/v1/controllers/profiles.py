@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from starlette.responses import Response
 
-from api.dependencies import UserDep, ProfileUOWDep, ProfileServiceDep
+from api.dependencies import UserSchemaDep, ProfileUOWDep, ProfileServiceDep
 from modules.responses import profiles as responses
 from modules.schemas.profiles import RegisterUserSchema, UpdateUserSchema
 
@@ -29,7 +29,7 @@ async def create_user(
     responses=responses.GET_RESPONSES,
 )
 async def get_user(
-        current_user: UserDep, uow: ProfileUOWDep, service: ProfileServiceDep,
+        current_user: UserSchemaDep, uow: ProfileUOWDep, service: ProfileServiceDep,
 ) -> Response:
     """Контроллер получения информации профиля пользователя."""
     profile_data = await service.get(uow, current_user.id)
@@ -42,7 +42,7 @@ async def get_user(
     responses=responses.EDIT_RESPONSES,
 )
 async def update_user(
-        current_user: UserDep,
+        current_user: UserSchemaDep,
         uow: ProfileUOWDep,
         service: ProfileServiceDep,
         model: UpdateUserSchema,
