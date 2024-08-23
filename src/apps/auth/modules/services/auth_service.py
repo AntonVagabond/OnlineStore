@@ -1,12 +1,12 @@
-from typing import Union, Optional
+from typing import Optional
 
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from api.current_user_deps import CurrentUserDep
-from modules.schemas.auth_schema import UserInfoSchema, AuthExceptionSchema
-from modules.unit_of_works.auth_uow import AuthUOW
 from core.security import Security
+from modules.schemas.auth_schema import UserInfoSchema
+from modules.unit_of_works.auth_uow import AuthUOW
 
 
 class AuthUserService:
@@ -57,7 +57,7 @@ class AuthUserService:
     @staticmethod
     async def get_data_user(
             token: str, roles: Optional[tuple[str, ...]]
-    ) -> Union[UserInfoSchema, AuthExceptionSchema]:
+    ) -> UserInfoSchema:
         """Получить данные текущего пользователя."""
         data_user = await CurrentUserDep.get_data_user(roles, token)
         return data_user

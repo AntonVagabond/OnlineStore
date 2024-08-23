@@ -1,21 +1,16 @@
-from typing import Union
-
 from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response
 
 from common.schemas.responses import mixins as schema_response
-from core.config import get_settings
 from core.constants import REFRESH
 from core.security import Security
 from modules.schemas.auth_schema import (
-    TokenInfoSchema, LogoutResponseSchema, UserInfoSchema, AuthExceptionSchema,
+    TokenInfoSchema, LogoutResponseSchema, UserInfoSchema,
 )
 from ...dependencies import (
     OAuth2PasswordDep, AuthUOWDep, RefreshDep, UserDep, AuthUserServiceDep,
 )
-
-settings = get_settings()
 
 auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 
@@ -97,7 +92,7 @@ async def logout_user(
 @auth.get(path="/authenticate/", summary="Аутентификация пользователя.")
 async def auth_user(
         request: Request, service: AuthUserServiceDep,
-) -> Union[UserInfoSchema, AuthExceptionSchema]:
+) -> UserInfoSchema:
     """Контроллер для аутентификации пользователя."""
     headers = request.headers
     access_token = headers.get("access_token")

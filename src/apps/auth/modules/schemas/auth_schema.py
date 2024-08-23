@@ -18,7 +18,6 @@ class LogoutResponseSchema(BaseModel):
 
 class EmptyUserSchema(BaseModel):
     """Пустой пользователь."""
-    pass
 
 
 class UserInfoSchema(BaseModel):
@@ -27,10 +26,3 @@ class UserInfoSchema(BaseModel):
     email: str
     deleted: bool
     password_hash: bytes
-
-
-class AuthExceptionSchema(BaseModel):
-    """Схема ошибки."""
-    status_code: int
-    detail: str
-    headers: Optional[dict[str, str]] = Field(default=None)
