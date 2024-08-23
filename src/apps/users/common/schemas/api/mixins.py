@@ -19,7 +19,7 @@ class PersonBaseSchema(BaseModel):
     """Базовая схема человека."""
     id: UUID
     email: EmailStr
-    photo: Optional[bytes] = Field(default=None)
+    phone_number: Optional[str] = Field(default=None)
     full_name: Optional[str] = Field(default=None)
 
 
