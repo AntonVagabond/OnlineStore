@@ -55,7 +55,7 @@ class CurrentUserDep:
             if not is_valid_role:
                 raise error.AuthForbiddenException(
                     detail=f"Для этого действия требуется одна из "
-                           f"ролей: '{', '.join(req_role for req_role in roles)}'",
+                           f"ролей: '{', '.join(req_role for req_role in roles)}'.",
                 )
         return data_user
 
