@@ -3,6 +3,7 @@ from typing import Union, TypeAlias, Optional
 from uuid import UUID
 
 import sqlalchemy as sa
+from sqlalchemy.orm import joinedload
 
 from common.repositories.mixins import PaginatedPageRepository
 from models import Role
@@ -20,7 +21,7 @@ class AdminPanelRepository(PaginatedPageRepository):
         """Получить запрос для метода списка."""
         stmt = (
             sa.select(self.model)
-            .options(sa.joinedload(self.model.role).load_only(Role.name))
+            .options(joinedload(self.model.role).load_only(Role.name))
             .where(self.model.deleted.__eq__(False))
         )
         return stmt
