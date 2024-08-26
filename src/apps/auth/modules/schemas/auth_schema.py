@@ -23,4 +23,7 @@ class EmptyUserSchema(BaseModel):
 class UserInfoSchema(BaseModel):
     """Схема информации о пользователе."""
     id: str
+    email: str
+    deleted: bool
+    password_hash: bytes
     role_name: str
