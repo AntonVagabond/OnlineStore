@@ -18,11 +18,7 @@ class AuthRepository(BaseRepository):
         result = await self.session.execute(
             sa.select(self.model)
             .options(joinedload(self.model.role).load_only(Role.name))
-            .filter(
-                self.model.email == email,
-                self.model.deleted.__eq__(False),
-                self.model.logged_out.__eq__(False),
-            )
+            .where(self.model.email == email)
         )
         user = result.scalar_one_or_none()
         return None if not user else UserInfoSchema(
