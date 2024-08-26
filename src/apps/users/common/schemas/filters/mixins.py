@@ -4,11 +4,9 @@ from typing import TypeVar, Optional
 from pydantic import Field
 
 from common.schemas.base import BaseModel
-from core.config import get_settings
+from core.config import get_settings, settings
 
 TSchema = TypeVar("TSchema", bound=BaseModel)
-
-settings = get_settings()
 
 
 class BaseFilterSchema(BaseModel):

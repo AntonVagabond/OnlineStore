@@ -5,14 +5,13 @@ from alembic import context
 from sqlalchemy.engine import Connection
 
 from common.models.base import Base
-from core.config import get_settings
+from core.config import settings
 from core.database import engine_async
 
 # Обязательная инициализация всех моделей в этом файле.
 from models.roles import Role  # noqa
 from models.users import User  # noqa
 
-settings = get_settings()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
