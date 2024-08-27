@@ -9,7 +9,7 @@ from httpx import AsyncClient
 
 from common.schemas.api.mixins import CurrentUserSchema
 from core.config import settings
-from core.http_client import HttpClient
+from core.http_connector import ExternalServiceConnector
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl=str(settings.auth.token_url), scheme_name="JWT",
@@ -22,7 +22,7 @@ def get_current_user(
     """Возвращает авторизованного пользователя."""
 
     async def current_user(
-            client: AsyncClient = Depends(HttpClient.get_client),
+            client: AsyncClient = Depends(ExternalServiceConnector.get_client),
             token: str = Depends(oauth2_scheme),
     ) -> CurrentUserSchema:
         """Поиск текущего пользователя."""

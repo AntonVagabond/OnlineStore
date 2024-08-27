@@ -1,11 +1,11 @@
 from typing import Optional
 
-from httpx import AsyncClient, AsyncHTTPTransport, Limits
+from httpx import AsyncClient, AsyncHTTPTransport, Limits, Timeout
 
 from core.config import settings
 
 
-class HttpClient:
+class ExternalServiceConnector:
     """Класс инициализации/закрытия и получения клиента."""
     client: Optional[AsyncClient] = None
 
@@ -19,7 +19,9 @@ class HttpClient:
                 keepalive_expiry=settings.client.keepalive_expiry,
             )
         )
-        cls.client = AsyncClient(transport=transport, timeout=settings.client.timeout)
+        cls.client = AsyncClient(
+            transport=transport, timeout=Timeout(settings.client.timeout),
+        )
 
     @classmethod
     async def close_client(cls) -> None:
