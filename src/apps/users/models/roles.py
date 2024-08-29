@@ -9,14 +9,14 @@ from common.models.mixins import GenericMixin
 
 class Role(Base, GenericMixin[sa.UUID]):
     """Модель ролей пользователей."""
-    __tablename__ = "RoleDB"
+    __tablename__ = "Roles"
 
     name: Mapped[Optional[str]] = mapped_column(
-        __name_pos="Name",
+        __name_pos="name",
         __type_pos=sa.String(256),
     )
     role: Mapped[int] = mapped_column(
-        __name_pos="Role",
+        __name_pos="role",
         __type_pos=sa.Integer,
         nullable=False,
     )

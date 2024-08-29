@@ -9,47 +9,47 @@ from common.models.mixins import DateModelMixin, GenericMixin
 
 class User(DateModelMixin, GenericMixin[sa.UUID]):
     """Модель пользователя."""
-    __tablename__ = "UserDB"
+    __tablename__ = "Users"
 
     username: Mapped[Optional[str]] = mapped_column(
-        __name_pos="UserName",
+        __name_pos="user_name",
         __type_pos=sa.String(100),
     )
     last_name: Mapped[Optional[str]] = mapped_column(
-        __name_pos="LastName",
+        __name_pos="last_name",
         __type_pos=sa.String(100),
     )
     first_name: Mapped[Optional[str]] = mapped_column(
-        __name_pos="FirstName",
+        __name_pos="first_name",
         __type_pos=sa.String(100),
     )
     second_name: Mapped[Optional[str]] = mapped_column(
-        __name_pos="SecondName",
+        __name_pos="second_name",
         __type_pos=sa.String(100),
     )
     full_name: Mapped[Optional[str]] = mapped_column(
-        __name_pos="FullName",
+        __name_pos="full_name",
         __type_pos=sa.String(200),
     )
     email: Mapped[Optional[str]] = mapped_column(
-        __name_pos="Email",
+        __name_pos="email",
         __type_pos=sa.String(256),
         unique=True,
     )
     password_hash: Mapped[Optional[bytes]] = mapped_column(
-        __name_pos="PasswordHash",
+        __name_pos="password_hash",
         __type_pos=sa.LargeBinary,
     )
     phone_number: Mapped[Optional[str]] = mapped_column(
-        __name_pos="PhoneNumber",
+        __name_pos="phone_number",
         __type_pos=sa.String(18),
     )
     photo: Mapped[Optional[str]] = mapped_column(
-        __name_pos="Photo",
+        __name_pos="photo",
         __type_pos=sa.String(100),
     )
     birthday: Mapped[Optional[datetime]] = mapped_column(
-        __name_pos="Birthday",
+        __name_pos="birthday",
         __type_pos=sa.DateTime,
     )
     role: Mapped["Role"] = relationship(  # type: ignore
@@ -58,26 +58,26 @@ class User(DateModelMixin, GenericMixin[sa.UUID]):
         default=None,
     )
     logged_out: Mapped[bool] = mapped_column(
-        __name_pos="LoggedOut",
+        __name_pos="logged_out",
         __type_pos=sa.Boolean,
         default=False,
         nullable=False
     )
     deleted: Mapped[bool] = mapped_column(
-        __name_pos="Deleted",
+        __name_pos="deleted",
         __type_pos=sa.Boolean,
         default=False,
         nullable=False
     )
     is_man: Mapped[bool] = mapped_column(
-        __name_pos="IsMan",
+        __name_pos="is_man",
         __type_pos=sa.Boolean,
         default=False,
         nullable=False,
     )
     role_id: Mapped[Optional[sa.UUID]] = mapped_column(
-        "RoleId",
+        "role_id",
         sa.UUID,
-        sa.ForeignKey(column="RoleDB.Id", ondelete="RESTRICT"),
+        sa.ForeignKey(column="Roles.id", ondelete="RESTRICT"),
         default=None,
     )

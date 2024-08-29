@@ -47,7 +47,7 @@ class GenericMixin(MappedAsDataclass, Generic[TInt]):
         assert cls.__type_t in type_mapping, "Тип не поддерживается."
         if cls.__type_t is sa.UUID:
             return mapped_column(
-                __name_pos="Id",
+                __name_pos="id",
                 __type_pos=type_mapping[cls.__type_t],
                 primary_key=True,
                 unique=True,
@@ -56,7 +56,7 @@ class GenericMixin(MappedAsDataclass, Generic[TInt]):
                 default=uuid.uuid4
             )
         return mapped_column(
-            __name_pos="Id",
+            __name_pos="id",
             __type_pos=type_mapping[cls.__type_t],
             primary_key=True,
             unique=True,
@@ -67,7 +67,7 @@ class GenericMixin(MappedAsDataclass, Generic[TInt]):
 
     if TYPE_CHECKING:
         id: Mapped[TInt] = mapped_column(
-            __name_pos="Id",
+            __name_pos="id",
             __type_pos=Integer,
             primary_key=True,
             unique=True,
@@ -85,12 +85,12 @@ class DateModelMixin(Base):
     """Общая модель для создания и обновления."""
     __abstract__ = True
     date_add: Mapped[datetime] = mapped_column(
-        __name_pos="DateAdd",
+        __name_pos="date_add",
         __type_pos=sa.DateTime,
         nullable=False,
     )
     date_update: Mapped[datetime] = mapped_column(
-        __name_pos="DateUpdate",
+        __name_pos="date_update",
         __type_pos=sa.DateTime,
         nullable=False,
     )
