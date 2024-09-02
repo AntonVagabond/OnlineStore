@@ -89,3 +89,6 @@ venv/
 
 # VS Code
 .vscode/
+
+/.pytest_cache
+/tests
