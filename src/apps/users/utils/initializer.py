@@ -1,16 +1,13 @@
 from abc import ABC
 from datetime import datetime
-from typing import TypeVar
+from uuid import UUID
 
 from sqlalchemy import select, func
 
-from common.models.base import Base
 from core.database import async_session_maker
 from core.security import hash_password
-from models.users import User
 from models.roles import Role
-
-TModel = TypeVar("TModel", bound=Base)
+from models.users import User
 
 
 class Initializer(ABC):
@@ -46,6 +43,7 @@ class RoleInitializer(Initializer):
             "name": 'customer',
             "users": [
                 User(
+                    id=UUID("beb247ae-58cc-4e75-b6fc-61e57e10a606"),
                     username="TestCustomer@gmail.com",
                     last_name="Динаров",
                     first_name="Алмаз",
@@ -60,8 +58,8 @@ class RoleInitializer(Initializer):
                     deleted=False,
                     is_man=True,
                     role_id=None,
-                    date_add=datetime.now(),
-                    date_update=datetime.now(),
+                    created_at=datetime.now(),
+                    updated_at=datetime.now(),
                 )
             ],
             "role": 0,
@@ -69,6 +67,7 @@ class RoleInitializer(Initializer):
         {
             "name": 'courier',
             "users": [User(
+                id=UUID("922f323e-abda-4192-b9f8-c9091fd2686d"),
                 username="TestCourier@gmail.com",
                 last_name="Леонов",
                 first_name="Степан",
@@ -76,21 +75,22 @@ class RoleInitializer(Initializer):
                 full_name="Леонов Степан Владимирович",
                 email="TestCourier@gmail.com",
                 password_hash=hash_password("TestPassword_2222"),
-                phone_number="+7(924)596-30-99",
+                phone_number="+7(924)596-30-92",
                 photo=None,
                 birthday=datetime.strptime("1986-2-25", "%Y-%m-%d"),
                 logged_out=False,
                 deleted=False,
                 is_man=True,
                 role_id=None,
-                date_add=datetime.now(),
-                date_update=datetime.now(),
+                created_at=datetime.now(),
+                updated_at=datetime.now(),
             )],
             "role": 10,
         },
         {
             "name": 'provider',
             "users": [User(
+                id=UUID("1c44d798-a6a4-4baa-abc6-b243599a1472"),
                 username="TestProvider@gmail.com",
                 last_name="Матвеева",
                 first_name="Диляра",
@@ -98,21 +98,22 @@ class RoleInitializer(Initializer):
                 full_name="Матвеева Диляра Анатольевна",
                 email="TestProvider@gmail.com",
                 password_hash=hash_password("TestPassword_3333"),
-                phone_number="+7(922)523-11-22",
+                phone_number="+7(922)523-11-23",
                 photo=None,
                 birthday=datetime.strptime("1999-12-19", "%Y-%m-%d"),
                 logged_out=False,
                 deleted=False,
                 is_man=True,
                 role_id=None,
-                date_add=datetime.now(),
-                date_update=datetime.now(),
+                created_at=datetime.now(),
+                updated_at=datetime.now(),
             )],
             "role": 20,
         },
         {
             "name": 'manager',
             "users": [User(
+                id=UUID("348bf57f-06a1-44f4-b025-c6c4fad5be09"),
                 username="TestManager@gmail.com",
                 last_name="Горбачев",
                 first_name="Динар",
@@ -127,14 +128,15 @@ class RoleInitializer(Initializer):
                 deleted=False,
                 is_man=True,
                 role_id=None,
-                date_add=datetime.now(),
-                date_update=datetime.now(),
+                created_at=datetime.now(),
+                updated_at=datetime.now(),
             )],
             "role": 50,
         },
         {
             "name": 'admin',
             "users": [User(
+                id=UUID("8f3fd250-c810-4395-83bb-782ef8a1b79e"),
                 username="TestAdmin@gmail.com",
                 last_name="Долотов",
                 first_name="Давид",
@@ -142,15 +144,15 @@ class RoleInitializer(Initializer):
                 full_name="Долотов Давид Альмирович",
                 email="TestAdmin@gmail.com",
                 password_hash=hash_password("TestPassword_5555"),
-                phone_number="+7(954)511-99-22",
+                phone_number="+7(954)511-99-11",
                 photo=None,
                 birthday=datetime.strptime("1974-06-03", "%Y-%m-%d"),
                 logged_out=False,
                 deleted=False,
                 is_man=True,
                 role_id=None,
-                date_add=datetime.now(),
-                date_update=datetime.now(),
+                created_at=datetime.now(),
+                updated_at=datetime.now(),
             )],
             "role": 100,
         },
