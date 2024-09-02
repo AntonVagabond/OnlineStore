@@ -1,12 +1,10 @@
-import asyncio
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy.engine import Connection
 
 from common.models.base import Base
-from core.config import settings
-from core.database import engine_async
+from core.database import engine_sync
 
 # Обязательная инициализация всех моделей в этом файле.
 from models.roles import Role  # noqa
@@ -19,19 +17,10 @@ config = context.config
 
 section = config.config_ini_section
 
-# значение, заданное здесь, будет переопределять значение, заданное в alembic.ini
-# значение передается в `ConfigParser.set`, который поддерживает интерполяцию
-# переменных с помощью pyformat (например, `%(some_value)s`).
-config.set_section_option(section, "PG_HOST", settings.db.pg_host)
-config.set_section_option(section, "PG_PORT", str(settings.db.pg_port))
-config.set_section_option(section, "PG_USER", settings.db.pg_user)
-config.set_section_option(section, "PG_DATABASE", settings.db.pg_database)
-config.set_section_option(section, "PG_PASSWORD", settings.db.pg_password)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -82,17 +71,33 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-async def run_migrations_online() -> None:
+def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
 
     """
-    connectable = engine_async
+    connectable = context.config.attributes.get("connection", None)  # для pytest-alembic
 
-    async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
+    if connectable is None:  # без pytest-alembic
+        connectable = engine_sync
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_type=True,
+            compare_server_default=True,
+            include_schemas=True,
+            dialect_name="postgresql",
+        )
+
+        with context.begin_transaction():
+            context.run_migrations()
 
 
-asyncio.run(run_migrations_online())
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
