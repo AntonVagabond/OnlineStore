@@ -4,7 +4,7 @@ from typing import Union, TypeAlias
 from uuid import UUID
 
 from common.enums.role import RoleEnum
-from common.exceptions import mixins as error
+from common.exceptions import mixins as exception
 from common.schemas.api.mixins import RegisterSchema
 from common.services.base import BaseService
 from core.security import hash_password
@@ -65,7 +65,7 @@ class ProfileService(BaseService):
         async with uow:
             current_user = await uow.repo.get(user_id)
             if current_user is None:
-                raise error.UserNotFoundException()
+                raise exception.UserNotFoundException()
             return cls.__convert_result(current_user)
 
     # endregion --------------------------------------------------------------------------

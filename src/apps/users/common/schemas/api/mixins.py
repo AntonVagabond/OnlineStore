@@ -48,10 +48,10 @@ class RegisterSchema(BaseModel):
     second_name: str
     is_man: bool = Field(default=True)
     birthday: Optional[datetime] = Field(default=None)
-    date_add: datetime = Field(
+    created_at: datetime = Field(
         default=datetime.now(), json_schema_extra={"hidden": True},
     )
-    date_update: datetime = Field(
+    updated_at: datetime = Field(
         default=datetime.now(), json_schema_extra={"hidden": True},
     )
 

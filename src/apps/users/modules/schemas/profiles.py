@@ -38,7 +38,7 @@ class UpdateUserSchema(BaseModel):
     second_name: str
     birthday: Optional[datetime] = Field(default=None)
     phone_number: str
-    date_update: datetime = Field(
+    updated_at: datetime = Field(
         default=datetime.now(), json_schema_extra={"hidden": True},
     )
 

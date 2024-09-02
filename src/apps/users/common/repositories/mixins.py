@@ -21,15 +21,15 @@ class PaginatedPageRepository(BaseRepository):
     ) -> Select:
         """Проверка на существование даты начала и окончания."""
         if filters.date_begin:
-            stmt = stmt.filter(self.model.date_update >= filters.date_begin.date())
+            stmt = stmt.filter(self.model.updated_at >= filters.date_begin.date())
         if filters.date_end:
-            stmt = stmt.filter(self.model.date_update <= filters.date_end.date())
+            stmt = stmt.filter(self.model.updated_at <= filters.date_end.date())
         return stmt
 
     async def _get_count_records(self, stmt: Select) -> int:
         """Получить количество записей."""
         count_records = (await self.session.execute(
-            sa.select(sa.func.count(stmt.c.Id))
+            sa.select(sa.func.count(stmt.c.id))
         )).scalar_one()
         return count_records
 
@@ -40,7 +40,7 @@ class PaginatedPageRepository(BaseRepository):
         if count_records != 0:
             records = (await self.session.execute(
                 stmt
-                .order_by(self.model.date_update.desc())
+                .order_by(self.model.updated_at.desc())
                 .offset(
                     (
                         filters.page_number - 1

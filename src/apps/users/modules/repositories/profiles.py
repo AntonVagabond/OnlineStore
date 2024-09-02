@@ -6,7 +6,7 @@ from uuid import UUID
 import sqlalchemy as sa
 
 from common.enums.role import RoleEnum
-from common.exceptions import mixins as error
+from common.exceptions import mixins as exception
 from common.repositories.mixins import PaginatedPageRepository
 from models import Role
 from models.users import User
@@ -38,10 +38,10 @@ class ProfileRepository(PaginatedPageRepository):
     async def add(self, data: RegisterData) -> str:
         """Добавить новую запись профиля в БД."""
         if await self.__is_exist_email(data["email"]):
-            raise error.EmailAlreadyExistsException()
+            raise exception.EmailAlreadyExistsException()
 
         if await self.__is_exist_phone_number(data["phone_number"]):
-            raise error.EmailAlreadyExistsException()
+            raise exception.PhoneNumberAlreadyExistsException()
 
         role_id = await self.__get_role_id(data.pop("role"))
         data.update(role_id=role_id)
