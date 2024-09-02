@@ -1,10 +1,10 @@
 import os
 from functools import lru_cache
-from typing import Union, Optional, Any
+from typing import Optional, Self
 
-from pydantic import PostgresDsn, HttpUrl, field_validator, Field
-from pydantic_core.core_schema import FieldValidationInfo
+from pydantic import PostgresDsn, HttpUrl, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy import URL
 
 
 class CommonSettings(BaseSettings):
@@ -20,28 +20,59 @@ class DatabaseSettings(CommonSettings):
     """Настройки окружения базы данных."""
     pg_host: str = Field(alias="PG_HOST")
     pg_user: str = Field(alias="PG_USER")
+
     pg_password: str = Field(alias="PG_PASSWORD")
     pg_database: str = Field(alias="PG_DATABASE")
     pg_port: int = Field(alias="PG_PORT")
-    async_database_uri: Union[PostgresDsn, str] = Field(
-        default="", alias="ASYNC_DATABASE_URI",
-    )
+    async_database_url: Optional[PostgresDsn] = Field(default=None)
+    sync_database_url: Optional[PostgresDsn] = Field(default=None)
 
-    @field_validator("async_database_uri")
-    def assemble_db_async_connection(
-            cls, value: Optional[str], info: FieldValidationInfo,  # noqa
-    ) -> Any:
-        """Собственная схема для асинхронного подключения к БД."""
-        if isinstance(value, str) and value == "":
-            return PostgresDsn.build(
-                scheme="postgresql+asyncpg",
-                username=info.data["pg_user"],
-                password=info.data["pg_password"],
-                host=info.data["pg_host"],
-                port=info.data["pg_port"],
-                path=info.data["pg_database"],
-            )
-        return value
+    @staticmethod
+    def __build_db_dsn(
+            username: str,
+            password: str,
+            host: str,
+            port: int,
+            database: str,
+            async_dsn: bool = False,
+    ) -> URL:
+        """Фабрика для PostgreSQL DSN."""
+        driver_name = "postgresql"
+        if async_dsn:
+            driver_name += "+asyncpg"
+        return URL.create(
+            drivername=driver_name,
+            username=username,
+            password=password,
+            host=host,
+            port=port,
+            database=database,
+        )
+
+    @model_validator(mode="after")
+    def validate_async_database_url(self) -> Self:
+        """Построить асинхронный PostgreSQL DSN."""
+        self.async_database_url = self.__build_db_dsn(
+            username=self.pg_user,
+            password=self.pg_password,
+            host=self.pg_host,
+            port=self.pg_port,
+            database=self.pg_database,
+            async_dsn=True,
+        )
+        return self
+
+    @model_validator(mode="after")
+    def validate_sync_database_url(self) -> Self:
+        """Построить синхронный PostgreSQL DSN."""
+        self.sync_database_url = self.__build_db_dsn(
+            username=self.pg_user,
+            password=self.pg_password,
+            host=self.pg_host,
+            port=self.pg_port,
+            database=self.pg_database,
+        )
+        return self
 
 
 class AuthSettings(CommonSettings):
