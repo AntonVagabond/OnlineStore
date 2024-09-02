@@ -32,7 +32,7 @@ class BaseUnitOfWork(IUnitOfWork):
         """Базовый метод выхода из контекстного менеджера"""
 
         # Регистрируем и вызываем все кастомные исключения.
-        if not isinstance(exc_type, (HTTPException, NoneType)):
+        if exc_type is not None and issubclass(exc_type, HTTPException):
             await self.rollback()
             logging.error(
                 {
@@ -50,16 +50,21 @@ class BaseUnitOfWork(IUnitOfWork):
                     )
                 }
             )
-            await self._session.close()
+            await self.close()
             raise exc_type()
 
         #  Регистрируем и вызываем не отслеживаемые исключения.
         if exc_type:
             await self.rollback()
+            detail_massage = (
+                getattr(exc_val, "detail")
+                if getattr(exc_val, "detail", None) else
+                exc_val.args[0]
+            )
             logging.error(
                 {
                     "exception": exc_val.__class__.__name__,
-                    "detail": getattr(exc_val, "detail"),
+                    "detail": detail_massage,
                     "class": (
                         exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
                         if exc_tb.tb_next.tb_frame.f_locals.get("self") else
@@ -72,14 +77,17 @@ class BaseUnitOfWork(IUnitOfWork):
                     )
                 }
             )
-            await self._session.close()
-            raise HTTPException(status_code=500, detail=getattr(exc_val, "detail"))
-        await self._session.close()
+            await self.close()
+            raise HTTPException(status_code=500, detail=detail_massage)
 
     async def commit(self) -> None:
         """Базовый метод фиксирования транзакции."""
         await self._session.commit()
 
     async def rollback(self) -> None:
-        """Базовый метод завершения транзакции."""
+        """Базовый метод отмены транзакции."""
         await self._session.rollback()
+
+    async def close(self) -> None:
+        """Базовый метод закрытия транзакции."""
+        await self._session.close()
