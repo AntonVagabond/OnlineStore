@@ -1,5 +1,5 @@
 import json
-from typing import Optional, Callable, Coroutine, Any, Annotated
+from typing import Optional, Callable, Coroutine, Any
 from uuid import UUID
 
 import httpx
