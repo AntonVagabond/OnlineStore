@@ -193,8 +193,6 @@ async def app_fixture(
         async_session_factory: async_sessionmaker[AsyncSession],
 ) -> AsyncGenerator[FastAPI, None]:
     """Создание экземпляра FastAPI в тестовом окружении."""
-    app.dependency_overrides[sync_session_maker] = sync_session_factory
-    app.dependency_overrides[async_session_maker] = async_session_factory
     app.dependency_overrides[BaseUnitOfWork] = TestUnitOfWork
     yield app
     app.dependency_overrides = {}
