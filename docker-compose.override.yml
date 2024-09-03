@@ -26,6 +26,7 @@ services:
       CLIENT_ID: ${CLIENT_ID_AUTH}
       CLIENT_SECRET: ${CLIENT_SECRET_AUTH}
       OPENAPI_URL: ${OPENAPI_URL_AUTH}
+      TZ: Europe/Moscow
     volumes:
       - online_logs:/usr/src/app/logs
     ports:
@@ -53,6 +54,7 @@ services:
       CLIENT_ID: ${CLIENT_ID_USER}
       CLIENT_SECRET: ${CLIENT_SECRET_USER}
       OPENAPI_URL: ${OPENAPI_URL_USER}
+      TZ: Europe/Moscow
     volumes:
       - online_logs:/usr/src/app/logs
     ports:
