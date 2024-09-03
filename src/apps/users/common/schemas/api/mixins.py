@@ -3,6 +3,7 @@ from typing import TypeVar, Optional
 from uuid import UUID
 
 from pydantic import Field, EmailStr, field_validator, ValidationError
+from pydantic.json_schema import SkipJsonSchema as HiddenField
 
 from common.enums.role import RoleEnum
 from common.schemas.base import BaseModel
@@ -39,7 +40,7 @@ class StandardViewSchemaForTable(PersonSchema):
 
 class RegisterSchema(BaseModel):
     """Общая схема для регистрации."""
-    role: RoleEnum = Field(default=RoleEnum.CUSTOMER, json_schema_extra={"hidden": True})
+    role: HiddenField[RoleEnum] = Field(default=RoleEnum.CUSTOMER)
     email: EmailStr
     phone_number: str
     password_hash: str
@@ -48,12 +49,8 @@ class RegisterSchema(BaseModel):
     second_name: str
     is_man: bool = Field(default=True)
     birthday: Optional[datetime] = Field(default=None)
-    created_at: datetime = Field(
-        default=datetime.now(), json_schema_extra={"hidden": True},
-    )
-    updated_at: datetime = Field(
-        default=datetime.now(), json_schema_extra={"hidden": True},
-    )
+    created_at: HiddenField[datetime] = Field(default=datetime.now())
+    updated_at: HiddenField[datetime] = Field(default=datetime.now())
 
     @field_validator("last_name")
     def validate_last_name(cls, last_name: str) -> str:  # noqa
