@@ -28,8 +28,12 @@ class PaginatedPageRepository(BaseRepository):
 
     async def _get_count_records(self, stmt: Select) -> int:
         """Получить количество записей."""
+        # Создаем под запрос из переданного выражения `stmt`.
+        subquery = stmt.subquery()
+
+        # Используем `func.count` для подсчета записей в подзапросе.
         count_records = (await self.session.execute(
-            sa.select(sa.func.count(stmt.c.id))
+            sa.select(sa.func.count().label('count')).select_from(subquery)
         )).scalar_one()
         return count_records
 
