@@ -28,6 +28,14 @@ build-backend = "poetry.core.masonry.api"
 # ----------------------- PYTEST -------------------------
 [tool.pytest.ini_options]
 pythonpath = ["."]
-asyncio_mode="auto"
-asyncio_default_fixture_loop_scope = "function"
-addopts='-p no:warnings'
+asyncio_default_fixture_loop_scope = "session"
+python_files = ["test*.py", "*test.py"]
+python_functions = ["*_test", "test_*"]
+norecursedirs = ["venv", ".venv", ".env", "migrations"]
+asyncio_mode = "auto"
+addopts = '-p no:warnings'
+testpaths=[
+    "tests/unit/test_admin_panels.py",
+    "tests/unit/test_profiles.py",
+    "tests/migrations/test_migrations_base.py",  # тестирования миграций.
+]
