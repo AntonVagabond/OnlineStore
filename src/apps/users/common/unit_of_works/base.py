@@ -32,7 +32,7 @@ class BaseUnitOfWork(IUnitOfWork):
         """Базовый метод выхода из контекстного менеджера"""
 
         # Регистрируем и вызываем все кастомные исключения.
-        if exc_type is not None and issubclass(exc_type, HTTPException):
+        if exc_type is not None and exc_type.__base__ == HTTPException:
             await self.rollback()
             logging.error(
                 {

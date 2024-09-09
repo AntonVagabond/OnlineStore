@@ -1,4 +1,4 @@
-from common.const import response_exception as resp_exc
+from common.const import response_exceptions as resp_exc
 from common.enums.role import RoleEnum
 
 GET_USER_INFO_TEST_DATA = (

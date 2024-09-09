@@ -60,7 +60,7 @@ class BaseService(IService):
         async with uow:
             result = await uow.repo.edit(obj_dict)
             await uow.commit()
-            return result
+            return bool(result)
 
     @classmethod
     async def exist(cls, uow: TUnitOfWork, obj_id: TID) -> bool:

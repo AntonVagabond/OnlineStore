@@ -1,5 +1,4 @@
 from datetime import datetime
-from types import NoneType
 from typing import TypeVar, Optional, TypeAlias, Union
 from uuid import UUID
 
@@ -16,7 +15,7 @@ TModel = TypeVar("TModel", bound=Base)
 TSchema = TypeVar("TSchema", bound=BaseModel)
 TFilter = TypeVar("TFilter", bound=BaseFilterSchema)
 
-RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, RoleEnum, NoneType]]
+RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, RoleEnum, None]]
 EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 TID = TypeVar("TID", int, UUID)
 
@@ -68,7 +67,7 @@ class BaseRepository(IRepository):
         res = await self.session.execute(stmt)
         return bool(res.scalar_one_or_none())
 
-    async def edit(self, data: EditData) -> bool:
+    async def edit(self, data: EditData) -> Optional[UUID]:
         """Базовый метод репозитория для редактирования данных."""
         data_id: TID = data.pop("id")
         stmt = (update(self.model)
@@ -76,7 +75,7 @@ class BaseRepository(IRepository):
                 .values(**data)
                 .returning(self.model.id))
         res = await self.session.execute(stmt)
-        return bool(res.scalar_one_or_none())
+        return res.scalar_one_or_none()
 
     async def exist(self, obj_id: TID) -> bool:
         """Базовый метод репозитория для поиска данных."""

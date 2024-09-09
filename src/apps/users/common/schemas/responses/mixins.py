@@ -3,6 +3,7 @@ import uuid
 from pydantic import Field
 
 from common.schemas.base import BaseModel
+from common.const import response_exceptions as resp_exc
 
 
 class SuccessIdResponseSchema(BaseModel):
@@ -38,6 +39,11 @@ class ForbiddenAdminResponseSchema(BaseModel):
 class NotFoundResponseSchema(BaseModel):
     """Схема ответа при не найденном ресурсе."""
     detail: str = Field(default="Данные не найдены.")
+
+
+class UserNotFoundResponseSchema(BaseModel):
+    """Схема ответа при не найденном ресурсе."""
+    detail: str = Field(default=resp_exc.USER_NOT_FOUND)
 
 
 class ServerErrorResponseSchema(BaseModel):

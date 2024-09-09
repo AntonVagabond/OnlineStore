@@ -1,5 +1,5 @@
 import asyncio
-from typing import Generator, AsyncGenerator
+from typing import Generator, AsyncGenerator, Any
 
 import psycopg2
 import pytest
@@ -13,11 +13,13 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import close_all_sessions, Session, sessionmaker
 
-from common.unit_of_works.base import BaseUnitOfWork
 from core.config import settings
 from core.database import async_session_maker, sync_session_maker
 from main import app
-from tests.bases import TestUnitOfWork
+from modules.unit_of_works.admin_panels import AdminPanelUOW
+from modules.unit_of_works.profiles import ProfileUOW
+from tests.unit.fixtures.admin_panels import AdminTestUOW
+from tests.unit.fixtures.profiles import ProfileTestUOW
 from utils.initializer import RoleInitializer
 
 pytest_plugins = (
@@ -195,8 +197,18 @@ async def app_fixture(
         event_loop: asyncio.AbstractEventLoop,
 ) -> AsyncGenerator[FastAPI, None]:
     """Создание экземпляра FastAPI в тестовом окружении."""
-    app.dependency_overrides[sync_session_maker] = sync_session_factory
-    app.dependency_overrides[async_session_maker] = async_session_factory
-    app.dependency_overrides[BaseUnitOfWork] = TestUnitOfWork
+
+    def generator_dependency_override() -> Generator[tuple[Any, Any], None, None]:
+        """Объект для переопределения зависимостей."""
+        dict_dep_overrides = {
+            sync_session_maker: sync_session_factory,
+            async_session_maker: async_session_factory,
+            AdminPanelUOW: AdminTestUOW,
+            ProfileUOW: ProfileTestUOW,
+        }
+        yield from dict_dep_overrides.items()
+    for key, value in generator_dependency_override():
+        app.dependency_overrides[key] = value
+
     yield app
     app.dependency_overrides = {}
