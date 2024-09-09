@@ -1,26 +1,16 @@
-from typing import Optional
-
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from common.models.base import Base
-from common.models.mixins import GenericMixin
+from common.models.mixins import UUIDMixin
 
 
-class Role(Base, GenericMixin[sa.UUID]):
+class Role(Base, UUIDMixin):
     """Модель ролей пользователей."""
-    __tablename__ = "RoleDB"
-
-    name: Mapped[Optional[str]] = mapped_column(
-        __name_pos="Name",
-        __type_pos=sa.String(256),
+    name: Mapped[str] = mapped_column(
+        sa.String(length=256), nullable=False, unique=True, index=True,
     )
-    role: Mapped[int] = mapped_column(
-        __name_pos="Role",
-        __type_pos=sa.Integer,
-        nullable=False,
-    )
+    role: Mapped[int] = mapped_column(sa.Integer, nullable=False)
     users: Mapped[list["User"]] = relationship(  # type: ignore
-        back_populates="role",
-        lazy="raise",
+        back_populates="role", lazy="raise",
     )
