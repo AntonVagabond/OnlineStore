@@ -1,3 +1,6 @@
+from common.const.response_exceptions import USER_NOT_FOUND
+from common.enums.role import RoleEnum
+
 GET_LIST_USERS_ADMIN_TEST_DATA = (
     "test_data",
     (
@@ -99,6 +102,32 @@ GET_LIST_USERS_ADMIN_TEST_DATA = (
             "date_end": None,
             "role_uuid": None,
             "count": 1,
+        },
+    ),
+)
+
+UPDATE_USER_ADMIN_TEST_DATA = (
+    "test_data",
+    (
+        {
+            "id": "beb247ae-58cc-4e75-b6fc-61e57e10a606",
+            "last_name": "Динаров",
+            "first_name": "Алмаз",
+            "second_name": "Антонович",
+            "birthday": "1986-02-25",
+            "phone_number": "+7(925)555-35-35",
+            "role": RoleEnum.MANAGER,
+            "test_result": True
+        },
+        {
+            "id": "beb247ae-58cc-4e75-b6fc-61e57e12b666",
+            "last_name": "Динаров",
+            "first_name": "Алмаз",
+            "second_name": "Антонович",
+            "birthday": "1986-02-25",
+            "phone_number": "+7(925)555-35-35",
+            "role": RoleEnum.CUSTOMER,
+            "test_result": USER_NOT_FOUND
         },
     ),
 )
