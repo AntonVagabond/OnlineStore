@@ -3,7 +3,8 @@ from uuid import UUID
 
 from pydantic import Field
 
-from common.schemas.api.mixins import PersonBaseSchema
+from common.enums.role import RoleEnum
+from common.schemas.api.mixins import PersonBaseSchema, UpdateSchema
 from common.schemas.filters.mixins import DataRangeBaseFilterSchema
 
 
@@ -15,3 +16,9 @@ class UserByRoleFilterSchema(DataRangeBaseFilterSchema):
 class UserViewSchemaForAdminTable(PersonBaseSchema):
     """Схема представления пользователя для таблицы админа."""
     role: str
+
+
+class UpdateAdminSchema(UpdateSchema):
+    """Схема для редактирования пользователя Администратором."""
+    id: Optional[UUID] = Field(default=None)
+    role: RoleEnum

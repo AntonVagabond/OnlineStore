@@ -3,10 +3,11 @@ from typing import Union, TypeAlias
 from uuid import UUID
 
 from common.schemas.internal.mixins import PageViewSchema
+from common.exceptions import mixins as exception
 from common.services.mixins import PaginatedPageService
 from models import User
 from modules.schemas.admin_panels import (
-    UserByRoleFilterSchema, UserViewSchemaForAdminTable,
+    UserByRoleFilterSchema, UserViewSchemaForAdminTable, UpdateAdminSchema,
 )
 from modules.unit_of_works.admin_panels import AdminPanelUOW
 
@@ -27,8 +28,9 @@ class AdminPanelService(PaginatedPageService):
             role=record.role.name,
         )
 
+    @classmethod
     async def get_all(
-            self, uow: AdminPanelUOW, filters: UserByRoleFilterSchema
+            cls, uow: AdminPanelUOW, filters: UserByRoleFilterSchema
     ) -> PageViewSchema:
         """Получить информацию по фильтрам пользователей."""
         async with uow:
@@ -37,9 +39,32 @@ class AdminPanelService(PaginatedPageService):
                 list_records = []
             else:
                 list_records = [
-                    self.__convert_record(record) for record in self._gen_records(records)
+                    cls.__convert_record(record) for record in cls._gen_records(records)
                 ]
-            response = self._get_response(
+            response = cls._get_response(
                 count_records, UserViewSchemaForAdminTable, list_records, filters,
             )
             return response
+
+    @staticmethod
+    def __update_data(data: EditData) -> EditData:
+        """Обновить данные пользователя."""
+        last_name, first_name, second_name = (
+            data["last_name"], data["first_name"], data["second_name"]
+        )
+        data.update(full_name=f"{last_name} {first_name} {second_name}")
+        return data
+
+    @classmethod
+    async def edit(cls, uow: AdminPanelUOW, obj: UpdateAdminSchema) -> bool:
+        """Редактирование данных пользователя Администратором."""
+        obj_dict = obj.model_dump()
+        async with uow:
+            if not await uow.repo.exist(obj_dict.get("id")):
+                raise exception.UserNotFoundException()
+
+            obj_dict = cls.__update_data(obj_dict)
+
+            user_instance = await uow.repo.edit(obj_dict)
+            await uow.commit()
+            return bool(user_instance)
