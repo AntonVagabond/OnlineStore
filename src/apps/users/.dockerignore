@@ -92,3 +92,4 @@ venv/
 
 /.pytest_cache
 /tests
+.env.example
