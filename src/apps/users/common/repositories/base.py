@@ -4,12 +4,14 @@ from uuid import UUID
 
 from sqlalchemy import insert, select, update, delete, ScalarResult
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from common.enums.role import RoleEnum
 from common.interfaces.abstraction_repository import IRepository
 from common.models.base import Base
 from common.schemas.base import BaseModel
 from common.schemas.filters.mixins import BaseFilterSchema
+from models import Role
 
 TModel = TypeVar("TModel", bound=Base)
 TSchema = TypeVar("TSchema", bound=BaseModel)
@@ -37,6 +39,7 @@ class BaseRepository(IRepository):
         """Базовый метод репозитория для получения данных."""
         stmt = (
             select(self.model)
+            .options(joinedload(self.model.role).load_only(Role.name))
             .filter(
                 self.model.id == data_id,
                 self.model.deleted.__eq__(False),
