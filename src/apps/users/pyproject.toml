@@ -37,5 +37,5 @@ addopts = '-p no:warnings'
 testpaths=[
     "tests/unit/test_admin_panels.py",
     "tests/unit/test_profiles.py",
-    "tests/migrations/test_migrations_base.py",  # тестирования миграций.
+    "tests/migrations/test_migrations.py",  # тестирования миграций.
 ]
