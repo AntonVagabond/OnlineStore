@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from common.const.response_exceptions import USER_NOT_FOUND
 from common.enums.role import RoleEnum
 
@@ -103,6 +105,15 @@ GET_LIST_USERS_ADMIN_TEST_DATA = (
             "role_uuid": None,
             "count": 1,
         },
+    ),
+)
+
+GET_USER_TEST_DATA = (
+    "uuid, test_result",
+    (
+        # не существующий id-ник
+        (UUID("beb247ae-58cc-4e75-b6fc-61e57e10a707"), USER_NOT_FOUND),
+        (UUID("beb247ae-58cc-4e75-b6fc-61e57e10a606"), True),
     ),
 )
 
