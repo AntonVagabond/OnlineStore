@@ -8,6 +8,7 @@ from common.services.mixins import PaginatedPageService
 from models import User
 from modules.schemas.admin_panels import (
     UserByRoleFilterSchema, UserViewSchemaForAdminTable, UpdateAdminSchema,
+    UserResponseSchema,
 )
 from modules.unit_of_works.admin_panels import AdminPanelUOW
 
@@ -17,6 +18,7 @@ EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 class AdminPanelService(PaginatedPageService):
     """Сервис для работы админ панели."""
 
+    # region --------------------------------- LIST --------------------------------------
     @staticmethod
     def __convert_record(record: User) -> UserViewSchemaForAdminTable:
         """Конвертировать запись в pydantic-модель."""
@@ -45,7 +47,34 @@ class AdminPanelService(PaginatedPageService):
                 count_records, UserViewSchemaForAdminTable, list_records, filters,
             )
             return response
+    # endregion --------------------------------------------------------------------------
 
+    @staticmethod
+    def __convert_result(result: User) -> UserResponseSchema:
+        """Конвертировать результат в pydantic-модель."""
+        return UserResponseSchema(
+            id=result.id,
+            last_name=result.last_name,
+            first_name=result.first_name,
+            second_name=result.second_name,
+            birthday=result.birthday,
+            photo=result.photo,
+            role=result.role.name,
+            role_id=result.role_id,
+        )
+
+    async def get(
+            self, uow: AdminPanelUOW, obj_id: UUID,
+    ) -> UserResponseSchema:
+        """Получить данные пользователя для редактирования."""
+        async with uow:
+            result = await uow.repo.get(obj_id)
+            if result is None:
+                raise exception.UserNotFoundException()
+            response = self.__convert_result(result)
+            return response
+
+    # region ---------------------------------- EDIT -------------------------------------
     @staticmethod
     def __update_data(data: EditData) -> EditData:
         """Обновить данные пользователя."""
@@ -68,3 +97,4 @@ class AdminPanelService(PaginatedPageService):
             user_instance = await uow.repo.edit(obj_dict)
             await uow.commit()
             return bool(user_instance)
+    # endregion --------------------------------------------------------------------------
