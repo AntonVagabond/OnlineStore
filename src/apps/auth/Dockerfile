@@ -1,12 +1,11 @@
-# Базовый образ.
-FROM python:3.11-alpine
+# Этап 1: Сборка зависимостей и приложения
+FROM python:3.11-alpine AS builder
 
+# Установка переменных окружения
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     # python
-    # Предотвращает копирование файлов pyc в контейнер.
     PYTHONDONTWRITEBYTECODE=1 \
-    # Гарантирует, что выходные данные python регистрируются в терминале контейнера.
     PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     # pip
@@ -23,9 +22,9 @@ ENV LANG=C.UTF-8 \
 
 ENV PATH="$PATH:$POETRY_HOME/bin"
 
-
+# Обновление пакетов и установка необходимых инструментов
 RUN apk update && \
-    apk add --upgrade --no-cache expat curl && \
+    apk add --no-cache expat curl && \
     pip install --upgrade pip setuptools && \
     curl -sSL https://install.python-poetry.org | python3 - && \
     apk del curl expat && \
@@ -34,25 +33,32 @@ RUN apk update && \
 # Указываем рабочий каталог
 WORKDIR /usr/src/app
 
-# Установка зависимостей проекта с помощью Poetry.
+# Копируем зависимости проекта и устанавливаем их
 COPY pyproject.toml poetry.lock ./
-
-# Настройка poetry
-RUN poetry config virtualenvs.create false && \
-    poetry install \
+RUN poetry install \
     --only main \
     --no-root \
     --no-interaction \
     --no-ansi && \
 #    --without test && \
-    rm -rf ~/.cache/pypoetry && \
-    # Устанавливаем adduser
-    adduser -D user
+    rm -rf ~/.cache/pypoetry
+
+# Этап 2: Финальный образ
+FROM builder as production
+
+# Указываем рабочий каталог
+WORKDIR /usr/src/app
+
+# Копируем установленные зависимости из этапа сборки
+COPY --from=builder /usr/src/app /usr/src/app
+
+# Создаем нового пользователя
+RUN adduser -D user
 
 # Переключаемся на пользователя
 USER user
 
-# Копирование кода в контейнер.
+# Копирование кода в контейнер
 COPY --chown=user:user . .
 
 # Команда для запуска сервера с помощью Uvicorn для main.py.
