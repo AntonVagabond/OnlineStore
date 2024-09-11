@@ -8,13 +8,11 @@ from common.enums.role import RoleEnum
 from common.exceptions import mixins as exceptions
 from modules.schemas.profiles import RegisterUserSchema
 from modules.services.profiles import ProfileService
-from tests.unit.data.profiles import (
-    GET_USER_INFO_TEST_DATA, CREATE_USERS_PROFILE_TEST_DATA,
-)
+from tests.unit.data import profiles as data_array
 from tests.unit.fixtures.profiles import ProfileTestUOW
 
 
-@pytest.mark.parametrize(*GET_USER_INFO_TEST_DATA)
+@pytest.mark.parametrize(*data_array.GET_USER_INFO_TEST_DATA)
 async def test_get_user_info(
         profile_uow: ProfileTestUOW,
         profile_service: ProfileService,
@@ -31,7 +29,7 @@ async def test_get_user_info(
         assert bool(user) == test_result
 
 
-@pytest.mark.parametrize(*CREATE_USERS_PROFILE_TEST_DATA)
+@pytest.mark.parametrize(*data_array.CREATE_USERS_PROFILE_TEST_DATA)
 async def test_create_users_profile(
         profile_uow: ProfileTestUOW,
         profile_service: ProfileService,
