@@ -1,3 +1,4 @@
+import json
 import logging
 from types import TracebackType, NoneType
 from typing import Self, TypeVar, Optional
@@ -34,21 +35,24 @@ class BaseUnitOfWork(IUnitOfWork):
         # Регистрируем и вызываем все кастомные исключения.
         if exc_type is not None and exc_type.__base__ == HTTPException:
             await self.rollback()
-            logging.error(
-                {
-                    "exception": exc_val.__class__.__name__,
-                    "detail": getattr(exc_val, "detail"),
-                    "class": (
-                        exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
-                        if exc_tb.tb_next.tb_frame.f_locals.get("self") else
-                        exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
-                    ) if exc_tb.tb_next else "Нет класса.",
-                    "user_id": (
-                        exc_tb.tb_frame.f_locals["user_uuid"].hex
-                        if exc_tb.tb_frame.f_locals.get("user_uuid") else
-                        "ID пользователя не найден."
-                    )
-                }
+            logging.exception(
+                json.dumps(
+                    obj={
+                        "exception": exc_val.__class__.__name__,
+                        "detail": getattr(exc_val, "detail"),
+                        "class": (
+                            exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
+                            if exc_tb.tb_next.tb_frame.f_locals.get("self") else
+                            exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
+                        ) if exc_tb.tb_next else "Нет класса.",
+                        "user_id": (
+                            exc_tb.tb_frame.f_locals["user_uuid"].hex
+                            if exc_tb.tb_frame.f_locals.get("user_uuid") else
+                            "ID пользователя не найден."
+                        )
+                    },
+                    ensure_ascii=False
+                )
             )
             await self.close()
             raise exc_type()
@@ -59,23 +63,26 @@ class BaseUnitOfWork(IUnitOfWork):
             detail_massage = (
                 getattr(exc_val, "detail")
                 if getattr(exc_val, "detail", None) else
-                exc_val.args[0]
+                exc_val.args[0] if exc_val.args else None
             )
             logging.error(
-                {
-                    "exception": exc_val.__class__.__name__,
-                    "detail": detail_massage,
-                    "class": (
-                        exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
-                        if exc_tb.tb_next.tb_frame.f_locals.get("self") else
-                        exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
-                    ) if exc_tb.tb_next else "Нет класса.",
-                    "user_id": (
-                        exc_tb.tb_frame.f_locals["user_uuid"].hex
-                        if exc_tb.tb_frame.f_locals.get("user_uuid") else
-                        "ID пользователя не найден."
-                    )
-                }
+                json.dumps(
+                    obj={
+                        "exception": exc_val.__class__.__name__,
+                        "detail": detail_massage,
+                        "class": (
+                            exc_tb.tb_next.tb_frame.f_locals["self"].__class__.__name__
+                            if exc_tb.tb_next.tb_frame.f_locals.get("self") else
+                            exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
+                        ) if exc_tb.tb_next else "Нет класса.",
+                        "user_id": (
+                            exc_tb.tb_frame.f_locals["user_uuid"].hex
+                            if exc_tb.tb_frame.f_locals.get("user_uuid") else
+                            "ID пользователя не найден."
+                        )
+                    },
+                    ensure_ascii=False,
+                )
             )
             await self.close()
             raise HTTPException(status_code=500, detail=detail_massage)
