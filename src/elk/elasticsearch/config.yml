@@ -1,0 +1,28 @@
+node.name: es01
+cluster.name: elk
+# После перезапуска узла, если используется этот параметр, закомментируйте его в Докере.
+#cluster.initial_master_nodes: es01
+
+# Этот атрибут вызовет ошибку, если использовать атрибут - cluster.initial_master_nodes
+discovery.type: single-node
+discovery.seed_hosts: []
+bootstrap.memory_lock: true
+
+# Если этот атрибут закомментировать elasticsearch не сможет запуститься.
+network.host: "0.0.0.0" # Для корректной работы внутри контейнера
+
+xpack.security.enabled: true # Для поддержки функционала, обеспечивающего безопасность кластера
+xpack.security.http.ssl:
+  enabled: true
+  key: certs/elkstack-certs/elkstack-certs.key
+  certificate: certs/elkstack-certs/elkstack-certs.crt
+  certificate_authorities: certs/ca/ca.crt
+
+xpack.security.transport.ssl:
+  enabled: true
+  key: certs/elkstack-certs/elkstack-certs.key
+  certificate: certs/elkstack-certs/elkstack-certs.crt
+  certificate_authorities: certs/ca/ca.crt
+  verification_mode: certificate
+
+xpack.license.self_generated.type: basic # Тип лицензии "basic"

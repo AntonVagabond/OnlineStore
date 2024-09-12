@@ -1,0 +1,76 @@
+version: "3.11"
+services:
+
+  setup_es:
+    container_name: setup_es
+    image: elasticsearch:8.11.4
+    user: "0" # "0" == root, без этого параметра скрипт у файла setup_es.sh приведет к ошибке.
+    command: /bin/sh -c "/usr/share/elasticsearch/config/setup_es.sh"
+    healthcheck:
+      test: [ "CMD-SHELL", "[ -f config/certs/elkstack-certs/elkstack-certs.crt ]" ]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
+  es01:
+    container_name: es01
+    image: elasticsearch:8.11.4
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+      nproc:
+        soft: 4096
+        hard: 4096
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail -k -s -u elastic:elastic_store --cacert config/certs/ca/ca.crt https://es01:9200",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      setup_es:
+        condition: service_healthy
+    restart: always
+
+
+  kibana:
+    container_name: kibana
+    image: kibana:8.11.4
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    depends_on:
+      es01:
+        condition: service_healthy
+    restart: always
+
+
+  logstash:
+    container_name: logstash
+    image: logstash:8.11.4
+    depends_on:
+      es01:
+        condition: service_healthy
+    restart: always
+
+  beats:
+    container_name: beats
+    image: elastic/filebeat:8.11.4
+    command: filebeat -e -strict.perms=false
+    depends_on:
+      es01:
+        condition: service_healthy
+    restart: always

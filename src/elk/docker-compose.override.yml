@@ -1,0 +1,83 @@
+version: "3.11"
+
+services:
+
+  setup_es:
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - ./elasticsearch/setup_es.sh:/usr/share/elasticsearch/config/setup_es.sh
+    networks:
+      - elk
+
+  es01:
+    environment:
+      # Используем "-Des.enforce.bootstrap.checks=true" для выполнения проверок
+      # нач-ной загрузки, из-за параметра discovery.type: single-node, который находится в файле конфигурации.
+      - "ES_JAVA_OPTS=-Xmx1g -Xms1g -Des.enforce.bootstrap.checks=true"
+      - ELASTIC_PASSWORD=elastic_store
+      - KIBANA_USERNAME=kibana_system
+      - KIBANA_PASSWORD=kibana_store
+    volumes:
+      - es_data01:/usr/share/elasticsearch/data
+      - certs:/usr/share/elasticsearch/config/certs
+      - ./elasticsearch/config.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elk
+
+  kibana:
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+      - certs:/usr/share/kibana/config/certs
+      - ./kibana/config.yml:/usr/share/kibana/config/kibana.yml:ro
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+
+
+  logstash:
+    environment:
+      - "LS_JAVA_OPTS=-Xmx1g -Xms1g"
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic_store
+      - ES_NAME=es01
+    volumes:
+      - logstash_data:/usr/share/logstash/data
+      - certs:/usr/share/logstash/config/certs
+      - ./logstash/config.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/pipelines/:/usr/share/logstash/config/pipelines:ro
+    ports:
+      - "5044:5044"
+    networks:
+      - elk
+
+  beats:
+    volumes:
+      - filebeat_data:/usr/share/filebeat/data
+      - certs:/usr/share/filebeat/config/certs
+      - online_logs:/usr/share/filebeat/logs:ro
+      - ./filebeat/config.yml:/usr/share/filebeat/filebeat.yml:ro
+    networks:
+      - elk
+
+volumes:
+  online_logs:
+    name: online_logs
+    external: true
+  certs:
+    driver: local
+  es_data01:
+    driver: local
+  logstash_data:
+    driver: local
+  kibana_data:
+    driver: local
+  filebeat_data:
+    driver: local
+
+networks:
+  elk:

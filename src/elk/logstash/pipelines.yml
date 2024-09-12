@@ -1,0 +1,4 @@
+- pipeline.id: main
+  pipeline.workers: 2
+  pipeline.batch.size: 2
+  path.config: "/usr/share/logstash/config/pipelines/modsec.conf"

@@ -1,0 +1,31 @@
+server:
+  name: kibana
+  host: "0.0.0.0"
+  publicBaseUrl: "http://localhost:5601"
+  ssl:
+    enabled: true
+    key: config/certs/ca/ca.key
+    certificate: config/certs/ca/ca.crt
+    certificateAuthorities: config/certs/ca/ca.crt
+
+monitoring.ui.container.elasticsearch.enabled: true # Для корректного сбора метрик с elastic search, запущенного в контейнере
+elasticsearch:
+  compression: true
+  hosts: [ "https://es01:9200" ]
+  username: kibana_system
+  password: kibana_store
+  ssl.certificateAuthorities: [ "config/certs/ca/ca.crt" ]
+
+xpack.reporting:
+  roles.enabled: false
+  kibanaServer.hostname: localhost
+  encryptionKey: d7daff1746ed5c5542eb1f6213bc77bc
+xpack.encryptedSavedObjects.encryptionKey: 0517be984e92f2157da8b2ad3ef95166
+xpack.security.encryptionKey: 52a263644491c639231eef4bfbdad6dd
+xpack.screenshotting.browser.chromium.disableSandbox: true
+
+data.search.sessions:
+  enabled: true
+  notTouchedTimeout: "5m"
+  maxUpdateRetries: 10
+  defaultExpiration: "7d"
