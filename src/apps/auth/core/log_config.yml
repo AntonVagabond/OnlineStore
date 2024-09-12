@@ -14,6 +14,10 @@ formatters:
   json_formatter:
     (): core.logger.JSONFormatter
 
+filters:
+  message_filter:
+    "()": core.logger.LoggingFilter
+
 handlers:
   default:
     formatter: default

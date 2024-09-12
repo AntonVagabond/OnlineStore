@@ -3,7 +3,7 @@ import logging
 import os
 import re
 from logging import LogRecord
-from typing import Union, TypeAlias
+from typing import Union, TypeAlias, Any
 
 import yaml
 
@@ -13,6 +13,12 @@ LoadData: TypeAlias = dict[
 
 
 class LoggerConfig:
+    """
+    Класс для конфигурирования логирования.
+    Этот класс загружает настройки логирования из YAML-файла и проверяет
+    существование необходимой директории и файлов
+    для логов, создавая их при необходимости.
+    """
     @staticmethod
     def __load_config() -> LoadData:
         """Загрузить конфиги для логирования из yml-файла."""
@@ -47,11 +53,19 @@ class LoggerConfig:
 
 
 class JSONFormatter(logging.Formatter):
+    """
+    Класс форматтера для логирования,
+    который преобразует лог-сообщения в формат JSON.
+    Этот класс используется для структурирования логов в формате JSON,
+    с поддержкой специальной обработки логов от httpx и uvicorn.
+    """
     @staticmethod
-    def _httpx_logs(message: str) -> Union[dict[str, str], dict]:
+    def __httpx_logs(message: str) -> Union[dict[str, str], dict]:
         """Конвертировать данные из строки в словарь для логов httpx."""
         log_pattern = re.compile(
-            r"HTTP Request: (?P<http_method>\w+) (?P<http_protocol>https?)://(?P<http_path>[^\s]+) \"(?P<http_version>HTTP/\d\.\d) (?P<http_status>\d+) (?P<http_status_message>.+)\""
+            r"HTTP Request: (?P<http_method>\w+) (?P<http_protocol>https?)://"
+            r"(?P<http_path>\S+) \"(?P<http_version>HTTP/\d\.\d) "
+            r"(?P<http_status>\d+) (?P<http_status_message>.+)\""
         )
 
         match = log_pattern.match(message)
@@ -60,22 +74,31 @@ class JSONFormatter(logging.Formatter):
         return {}
 
     @staticmethod
-    def _uvicorn_access_logs(message: str) -> Union[dict[str, str], dict]:
+    def __uvicorn_access_logs(message: str) -> Union[dict[str, str], dict]:
         """Конвертировать данные из строки в словарь для логов uvicorn."""
         log_pattern = re.compile(
-            r"(?P<client_ip>[\d\.]+):(?P<client_port>\d+) - \"(?P<http_method>\w+) (?P<http_path>[^\s]+) (?P<http_version>HTTP/\d\.\d)\" (?P<http_status>\d+)"
+            r"(?P<client_ip>[\d.]+):(?P<client_port>\d+) - \"(?P<http_method>\w+) "
+            r"(?P<http_path>\S+) (?P<http_version>HTTP/\d\.\d)\" (?P<http_status>\d+)"
         )
         match = log_pattern.match(message)
         if match:
             return match.groupdict()
         return {}
+
+    @staticmethod
+    def __convert_to_dict_if_str_is_json_type(message: str) -> Union[dict[str, Any], str]:
+        """Конвертировать строку в словарь, если она является типом json."""
+        try:
+            return json.loads(message)
+        except json.JSONDecodeError:
+            return ""
 
     def format(self, record: LogRecord) -> str:
         """Отформатировать записи журнала."""
         if record.name.__eq__("httpx"):
-            message = self._httpx_logs(record.getMessage())
+            message = self.__httpx_logs(record.getMessage())
         elif record.name.__eq__("uvicorn.access"):
-            message = self._uvicorn_access_logs(record.getMessage())
+            message = self.__uvicorn_access_logs(record.getMessage())
         else:
             message = record.getMessage()
         log_record = {
@@ -83,7 +106,7 @@ class JSONFormatter(logging.Formatter):
             'level': record.levelname,
             'message': message,
             'name': record.name,
-            'app': "users",
+            'app': "auth",
             'module': record.module,
             'file': record.pathname,
             'line': record.lineno,
@@ -92,3 +115,13 @@ class JSONFormatter(logging.Formatter):
             'thread': record.threadName
         }
         return json.dumps(log_record, ensure_ascii=False)
+
+
+class LoggingFilter(logging.Filter):
+    """
+    Класс фильтра для логирования.
+    Этот класс позволяет фильтровать логи по определенным условиям.
+    """
+    def filter(self, record: logging.LogRecord) -> bool:
+        """Отфильтровать все сообщения, которые не являются словарём."""
+        return bool(record.name in ("root", "uvicorn.access", "httpx"))

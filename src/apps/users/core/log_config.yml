@@ -12,7 +12,11 @@ formatters:
     fmt: '%(asctime)s - %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
 
   json_formatter:
-    (): core.logger.JSONFormatter
+    "()": core.logger.JSONFormatter
+
+filters:
+  message_filter:
+    "()": core.logger.LoggingFilter
 
 handlers:
   default:
@@ -36,6 +40,8 @@ handlers:
     filename: logs/app.log
     mode: a
     encoding: utf8
+    filters:
+      - message_filter
 
 loggers:
   uvicorn:
