@@ -3,8 +3,8 @@ from typing import Optional
 from fastapi.security import OAuth2PasswordRequestForm
 
 from api.current_user_deps import CurrentUserDep
-from common.exceptions.mixins import AuthBadRequestException
 from common.const import mixins as resp_exc
+from common.exceptions.mixins import AuthBadRequestException
 from core.security import Security
 from modules.schemas.auth_schema import UserInfoSchema
 from modules.unit_of_works.auth_uow import AuthUOW

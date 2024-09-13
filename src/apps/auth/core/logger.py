@@ -3,7 +3,7 @@ import logging
 import os
 import re
 from logging import LogRecord
-from typing import Union, TypeAlias, Any
+from typing import Any, TypeAlias, Union
 
 import yaml
 

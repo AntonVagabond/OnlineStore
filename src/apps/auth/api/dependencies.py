@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, Cookie, Header
+from fastapi import Cookie, Depends, Header
 from fastapi.security import OAuth2PasswordRequestForm
 
 from api.current_user_deps import CurrentUserDep

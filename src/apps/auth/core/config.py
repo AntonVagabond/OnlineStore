@@ -1,9 +1,9 @@
 import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Union, Optional, Any
+from typing import Any, Optional, Union
 
-from pydantic import PostgresDsn, HttpUrl, field_validator, Field
+from pydantic import Field, HttpUrl, PostgresDsn, field_validator
 from pydantic_core.core_schema import FieldValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 

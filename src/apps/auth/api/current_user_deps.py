@@ -1,12 +1,12 @@
 from datetime import datetime
-from typing import Optional, Callable, Coroutine, Any
+from typing import Any, Callable, Coroutine, Optional
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from jwt import MissingRequiredClaimError, DecodeError, ExpiredSignatureError
+from jwt import DecodeError, ExpiredSignatureError, MissingRequiredClaimError
 
-from common.exceptions import mixins as error
 from common.const import mixins as resp_exc
+from common.exceptions import mixins as error
 from core.config import settings
 from core.security import Security
 from modules.schemas.auth_schema import UserInfoSchema

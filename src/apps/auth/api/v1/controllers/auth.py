@@ -6,16 +6,17 @@ from core.constants import REFRESH
 from core.security import Security
 from modules.responses import auth as responses
 from modules.schemas.auth_schema import (
-    TokenInfoSchema,
     LogoutResponseSchema,
+    TokenInfoSchema,
     UserInfoSchema,
 )
+
 from ...dependencies import (
-    OAuth2PasswordDep,
     AuthUOWDep,
+    AuthUserServiceDep,
+    OAuth2PasswordDep,
     RefreshDep,
     UserDep,
-    AuthUserServiceDep,
 )
 
 auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])

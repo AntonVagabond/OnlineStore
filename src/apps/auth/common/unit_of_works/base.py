@@ -1,7 +1,7 @@
 import json
 import logging
 from types import TracebackType
-from typing import Self, Generic, TypeVar, Optional
+from typing import Generic, Optional, Self, TypeVar
 
 from fastapi import HTTPException
 
