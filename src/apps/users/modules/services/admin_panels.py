@@ -66,9 +66,7 @@ class AdminPanelService(PaginatedPageService):
             role_id=result.role_id,
         )
 
-    async def get(
-            self, uow: AdminPanelUOW, obj_id: UUID
-    ) -> UserResponseSchema:
+    async def get(self, uow: AdminPanelUOW, obj_id: UUID) -> UserResponseSchema:
         """Получить данные пользователя для редактирования."""
         async with uow:
             result = await uow.repo.get(obj_id)
@@ -82,7 +80,9 @@ class AdminPanelService(PaginatedPageService):
     def __update_data(data: EditData) -> EditData:
         """Обновить данные пользователя."""
         last_name, first_name, second_name = (
-            data["last_name"], data["first_name"], data["second_name"]
+            data["last_name"],
+            data["first_name"],
+            data["second_name"],
         )
         data.update(full_name=f"{last_name} {first_name} {second_name}")
         return data

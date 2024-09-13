@@ -9,7 +9,10 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from pytest_alembic import Config, runner
 from sqlalchemy import URL, Engine, create_engine
 from sqlalchemy.ext.asyncio import (
-    create_async_engine, AsyncEngine, AsyncSession, async_sessionmaker
+    create_async_engine,
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
 )
 from sqlalchemy.orm import close_all_sessions, Session, sessionmaker
 
@@ -113,7 +116,7 @@ def sync_db_engine() -> Generator[Engine, None, None]:
 
 @pytest.fixture(scope="session")
 async def async_db_engine(
-        event_loop: asyncio.AbstractEventLoop,
+    event_loop: asyncio.AbstractEventLoop,
 ) -> AsyncGenerator[AsyncEngine, None]:
     """Создание асинхронного движка для тестовой базы данных."""
     async_engine = create_async_engine(settings.db.async_database_url)
@@ -132,7 +135,7 @@ async def sync_session_factory(sync_db_engine: Engine) -> sessionmaker[Session]:
 
 @pytest.fixture(scope="function")
 async def async_session_factory(
-        async_db_engine: AsyncEngine
+    async_db_engine: AsyncEngine,
 ) -> async_sessionmaker[AsyncSession]:
     """Создание асинхронной фабрики сессий."""
     return async_sessionmaker(async_db_engine, expire_on_commit=False)
@@ -158,7 +161,7 @@ def alembic_engine(sync_db_engine: Engine) -> Engine:
 
 @pytest.fixture(scope="session")
 def alembic_runner(
-        alembic_config: Config, alembic_engine: Engine
+    alembic_config: Config, alembic_engine: Engine
 ) -> Generator[runner, None, None]:
     """Запуск программы для настройки pytest_alembic."""
     config = Config.from_raw_config(raw_config=alembic_config)
@@ -180,10 +183,10 @@ def __apply_migrations(
 
 @pytest.fixture(scope="session", autouse=True)
 async def __initialize_table(
-        __apply_migrations: None,
-        __mock_sessions_factories: None,
-        *,
-        event_loop: asyncio.AbstractEventLoop,
+    __apply_migrations: None,
+    __mock_sessions_factories: None,
+    *,
+    event_loop: asyncio.AbstractEventLoop,
 ) -> AsyncGenerator[None, None]:
     """Инициализация тестовой таблицы."""
     await RoleInitializer.initialize()
@@ -192,10 +195,10 @@ async def __initialize_table(
 
 @pytest.fixture(scope="function")
 async def app_fixture(
-        sync_session_factory: sessionmaker[Session],
-        async_session_factory: async_sessionmaker[AsyncSession],
-        monkeypatch: MonkeyPatch,
-        event_loop: asyncio.AbstractEventLoop,
+    sync_session_factory: sessionmaker[Session],
+    async_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: MonkeyPatch,
+    event_loop: asyncio.AbstractEventLoop,
 ) -> AsyncGenerator[FastAPI, None]:
     """Создание экземпляра FastAPI в тестовом окружении."""
 

@@ -11,10 +11,10 @@ class AdminTestUOW(AdminPanelUOW):
     """Класс для тестирования админ панели."""
 
     async def __aexit__(
-            self,
-            exc_type: Optional[type[BaseException]],
-            exc_val: Optional[BaseException],
-            exc_tb: Optional[TracebackType],
+        self,
+        exc_type: Optional[type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
     ) -> None:
         """Метод тестового класса выхода из контекстного менеджера"""
         if exc_type is None:

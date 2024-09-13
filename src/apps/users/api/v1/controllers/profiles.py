@@ -14,9 +14,9 @@ profile = APIRouter(prefix="/api/v1/profile", tags=["Profile"])
     responses=responses.REGISTRATION_RESPONSES,
 )
 async def create_user(
-        uow: ProfileUOWDep,
-        service: ProfileServiceDep,
-        model: RegisterUserSchema,
+    uow: ProfileUOWDep,
+    service: ProfileServiceDep,
+    model: RegisterUserSchema,
 ) -> Response:
     """Контроллер регистрации пользователя."""
     user_id = await service.create(uow, model)
@@ -29,7 +29,7 @@ async def create_user(
     responses=responses.GET_RESPONSES,
 )
 async def get_user(
-        current_user: UserSchemaDep, uow: ProfileUOWDep, service: ProfileServiceDep
+    current_user: UserSchemaDep, uow: ProfileUOWDep, service: ProfileServiceDep
 ) -> Response:
     """Контроллер получения информации профиля пользователя."""
     profile_data = await service.get(uow, current_user.id)
@@ -42,10 +42,10 @@ async def get_user(
     responses=responses.EDIT_RESPONSES,
 )
 async def update_user(
-        current_user: UserSchemaDep,
-        uow: ProfileUOWDep,
-        service: ProfileServiceDep,
-        model: UpdateUserSchema,
+    current_user: UserSchemaDep,
+    uow: ProfileUOWDep,
+    service: ProfileServiceDep,
+    model: UpdateUserSchema,
 ) -> Response:
     """Контроллер редактирования профиля пользователя."""
     bool_result = await service.update(uow, model, current_user.id)

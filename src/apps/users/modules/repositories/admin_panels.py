@@ -30,7 +30,7 @@ class AdminPanelRepository(PaginatedPageRepository):
         return stmt
 
     def __is_there_role(
-            self, stmt: sa.Select, filters: UserByRoleFilterSchema
+        self, stmt: sa.Select, filters: UserByRoleFilterSchema
     ) -> sa.Select:
         """Проверка на существование роли"""
         if filters.role_uuid is not None:
@@ -38,7 +38,7 @@ class AdminPanelRepository(PaginatedPageRepository):
         return stmt
 
     def __is_there_search_string(
-            self, stmt: sa.Select, filters: UserByRoleFilterSchema
+        self, stmt: sa.Select, filters: UserByRoleFilterSchema
     ) -> sa.Select:
         """Проверка на существование строки поиска."""
         if filters.search_string:
@@ -53,7 +53,7 @@ class AdminPanelRepository(PaginatedPageRepository):
         return stmt
 
     async def get_all(
-            self, filters: UserByRoleFilterSchema
+        self, filters: UserByRoleFilterSchema
     ) -> tuple[int, Optional[sa.ScalarResult]]:
         """Получить всех пользователей с учетом фильтра по роли."""
         stmt = self.__get_stmt_for_method_list()

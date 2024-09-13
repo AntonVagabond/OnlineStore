@@ -13,9 +13,9 @@ from tests.unit.fixtures.admin_panels import AdminTestUOW
 
 @pytest.mark.parametrize(*data_array.GET_LIST_USERS_ADMIN_TEST_DATA)
 async def test_get_list_users_admin(
-        admin_panel_uow: AdminTestUOW,
-        admin_panel_service: AdminPanelService,
-        test_data: dict[str, Union[Optional[str], int]]
+    admin_panel_uow: AdminTestUOW,
+    admin_panel_service: AdminPanelService,
+    test_data: dict[str, Union[Optional[str], int]],
 ) -> None:
     """Тестирование получения всех пользователей для администратора."""
     count = test_data.pop("count")
@@ -27,10 +27,10 @@ async def test_get_list_users_admin(
 
 @pytest.mark.parametrize(*data_array.GET_USER_TEST_DATA)
 async def test_get_user(
-        admin_panel_uow: AdminTestUOW,
-        admin_panel_service: AdminPanelService,
-        uuid: UUID,
-        test_result: bool,
+    admin_panel_uow: AdminTestUOW,
+    admin_panel_service: AdminPanelService,
+    uuid: UUID,
+    test_result: bool,
 ) -> None:
     """Тест для получения данных пользователя для редактирования."""
     if test_result == USER_NOT_FOUND:
@@ -44,9 +44,9 @@ async def test_get_user(
 
 @pytest.mark.parametrize(*data_array.UPDATE_USER_ADMIN_TEST_DATA)
 async def test_update_user_admin(
-        admin_panel_uow: AdminTestUOW,
-        admin_panel_service: AdminPanelService,
-        test_data: dict[str, Union[str, int]]
+    admin_panel_uow: AdminTestUOW,
+    admin_panel_service: AdminPanelService,
+    test_data: dict[str, Union[str, int]],
 ) -> None:
     """Тестирование изменения пользователя для администратора."""
     test_result = test_data.pop("test_result")

@@ -34,7 +34,9 @@ class BaseService(IService):
 
     @classmethod
     async def get_all(
-            cls, uow: TUnitOfWork, filters: Optional[TFilter],
+        cls,
+        uow: TUnitOfWork,
+        filters: Optional[TFilter],
     ) -> PageViewSchema:
         """Базовый метод сервиса для получения списка данных."""
 

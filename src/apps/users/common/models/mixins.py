@@ -11,7 +11,10 @@ class UUIDMixin:
     """Общая модель, для переопределения поля id типа integer на поле uuid4."""
 
     id: Mapped[UUID] = mapped_column(
-        UUID, default=uuid.uuid4, primary_key=True, unique=True,
+        UUID,
+        default=uuid.uuid4,
+        primary_key=True,
+        unique=True,
     )
 
 

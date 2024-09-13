@@ -31,12 +31,12 @@ class DatabaseSettings(CommonSettings):
 
     @staticmethod
     def __build_db_dsn(
-            username: str,
-            password: str,
-            host: str,
-            port: int,
-            database: str,
-            async_dsn: bool = False,
+        username: str,
+        password: str,
+        host: str,
+        port: int,
+        database: str,
+        async_dsn: bool = False,
     ) -> URL:
         """Фабрика для PostgreSQL DSN."""
         driver_name = "postgresql"

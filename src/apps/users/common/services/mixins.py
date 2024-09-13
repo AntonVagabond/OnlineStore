@@ -24,10 +24,10 @@ class PaginatedPageService(BaseService):
 
     @staticmethod
     def _get_response(
-            count_records: int,
-            schema: type[TViewSchemaForTable],
-            list_records: list[Optional[TViewSchemaForTable]],
-            filters: TFilter,
+        count_records: int,
+        schema: type[TViewSchemaForTable],
+        list_records: list[Optional[TViewSchemaForTable]],
+        filters: TFilter,
     ) -> PageViewSchema:
         """Получите ответ."""
         return PageViewSchema[schema](

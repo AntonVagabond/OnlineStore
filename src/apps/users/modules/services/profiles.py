@@ -28,7 +28,9 @@ class ProfileService(BaseService):
         user_data.update(username=user_data["email"])
         user_data.update(password_hash=hash_password(user_data["password_hash"]))
         last_name, first_name, second_name = (
-            user_data["last_name"], user_data["first_name"], user_data["second_name"]
+            user_data["last_name"],
+            user_data["first_name"],
+            user_data["second_name"],
         )
         user_data.update(full_name=f"{last_name} {first_name} {second_name}")
         return user_data
@@ -76,14 +78,16 @@ class ProfileService(BaseService):
         """Добавить данные для редактирования пользователя."""
         user_data.update(id=user_id)
         last_name, first_name, second_name = (
-            user_data["last_name"], user_data["first_name"], user_data["second_name"]
+            user_data["last_name"],
+            user_data["first_name"],
+            user_data["second_name"],
         )
         user_data.update(full_name=f"{last_name} {first_name} {second_name}")
         return user_data
 
     @classmethod
     async def update(
-            cls, uow: ProfileUOW, model: UpdateUserSchema, user_id: UUID
+        cls, uow: ProfileUOW, model: UpdateUserSchema, user_id: UUID
     ) -> bool:
         """Обновить данные пользователя."""
         user_data = model.model_dump()

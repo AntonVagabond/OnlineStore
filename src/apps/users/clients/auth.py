@@ -17,13 +17,13 @@ oauth2_scheme = OAuth2PasswordBearer(
 
 
 def get_current_user(
-        roles: Optional[tuple[str, ...]] = None,
+    roles: Optional[tuple[str, ...]] = None,
 ) -> Callable[[AsyncClient, str], Coroutine[Any, Any, CurrentUserSchema]]:
     """Возвращает авторизованного пользователя."""
 
     async def current_user(
-            client: AsyncClient = Depends(ExternalServiceConnector.get_client),
-            token: str = Depends(oauth2_scheme),
+        client: AsyncClient = Depends(ExternalServiceConnector.get_client),
+        token: str = Depends(oauth2_scheme),
     ) -> CurrentUserSchema:
         """Поиск текущего пользователя."""
         data = {"access_token": token, "roles": ", ".join(roles) if roles else None}

@@ -17,10 +17,10 @@ class ProfileUOW(BaseUnitOfWork):
         return self
 
     async def __aexit__(
-            self,
-            exc_type: Optional[type[BaseException]],
-            exc_val: Optional[BaseException],
-            exc_tb: Optional[TracebackType],
+        self,
+        exc_type: Optional[type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
     ) -> None:
         """Выход из контекстного менеджера для профиля."""
         await super().__aexit__(exc_type, exc_val, exc_tb)
