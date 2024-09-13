@@ -39,6 +39,6 @@ repos:
         language: system
         types: [python]
         pass_filenames: false
-#        files: ^src/apps/.*\.py$
+        files: ^src/apps/.*\.py$
 #        exclude: "migrations|.git|__pycache__|__init__.py|.env|.env.example"
 #        args: ["--max-line-length=90", "--ignore=F821,E704,W503"]
