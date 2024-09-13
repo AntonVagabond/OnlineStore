@@ -13,16 +13,17 @@ from modules.schemas.auth_schema import UserInfoSchema
 from modules.unit_of_works.auth_uow import AuthUOW
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=str(settings.auth.token_url), scheme_name="JWT",
+    tokenUrl=str(settings.auth.token_url),
+    scheme_name="JWT",
 )
 
 
 class CurrentUserDep:
     """Зависимость для получения текущего пользователя."""
+
     @staticmethod
     async def get_data_user(
-            roles: Optional[tuple[str, ...]],
-            token: str,
+        roles: Optional[tuple[str, ...]], token: str,
     ) -> UserInfoSchema:
         """Получить данные пользователя."""
         try:
@@ -55,18 +56,18 @@ class CurrentUserDep:
             if not is_valid_role:
                 raise error.AuthForbiddenException(
                     detail=f"Для этого действия требуется одна из "
-                           f"ролей: '{', '.join(req_role for req_role in roles)}'.",
+                    f"ролей: '{', '.join(req_role for req_role in roles)}'.",
                 )
         return data_user
 
     @classmethod
     def get_current_user(
-            cls, roles: Optional[tuple[str, ...]] = None,
+        cls, roles: Optional[tuple[str, ...]] = None
     ) -> Callable[[str], Coroutine[Any, Any, UserInfoSchema]]:
         """Возвращает авторизованного пользователя."""
 
         async def current_user(
-                token: str = Depends(oauth2_scheme),
+            token: str = Depends(oauth2_scheme),
         ) -> UserInfoSchema:
             """Поиск текущего пользователя."""
             response = await cls.get_data_user(token=token, roles=roles)

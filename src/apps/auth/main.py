@@ -27,7 +27,7 @@ app = FastAPI(
     swagger_ui_init_oauth={
         "clientId": settings.client_id,
         "clientSecret": settings.client_secret,
-    }
+    },
 )
 
 
@@ -80,5 +80,5 @@ if __name__ == "__main__":
         host=settings.host,
         port=settings.port,
         reload=True,
-        log_config=LoggerConfig.execute_config()
+        log_config=LoggerConfig.execute_config(),
     )

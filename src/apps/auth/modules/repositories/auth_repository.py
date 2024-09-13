@@ -11,6 +11,7 @@ from modules.schemas.auth_schema import UserInfoSchema
 
 class AuthRepository(BaseRepository):
     """Репозиторий аутентификации."""
+
     model = User
 
     async def get_user_by_email(self, email: str) -> Optional[UserInfoSchema]:
@@ -21,12 +22,16 @@ class AuthRepository(BaseRepository):
             .where(self.model.email == email)
         )
         user = result.scalar_one_or_none()
-        return None if not user else UserInfoSchema(
-            id=getattr(user.id, "hex"),
-            email=user.email,
-            deleted=user.deleted,
-            password_hash=user.password_hash,
-            role_name=user.role.name,
+        return (
+            None
+            if not user
+            else UserInfoSchema(
+                id=getattr(user.id, "hex"),
+                email=user.email,
+                deleted=user.deleted,
+                password_hash=user.password_hash,
+                role_name=user.role.name,
+            )
         )
 
     async def authenticate_user(self, email: str) -> Optional[UserInfoSchema]:

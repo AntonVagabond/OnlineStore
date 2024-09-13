@@ -9,6 +9,7 @@ TModel = TypeVar("TModel", bound=Base)
 
 class BaseRepository:
     """Базовый класс репозитория."""
+
     model: type[TModel]
 
     def __init__(self, session: AsyncSession) -> None:

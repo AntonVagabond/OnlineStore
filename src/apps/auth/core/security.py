@@ -34,7 +34,7 @@ class Security:
         """Создать access токен."""
         payload = {"sub": email, "type": "access"}
         access_token = cls.__create_token(
-            payload=payload, minutes=settings.auth.access_token_expire_minutes,
+            payload=payload, minutes=settings.auth.access_token_expire_minutes
         )
         return access_token
 
@@ -43,7 +43,7 @@ class Security:
         """Создать refresh токен."""
         payload = {"sub": email, "type": "refresh"}
         refresh_token = cls.__create_token(
-            payload=payload, minutes=settings.auth.refresh_token_expire_minutes,
+            payload=payload, minutes=settings.auth.refresh_token_expire_minutes
         )
         return refresh_token
 
@@ -53,5 +53,6 @@ class Security:
         payload = jwt.decode(
             jwt=token,
             key=settings.auth.public_key_path.read_text(),
-            algorithms=[settings.auth.algorithm])
+            algorithms=[settings.auth.algorithm],
+        )
         return payload

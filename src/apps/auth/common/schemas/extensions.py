@@ -5,6 +5,7 @@ from pydantic import AfterValidator
 
 class ExtendedTypes:
     """Расширенные типы."""
+
     @staticmethod
     def validate_int16(value: int) -> int:
         """Валидация числового значения, чтобы оно было как тип int16."""

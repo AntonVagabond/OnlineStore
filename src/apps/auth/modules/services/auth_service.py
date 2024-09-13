@@ -15,7 +15,7 @@ class AuthUserService:
 
     @staticmethod
     async def get_user_for_create_tokens(
-            uow: AuthUOW, form_data: OAuth2PasswordRequestForm,
+        uow: AuthUOW, form_data: OAuth2PasswordRequestForm
     ) -> UserInfoSchema:
         """Получить пользователя для создания токенов."""
         async with uow:
@@ -23,7 +23,7 @@ class AuthUserService:
             if not data_user:
                 raise AuthBadRequestException(detail=resp_exc.EMAIL_BAD_REQUEST)
             if not Security.verify_password(
-                    form_data.password, hashed_password=data_user.password_hash
+                form_data.password, hashed_password=data_user.password_hash
             ):
                 raise AuthBadRequestException(detail=resp_exc.PASSWORD_BAD_REQUEST)
             if data_user.deleted:
@@ -32,7 +32,7 @@ class AuthUserService:
 
     @staticmethod
     async def get_user_for_update_tokens(
-            uow: AuthUOW, refresh_token: str,
+        uow: AuthUOW, refresh_token: str
     ) -> UserInfoSchema:
         """Получить пользователя для обновления токенов."""
         async with uow:
@@ -51,7 +51,7 @@ class AuthUserService:
 
     @staticmethod
     async def get_data_user(
-            token: str, roles: Optional[tuple[str, ...]]
+        token: str, roles: Optional[tuple[str, ...]]
     ) -> UserInfoSchema:
         """Получить данные текущего пользователя."""
         data_user = await CurrentUserDep.get_data_user(roles, token)

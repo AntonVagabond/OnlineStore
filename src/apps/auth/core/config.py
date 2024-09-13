@@ -10,6 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class CommonSettings(BaseSettings):
     """Общие настройки."""
+
     model_config = SettingsConfigDict(
         env_file=os.path.expanduser(".env"),
         env_file_encoding="utf-8",
@@ -19,18 +20,21 @@ class CommonSettings(BaseSettings):
 
 class DatabaseSettings(CommonSettings):
     """Настройки окружения базы данных."""
+
     pg_host: str = Field(alias="PG_HOST")
     pg_user: str = Field(alias="PG_USER")
     pg_password: str = Field(alias="PG_PASSWORD")
     pg_database: str = Field(alias="PG_DATABASE")
     pg_port: int = Field(alias="PG_PORT")
     async_database_uri: Union[PostgresDsn, str] = Field(
-        default="", alias="ASYNC_DATABASE_URI",
+        default="", alias="ASYNC_DATABASE_URI"
     )
 
     @field_validator("async_database_uri")
     def assemble_db_async_connection(
-            cls, value: Optional[str], info: FieldValidationInfo,  # noqa
+        cls,  # noqa
+        value: Optional[str],
+        info: FieldValidationInfo,
     ) -> Any:
         """Собственная схема для асинхронного подключения к БД."""
         if isinstance(value, str) and value == "":
@@ -47,6 +51,7 @@ class DatabaseSettings(CommonSettings):
 
 class AuthSettings(CommonSettings):
     """Настройки окружения для подключения к микросервису Auth."""
+
     token_url: HttpUrl = Field(alias="TOKEN_URL")
     private_key_path: Path = Field(alias="PRIVATE_KEY_PATH")
     public_key_path: Path = Field(alias="PUBLIC_KEY_PATH")
@@ -57,6 +62,7 @@ class AuthSettings(CommonSettings):
 
 class Settings(CommonSettings):
     """Настройки окружения."""
+
     db: DatabaseSettings = DatabaseSettings()
     auth: AuthSettings = AuthSettings()
 

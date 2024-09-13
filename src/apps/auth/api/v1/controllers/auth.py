@@ -6,10 +6,16 @@ from core.constants import REFRESH
 from core.security import Security
 from modules.responses import auth as responses
 from modules.schemas.auth_schema import (
-    TokenInfoSchema, LogoutResponseSchema, UserInfoSchema,
+    TokenInfoSchema,
+    LogoutResponseSchema,
+    UserInfoSchema,
 )
 from ...dependencies import (
-    OAuth2PasswordDep, AuthUOWDep, RefreshDep, UserDep, AuthUserServiceDep,
+    OAuth2PasswordDep,
+    AuthUOWDep,
+    RefreshDep,
+    UserDep,
+    AuthUserServiceDep,
 )
 
 auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
@@ -21,10 +27,10 @@ auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
     responses=responses.LOGIN_RESPONSES,
 )
 async def login_user(
-        uow: AuthUOWDep,
-        service: AuthUserServiceDep,
-        form_data: OAuth2PasswordDep,
-        response: Response
+    uow: AuthUOWDep,
+    service: AuthUserServiceDep,
+    form_data: OAuth2PasswordDep,
+    response: Response,
 ) -> TokenInfoSchema:
     """
     Контроллер для входа в учетную запись пользователя.
@@ -52,10 +58,10 @@ async def login_user(
     responses=responses.REFRESH_RESPONSES,
 )
 async def get_new_access_token(
-        uow: AuthUOWDep,
-        service: AuthUserServiceDep,
-        response: Response,
-        refresh: RefreshDep,
+    uow: AuthUOWDep,
+    service: AuthUserServiceDep,
+    response: Response,
+    refresh: RefreshDep,
 ) -> TokenInfoSchema:
     """
     Контроллер для обновления токена доступа.
@@ -77,8 +83,7 @@ async def get_new_access_token(
 
 @auth.post(path="/logout/", summary="Выход из учетной записи.")
 async def logout_user(
-        current_user: UserDep,  # noqa
-        response: Response
+    current_user: UserDep, response: Response  # noqa
 ) -> LogoutResponseSchema:
     """Контроллер для выхода из учетной записи."""
     response.delete_cookie(REFRESH, httponly=True, secure=True)
@@ -91,7 +96,8 @@ async def logout_user(
     responses=responses.AUTH_RESPONSES,
 )
 async def auth_user(
-        request: Request, service: AuthUserServiceDep,
+    request: Request,
+    service: AuthUserServiceDep,
 ) -> UserInfoSchema:
     """Контроллер для аутентификации пользователя."""
     headers = request.headers
