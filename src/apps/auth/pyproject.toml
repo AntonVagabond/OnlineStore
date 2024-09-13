@@ -54,4 +54,4 @@ skip = ["__init__.py", ".env", ".env.example"]
 exclude = ["migrations", ".git", "__pycache__", "__init__.py", ".env", ".env.example"]
 max-line-length = 90
 count = true
-ignore = ["F821"]
+ignore = ["F821", "E704", "W503"]
