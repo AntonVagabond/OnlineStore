@@ -3,14 +3,6 @@ default_stages: [commit, push]
 default_language_version:
   python: python3.11
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: trailing-whitespace  # убирает лишние пробелы
-      - id: check-yaml  # проверяет синтаксис .yaml файлов
-      - id: check-case-conflict  # проверяет файлы, которые могут конфликтовать в файловых системах без учета регистра.
-      - id: check-merge-conflict  # проверяет файлы, содержащие конфликтные строки слияния.
-
 #  - repo: https://github.com/pycqa/isort
 #    rev: 5.13.2
 #    hooks:
@@ -38,3 +30,11 @@ repos:
         files: ^src/apps/.*\.py$
         exclude: "migrations|.git|__pycache__|__init__.py|.env|.env.example"
         args: ["--max-line-length=90", "--ignore=F821,E704,W503"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace  # убирает лишние пробелы
+      - id: check-yaml  # проверяет синтаксис .yaml файлов
+      - id: check-case-conflict  # проверяет файлы, которые могут конфликтовать в файловых системах без учета регистра.
+      - id: check-merge-conflict  # проверяет файлы, содержащие конфликтные строки слияния.
