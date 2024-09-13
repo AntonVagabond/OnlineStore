@@ -40,7 +40,7 @@ RUN poetry install \
     --no-root \
     --no-interaction \
     --no-ansi \
-    --without test && \
+    --without test dev && \
     rm -rf ~/.cache/pypoetry
 
 # Этап 2: Финальный образ
