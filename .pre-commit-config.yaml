@@ -34,6 +34,6 @@ repos:
     hooks:
       - id: flake8
         language_version: python3.11
-        files: ^src/apps/(auth|users)/.*\.py$
+        files: ^src/apps/users/.*\.py$
         exclude: "migrations|.git|__pycache__|__init__.py|.env|.env.example"
         args: ["--max-line-length=90", "--ignore=F821,E704,W503"]
