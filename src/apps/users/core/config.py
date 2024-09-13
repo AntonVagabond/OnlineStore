@@ -2,7 +2,7 @@ import os
 from functools import lru_cache
 from typing import Optional, Self
 
-from pydantic import PostgresDsn, HttpUrl, Field, model_validator
+from pydantic import Field, HttpUrl, PostgresDsn, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 

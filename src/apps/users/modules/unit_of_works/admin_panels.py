@@ -1,5 +1,6 @@
 from types import TracebackType
-from typing import Self, Optional
+from typing import Optional, Self
+
 from common.unit_of_works.base import BaseUnitOfWork
 from modules.repositories.admin_panels import AdminPanelRepository
 

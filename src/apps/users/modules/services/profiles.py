@@ -1,6 +1,6 @@
 from datetime import datetime
 from types import NoneType
-from typing import Union, TypeAlias
+from typing import TypeAlias, Union
 from uuid import UUID
 
 from common.enums.role import RoleEnum

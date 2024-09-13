@@ -1,4 +1,4 @@
-from typing import TypeVar, Optional
+from typing import Optional, TypeVar
 from uuid import UUID
 
 from common.interfaces.abstraction_service import IService

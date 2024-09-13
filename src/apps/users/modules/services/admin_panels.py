@@ -1,16 +1,16 @@
 from datetime import datetime
-from typing import Union, TypeAlias
+from typing import TypeAlias, Union
 from uuid import UUID
 
-from common.schemas.internal.mixins import PageViewSchema
 from common.exceptions import mixins as exception
+from common.schemas.internal.mixins import PageViewSchema
 from common.services.mixins import PaginatedPageService
 from models import User
 from modules.schemas.admin_panels import (
-    UserByRoleFilterSchema,
-    UserViewSchemaForAdminTable,
     UpdateAdminSchema,
+    UserByRoleFilterSchema,
     UserResponseSchema,
+    UserViewSchemaForAdminTable,
 )
 from modules.unit_of_works.admin_panels import AdminPanelUOW
 

@@ -5,7 +5,7 @@ from uuid import UUID
 from pydantic import Field
 
 from common.enums.role import RoleEnum
-from common.schemas.api.mixins import UpdateSchema, StandardViewSchemaForTable
+from common.schemas.api.mixins import StandardViewSchemaForTable, UpdateSchema
 from common.schemas.base import BaseModel
 from common.schemas.filters.mixins import DataRangeBaseFilterSchema
 

@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import TypeVar, Optional
+from typing import Optional, TypeVar
 from uuid import UUID
 
-from pydantic import Field, EmailStr, field_validator, ValidationError
+from pydantic import EmailStr, Field, ValidationError, field_validator
 from pydantic.json_schema import SkipJsonSchema as HiddenField
 
 from common.enums.role import RoleEnum

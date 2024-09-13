@@ -1,5 +1,5 @@
 import asyncio
-from typing import Generator, AsyncGenerator, Any
+from typing import Any, AsyncGenerator, Generator
 
 import psycopg2
 import pytest
@@ -9,12 +9,12 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from pytest_alembic import Config, runner
 from sqlalchemy import URL, Engine, create_engine
 from sqlalchemy.ext.asyncio import (
-    create_async_engine,
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
+    create_async_engine,
 )
-from sqlalchemy.orm import close_all_sessions, Session, sessionmaker
+from sqlalchemy.orm import Session, close_all_sessions, sessionmaker
 
 from core.config import settings
 from core.database import async_session_maker, sync_session_maker

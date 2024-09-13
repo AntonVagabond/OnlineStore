@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import TypeVar, Optional, TypeAlias, Union
+from typing import Optional, TypeAlias, TypeVar, Union
 from uuid import UUID
 
-from sqlalchemy import insert, select, update, delete, ScalarResult
+from sqlalchemy import ScalarResult, delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 

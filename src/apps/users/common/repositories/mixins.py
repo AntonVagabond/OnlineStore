@@ -1,7 +1,7 @@
-from typing import TypeVar, Optional
+from typing import Optional, TypeVar
 
 import sqlalchemy as sa
-from sqlalchemy import Select, ScalarResult
+from sqlalchemy import ScalarResult, Select
 
 from common.models.base import Base
 from common.repositories.base import BaseRepository

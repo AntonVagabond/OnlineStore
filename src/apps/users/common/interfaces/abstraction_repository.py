@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from types import NoneType
-from typing import TypeVar, TypeAlias, Union, Optional
+from typing import Optional, TypeAlias, TypeVar, Union
 from uuid import UUID
 
 from sqlalchemy import ScalarResult

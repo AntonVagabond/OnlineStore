@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from starlette.responses import Response
 
-from api.dependencies import UserSchemaDep, ProfileUOWDep, ProfileServiceDep
+from api.dependencies import ProfileServiceDep, ProfileUOWDep, UserSchemaDep
 from modules.responses import profiles as responses
 from modules.schemas.profiles import RegisterUserSchema, UpdateUserSchema
 

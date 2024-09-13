@@ -2,7 +2,7 @@ from abc import ABC
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 
 from core.database import async_session_maker
 from core.security import hash_password

@@ -2,8 +2,8 @@ import uuid
 
 from pydantic import Field
 
-from common.schemas.base import BaseModel
 from common.const import response_exceptions as resp_exc
+from common.schemas.base import BaseModel
 
 
 class SuccessIdResponseSchema(BaseModel):

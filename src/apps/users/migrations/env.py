@@ -4,6 +4,7 @@ from alembic import context
 
 from common.models.base import Base
 from core.database import engine_sync
+
 # Обязательная инициализация всех моделей в этом файле.
 from models.roles import Role  # noqa
 from models.users import User  # noqa

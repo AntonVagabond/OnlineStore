@@ -1,5 +1,5 @@
 import math
-from typing import Generator, TypeVar, Optional
+from typing import Generator, Optional, TypeVar
 
 from sqlalchemy import ScalarResult
 

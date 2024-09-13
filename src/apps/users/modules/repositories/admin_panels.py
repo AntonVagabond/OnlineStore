@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Union, TypeAlias, Optional
+from typing import Optional, TypeAlias, Union
 from uuid import UUID
 
 import sqlalchemy as sa

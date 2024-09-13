@@ -5,7 +5,7 @@ import pytest
 
 from common.const.response_exceptions import USER_NOT_FOUND
 from common.exceptions import mixins as exceptions
-from modules.schemas.admin_panels import UserByRoleFilterSchema, UpdateAdminSchema
+from modules.schemas.admin_panels import UpdateAdminSchema, UserByRoleFilterSchema
 from modules.services.admin_panels import AdminPanelService
 from tests.unit.data import admin_panels as data_array
 from tests.unit.fixtures.admin_panels import AdminTestUOW
