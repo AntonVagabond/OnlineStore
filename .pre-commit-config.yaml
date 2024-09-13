@@ -1,44 +1,45 @@
-#default_install_hook_types: [pre-commit]
-#default_stages: [commit, push]
-#default_language_version:
-#  python: python3.11
+default_install_hook_types: [ pre-commit ]
+default_stages: [ commit, push ]
+default_language_version:
+  python: python3.11
 repos:
-#  - repo: https://github.com/pre-commit/pre-commit-hooks
-#    rev: v4.6.0
-#    hooks:
-#      - id: trailing-whitespace  # убирает лишние пробелы
-#      - id: check-yaml  # проверяет синтаксис .yaml файлов
-#      - id: check-case-conflict  # проверяет файлы, которые могут конфликтовать в файловых системах без учета регистра.
-#      - id: check-merge-conflict  # проверяет файлы, содержащие конфликтные строки слияния.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace  # убирает лишние пробелы
+      - id: check-yaml  # проверяет синтаксис .yaml файлов
+      - id: check-case-conflict  # проверяет файлы, которые могут конфликтовать в файловых системах без учета регистра.
+      - id: check-merge-conflict  # проверяет файлы, содержащие конфликтные строки слияния.
 
 #  - repo: https://github.com/pycqa/isort
 #    rev: 5.13.2
 #    hooks:
 #      - id: isort
-#        name: Isort Import Sorter
+#        name: Isort
 #        language_version: python3.11
-#        files: ^src/apps/(auth|users)/.*\.py$
-##        args: ["--profile=black", "--line-length=90", "--color"]
+#        args: [ "--profile=black", "--line-length=90", "--color" ]
 #
 #  - repo: https://github.com/psf/black
 #    rev: 24.8.0
 #    hooks:
 #      - id: black
-#        name: Black Formatter
+#        name: Black
 #        language_version: python3.11
-#        files: ^src/apps/(auth|users)/.*\.py$
-##        args: ["--line-length=90", "--target-version=py310", "--target-version=py311"]
+#        files: \.pyi?$
+#        exclude: "migrations/.*"
+#        args: [
+#          "--check",
+#          "--color",
+#          "--line-length=90",
+#          "--target-version=py310",
+#          "--target-version=py311",
+#        ]
 
-  - repo: local
-#    rev: 7.1.0
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.0
     hooks:
       - id: flake8
-        name: flake8
-#        additional_dependencies: ["flake8-pyproject"]
-        entry: flake8
-        language: system
-        types: [python]
-        pass_filenames: false
-        files: ^src/apps/.*\.py$
-#        exclude: "migrations|.git|__pycache__|__init__.py|.env|.env.example"
-#        args: ["--max-line-length=90", "--ignore=F821,E704,W503"]
+        name: Flake8
+        language_version: python3.11
+        exclude: "migrations|.git|__pycache__|__init__.py|.env|.env.example"
+        args: [ "--max-line-length=90", "--ignore=F821,E704,W503" ]
