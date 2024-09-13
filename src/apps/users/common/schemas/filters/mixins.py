@@ -4,7 +4,7 @@ from typing import TypeVar, Optional
 from pydantic import Field
 
 from common.schemas.base import BaseModel
-from core.config import get_settings, settings
+from core.config import settings
 
 TSchema = TypeVar("TSchema", bound=BaseModel)
 

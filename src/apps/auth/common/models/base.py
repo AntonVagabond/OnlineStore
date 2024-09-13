@@ -1,7 +1,7 @@
 import re
 
 from sqlalchemy import MetaData
-from sqlalchemy.orm import MappedAsDataclass, DeclarativeBase, declared_attr
+from sqlalchemy.orm import DeclarativeBase, declared_attr
 
 constraint_naming_conventions = {
     "ix": "ix_%(column_0_label)s",

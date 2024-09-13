@@ -1,7 +1,8 @@
-from typing import TypeVar, Generic
+from typing import TypeVar
+
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.models.base import Base
-from sqlalchemy.ext.asyncio import AsyncSession
 
 TModel = TypeVar("TModel", bound=Base)
 

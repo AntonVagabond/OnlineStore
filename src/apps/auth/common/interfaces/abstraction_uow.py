@@ -1,6 +1,5 @@
 import abc
-from types import TracebackType
-from typing import Type, TypeVar
+from typing import TypeVar
 
 from common.repositories.base import BaseRepository
 

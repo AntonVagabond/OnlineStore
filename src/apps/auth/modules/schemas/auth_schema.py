@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import Field
 
 from common.schemas.base import BaseModel

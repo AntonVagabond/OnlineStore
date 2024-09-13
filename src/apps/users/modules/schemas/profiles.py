@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from pydantic import EmailStr, field_validator, ValidationError, Field
+from pydantic import EmailStr, field_validator
 
 from common.schemas.api.mixins import RegisterSchema, UpdateSchema
 from common.schemas.base import BaseModel
