@@ -21,6 +21,14 @@ pytest = "^8.3.2"
 pytest-asyncio = "^0.24.0"
 pytest-alembic = "^0.11.1"
 
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+isort = "^5.13.2"
+pre-commit = "^3.8.0"
+flake8 = "^7.1.1"
+flake8-pyproject = "^1.2.3"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -31,7 +39,7 @@ pythonpath = ["."]
 asyncio_default_fixture_loop_scope = "session"
 python_files = ["test*.py", "*test.py"]
 python_functions = ["*_test", "test_*"]
-norecursedirs = ["venv", ".venv", ".env", "migrations"]
+norecursedirs = [".env", "migrations"]
 asyncio_mode = "auto"
 addopts = '-p no:warnings'
 testpaths=[
@@ -39,3 +47,39 @@ testpaths=[
     "tests/unit/test_profiles.py",
     "tests/migrations/test_migrations.py",  # тестирования миграций.
 ]
+# ---------------------------------------------------------
+
+[tool.black]
+color=true
+line-length = 90
+target-version = [ "py310", "py311" ]
+include = '\.pyi?$'
+exclude = '''
+    /(
+        \.git
+        | \._build
+        | \.back.out
+        | \.build
+        | \.coverage
+        | \.dist
+        | \.pytest_cache
+        | \.env.example
+        | \__pycache__
+        | \migrations
+    )/
+'''
+
+[tool.isort]
+profile = "black"
+color_output = true
+include_trailing_comma = true
+line_length = 90
+lines_after_imports = 2
+lines_between_sections = 1
+skip = ["__init__.py", ".env", ".env.example"]
+
+[tool.flake8]
+exclude = ["migrations", ".git", "__pycache__", "__init__.py", ".env", ".env.example"]
+max-line-length = 90
+count = true
+ignore = ["F821"]

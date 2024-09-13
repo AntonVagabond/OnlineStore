@@ -17,6 +17,48 @@ psycopg2-binary = "^2.9.9"
 bcrypt = "^4.2.0"
 
 
+[tool.poetry.group.dev.dependencies]
+flake8-pyproject = "^1.2.3"
+flake8 = "^7.1.1"
+isort = "^5.13.2"
+black = "^24.8.0"
+pre-commit = "^3.8.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+color=true
+line-length = 90
+target-version = [ "py310", "py311" ]
+include = '\.pyi?$'
+exclude = '''
+    /(
+        \.git
+        | \._build
+        | \.back.out
+        | \.build
+        | \.coverage
+        | \.dist
+        | \.pytest_cache
+        | \.env.example
+        | \__pycache__
+        | \migrations
+    )/
+'''
+
+[tool.isort]
+profile = "black"
+color_output = true
+include_trailing_comma = true
+line_length = 90
+lines_after_imports = 2
+lines_between_sections = 1
+skip = ["__init__.py", ".env", ".env.example"]
+
+[tool.flake8]
+exclude = ["migrations", ".git", "__pycache__", "__init__.py", ".env", ".env.example"]
+max-line-length = 90
+count = true
+ignore = ["F821"]
