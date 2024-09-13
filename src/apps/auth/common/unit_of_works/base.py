@@ -53,7 +53,8 @@ class BaseUnitOfWork(IUnitOfWork, Generic[TRepository]):
                             "ID пользователя не найден."
                         )
                     },
-                    ensure_ascii=False
+                    ensure_ascii=False,
+                    indent=4,
                 )
             )
             await self.close()
@@ -84,6 +85,7 @@ class BaseUnitOfWork(IUnitOfWork, Generic[TRepository]):
                         )
                     },
                     ensure_ascii=False,
+                    indent=4,
                 )
             )
             await self.close()

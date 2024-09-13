@@ -114,7 +114,7 @@ class JSONFormatter(logging.Formatter):
             'process': record.processName,
             'thread': record.threadName
         }
-        return json.dumps(log_record, ensure_ascii=False)
+        return json.dumps(log_record, ensure_ascii=False, indent=4)
 
 
 class LoggingFilter(logging.Filter):
