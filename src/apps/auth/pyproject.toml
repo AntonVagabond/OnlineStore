@@ -48,8 +48,6 @@ profile = "black"
 color_output = true
 include_trailing_comma = true
 line_length = 90
-lines_after_imports = 2
-lines_between_sections = 1
 skip = ["__init__.py", ".env", ".env.example"]
 
 [tool.flake8]
