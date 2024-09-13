@@ -4,12 +4,13 @@ from fastapi import APIRouter
 from starlette.responses import Response
 
 from api.dependencies import (
-    AdminPanelUOWDep, AdminPanelServiceDep, UserByRoleFilterDep, AdminDep,
+    AdminPanelUOWDep, AdminPanelServiceDep, UserByRoleFilterDep, AdminDep
 )
 from common.schemas.internal.mixins import PageViewSchema
 from modules.responses import admin_panels as responses
-from modules.schemas.admin_panels import UserViewSchemaForAdminTable, UpdateAdminSchema, \
-    UserResponseSchema
+from modules.schemas.admin_panels import (
+    UserViewSchemaForAdminTable, UpdateAdminSchema, UserResponseSchema
+)
 
 admin_panel = APIRouter(prefix="/api/v1/admin_panel", tags=["AdminPanel"])
 
@@ -18,7 +19,7 @@ admin_panel = APIRouter(prefix="/api/v1/admin_panel", tags=["AdminPanel"])
     path="/",
     summary="Получение списка данных о пользователях (Admin).",
     responses=responses.GET_LIST_RESPONSES,
-    dependencies=(AdminDep,)
+    dependencies=(AdminDep,),
 )
 async def get_list_users_admin(
         uow: AdminPanelUOWDep,
@@ -34,7 +35,7 @@ async def get_list_users_admin(
     path="/edit/{user_id}/",
     summary="Получение данных о пользователя для редактирования (Admin).",
     responses=responses.GET_RESPONSES,
-    dependencies=(AdminDep,)
+    dependencies=(AdminDep,),
 )
 async def get_user_admin(
         uow: AdminPanelUOWDep,
@@ -50,7 +51,7 @@ async def get_user_admin(
     path="/edit/",
     summary="Редактирование пользователя (Admin).",
     responses=responses.EDIT_RESPONSES,
-    dependencies=(AdminDep,)
+    dependencies=(AdminDep,),
 )
 async def update_user_admin(
         uow: AdminPanelUOWDep,

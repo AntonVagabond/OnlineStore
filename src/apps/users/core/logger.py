@@ -8,7 +8,7 @@ from typing import Union, TypeAlias, Any
 import yaml
 
 LoadData: TypeAlias = dict[
-    str, Union[int, bool, dict[str, dict[str, Union[str, None, bool]]]],
+    str, Union[int, bool, dict[str, dict[str, Union[str, None, bool]]]]
 ]
 
 
@@ -19,6 +19,7 @@ class LoggerConfig:
     существование необходимой директории и файлов
     для логов, создавая их при необходимости.
     """
+
     @staticmethod
     def __load_config() -> LoadData:
         """Загрузить конфиги для логирования из yml-файла."""
@@ -35,7 +36,7 @@ class LoggerConfig:
         """
         # Повышаем уровень логирования для watchfiles.main, чтобы не было спама в логах,
         # и не нагружал из-за этого систему.
-        logger = logging.getLogger('watchfiles.main')
+        logger = logging.getLogger("watchfiles.main")
         logger.setLevel(logging.WARNING)
 
         if os.path.exists("logs/app.log"):
@@ -59,6 +60,7 @@ class JSONFormatter(logging.Formatter):
     Этот класс используется для структурирования логов в формате JSON,
     с поддержкой специальной обработки логов от httpx и uvicorn.
     """
+
     @staticmethod
     def __httpx_logs(message: str) -> Union[dict[str, str], dict]:
         """Конвертировать данные из строки в словарь для логов httpx."""
@@ -105,17 +107,17 @@ class JSONFormatter(logging.Formatter):
         if isinstance(message, str):
             message = self.__convert_to_dict_if_str_is_json_type(message)
         log_record = {
-            'timestamp': self.formatTime(record, self.datefmt),
-            'level': record.levelname,
-            'message': message,
-            'name': record.name,
-            'app': "users",
-            'module': record.module,
-            'file': record.pathname,
-            'line': record.lineno,
-            'func': record.funcName,
-            'process': record.processName,
-            'thread': record.threadName
+            "timestamp": self.formatTime(record, self.datefmt),
+            "level": record.levelname,
+            "message": message,
+            "name": record.name,
+            "app": "users",
+            "module": record.module,
+            "file": record.pathname,
+            "line": record.lineno,
+            "func": record.funcName,
+            "process": record.processName,
+            "thread": record.threadName,
         }
         return json.dumps(log_record, ensure_ascii=False, indent=4)
 
@@ -125,6 +127,7 @@ class LoggingFilter(logging.Filter):
     Класс фильтра для логирования.
     Этот класс позволяет фильтровать логи по определенным условиям.
     """
+
     def filter(self, record: logging.LogRecord) -> bool:
         """Отфильтровать все сообщения, которые не являются словарём."""
         return bool(record.name in ("root", "uvicorn.access", "httpx"))

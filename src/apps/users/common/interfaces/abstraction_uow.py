@@ -10,8 +10,7 @@ class IUnitOfWork(abc.ABC):
     """Абстрактный класс для работы с транзакциями."""
 
     @abc.abstractmethod
-    def __init__(self) -> None:
-        ...
+    def __init__(self) -> None: ...
 
     @abc.abstractmethod
     async def __aenter__(self) -> TRepository:

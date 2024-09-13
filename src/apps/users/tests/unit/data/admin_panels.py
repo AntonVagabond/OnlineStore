@@ -128,7 +128,7 @@ UPDATE_USER_ADMIN_TEST_DATA = (
             "birthday": "1986-02-25",
             "phone_number": "+7(925)555-35-35",
             "role": RoleEnum.MANAGER,
-            "test_result": True
+            "test_result": True,
         },
         {
             "id": "beb247ae-58cc-4e75-b6fc-61e57e12b666",
@@ -138,7 +138,7 @@ UPDATE_USER_ADMIN_TEST_DATA = (
             "birthday": "1986-02-25",
             "phone_number": "+7(925)555-35-35",
             "role": RoleEnum.CUSTOMER,
-            "test_result": USER_NOT_FOUND
+            "test_result": USER_NOT_FOUND,
         },
     ),
 )

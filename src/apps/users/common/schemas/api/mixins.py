@@ -13,11 +13,13 @@ TSchema = TypeVar("TSchema", bound=BaseModel)
 
 class CurrentUserSchema(BaseModel):
     """Схема текущего пользователя."""
+
     id: UUID
 
 
 class PersonBaseSchema(BaseModel):
     """Базовая схема человека."""
+
     id: UUID
     email: EmailStr
     phone_number: Optional[str] = Field(default=None)
@@ -26,6 +28,7 @@ class PersonBaseSchema(BaseModel):
 
 class PersonSchema(PersonBaseSchema):
     """Схема человека."""
+
     last_name: Optional[str] = Field(default=None)
     first_name: Optional[str] = Field(default=None)
     second_name: Optional[str] = Field(default=None)
@@ -40,6 +43,7 @@ class StandardViewSchemaForTable(PersonSchema):
 
 class RegisterSchema(BaseModel):
     """Общая схема для регистрации."""
+
     role: HiddenField[RoleEnum] = Field(default=RoleEnum.CUSTOMER)
     email: EmailStr
     phone_number: str
@@ -91,6 +95,7 @@ class RegisterSchema(BaseModel):
 
 class UpdateSchema(BaseModel):
     """Общая схема для редактирования."""
+
     last_name: str
     first_name: str
     second_name: str

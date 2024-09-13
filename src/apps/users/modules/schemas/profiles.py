@@ -10,6 +10,7 @@ from common.schemas.base import BaseModel
 
 class ProfileResponseSchema(BaseModel):
     """Схема ответа на запрос профиля."""
+
     id: UUID
     last_name: str
     first_name: str

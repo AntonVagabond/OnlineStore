@@ -9,6 +9,7 @@ from sqlalchemy import URL
 
 class CommonSettings(BaseSettings):
     """Общие настройки приложения."""
+
     model_config = SettingsConfigDict(
         env_file=os.path.expanduser(".env"),
         env_file_encoding="utf-8",
@@ -18,6 +19,7 @@ class CommonSettings(BaseSettings):
 
 class DatabaseSettings(CommonSettings):
     """Настройки окружения базы данных."""
+
     pg_host: str = Field(alias="PG_HOST")
     pg_user: str = Field(alias="PG_USER")
 
@@ -77,6 +79,7 @@ class DatabaseSettings(CommonSettings):
 
 class AuthSettings(CommonSettings):
     """Настройки окружения для подключения к микросервису Auth."""
+
     token_url: HttpUrl = Field(alias="TOKEN_URL")
     auth_url: HttpUrl = Field(alias="AUTH_URL")
     auth_endpoint_url: HttpUrl = Field(alias="AUTH_ENDPOINT_URL")
@@ -84,6 +87,7 @@ class AuthSettings(CommonSettings):
 
 class HttpxSettings(CommonSettings):
     """Настройки окружения для работы с HTTP-клиентом."""
+
     max_connections: int = Field(default=500, alias="MAX_CONNECTIONS")
     max_keepalive_connections: int = Field(default=50, alias="MAX_KEEPALIVE_CONNECTIONS")
     keepalive_expiry: float = Field(default=30.0, alias="KEEPALIVE_EXPIRY")
@@ -92,6 +96,7 @@ class HttpxSettings(CommonSettings):
 
 class Settings(CommonSettings):
     """Настройки окружения."""
+
     db: DatabaseSettings = DatabaseSettings()
     auth: AuthSettings = AuthSettings()
     client: HttpxSettings = HttpxSettings()

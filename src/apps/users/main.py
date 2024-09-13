@@ -33,10 +33,7 @@ app = FastAPI(
         "clientId": settings.client_id,
         "clientSecret": settings.client_secret,
     },
-    swagger_ui_parameters={
-        "displayRequestDuration": True,
-        "persistAuthorization": True
-    }
+    swagger_ui_parameters={"displayRequestDuration": True, "persistAuthorization": True},
 )
 
 
@@ -90,5 +87,5 @@ if __name__ == "__main__":
         host=settings.host,
         port=settings.port,
         reload=True,
-        log_config=LoggerConfig.execute_config()
+        log_config=LoggerConfig.execute_config(),
     )

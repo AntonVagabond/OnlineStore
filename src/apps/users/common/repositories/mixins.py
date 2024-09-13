@@ -14,11 +14,10 @@ TFilterData = TypeVar("TFilterData", bound=DataRangeBaseFilterSchema)
 
 class PaginatedPageRepository(BaseRepository):
     """Общий репозиторий для разбивки данных на страницы."""
+
     model: type[TModel]
 
-    def _is_there_start_and_end_date(
-            self, stmt: Select, filters: TFilterData
-    ) -> Select:
+    def _is_there_start_and_end_date(self, stmt: Select, filters: TFilterData) -> Select:
         """Проверка на существование даты начала и окончания."""
         if filters.date_begin:
             stmt = stmt.filter(self.model.updated_at >= filters.date_begin.date())
@@ -32,25 +31,30 @@ class PaginatedPageRepository(BaseRepository):
         subquery = stmt.subquery()
 
         # Используем `func.count` для подсчета записей в подзапросе.
-        count_records = (await self.session.execute(
-            sa.select(sa.func.count().label('count')).select_from(subquery)
-        )).scalar_one()
+        count_records = (
+            await self.session.execute(
+                sa.select(sa.func.count().label("count")).select_from(subquery)
+            )
+        ).scalar_one()
         return count_records
 
     async def _is_there_records(
-            self, count_records: int, stmt: Select, filters: TFilter,
+        self, count_records: int, stmt: Select, filters: TFilter
     ) -> Optional[ScalarResult]:
         """Проверка на существование записи."""
         if count_records != 0:
-            records = (await self.session.execute(
-                stmt
-                .order_by(self.model.updated_at.desc())
-                .offset(
-                    (
-                        filters.page_number - 1
-                        if filters.page_number > 0 else
-                        filters.page_number
-                    ) * filters.page_size)
-                .limit(filters.page_size)
-            )).scalars()
+            records = (
+                await self.session.execute(
+                    stmt.order_by(self.model.updated_at.desc())
+                    .offset(
+                        (
+                            filters.page_number - 1
+                            if filters.page_number > 0
+                            else filters.page_number
+                        )
+                        * filters.page_size
+                    )
+                    .limit(filters.page_size)
+                )
+            ).scalars()
             return records

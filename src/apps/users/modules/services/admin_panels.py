@@ -7,7 +7,9 @@ from common.exceptions import mixins as exception
 from common.services.mixins import PaginatedPageService
 from models import User
 from modules.schemas.admin_panels import (
-    UserByRoleFilterSchema, UserViewSchemaForAdminTable, UpdateAdminSchema,
+    UserByRoleFilterSchema,
+    UserViewSchemaForAdminTable,
+    UpdateAdminSchema,
     UserResponseSchema,
 )
 from modules.unit_of_works.admin_panels import AdminPanelUOW
@@ -32,7 +34,7 @@ class AdminPanelService(PaginatedPageService):
 
     @classmethod
     async def get_all(
-            cls, uow: AdminPanelUOW, filters: UserByRoleFilterSchema
+        cls, uow: AdminPanelUOW, filters: UserByRoleFilterSchema
     ) -> PageViewSchema:
         """Получить информацию по фильтрам пользователей."""
         async with uow:
@@ -44,9 +46,10 @@ class AdminPanelService(PaginatedPageService):
                     cls.__convert_record(record) for record in cls._gen_records(records)
                 ]
             response = cls._get_response(
-                count_records, UserViewSchemaForAdminTable, list_records, filters,
+                count_records, UserViewSchemaForAdminTable, list_records, filters
             )
             return response
+
     # endregion --------------------------------------------------------------------------
 
     @staticmethod
@@ -64,7 +67,7 @@ class AdminPanelService(PaginatedPageService):
         )
 
     async def get(
-            self, uow: AdminPanelUOW, obj_id: UUID,
+            self, uow: AdminPanelUOW, obj_id: UUID
     ) -> UserResponseSchema:
         """Получить данные пользователя для редактирования."""
         async with uow:
@@ -97,4 +100,5 @@ class AdminPanelService(PaginatedPageService):
             user_instance = await uow.repo.edit(obj_dict)
             await uow.commit()
             return bool(user_instance)
+
     # endregion --------------------------------------------------------------------------

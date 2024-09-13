@@ -14,10 +14,10 @@ from tests.unit.fixtures.profiles import ProfileTestUOW
 
 @pytest.mark.parametrize(*data_array.GET_USER_INFO_TEST_DATA)
 async def test_get_user_info(
-        profile_uow: ProfileTestUOW,
-        profile_service: ProfileService,
-        user_id: str,
-        test_result: bool,
+    profile_uow: ProfileTestUOW,
+    profile_service: ProfileService,
+    user_id: str,
+    test_result: bool,
 ) -> None:
     """Тест получения информации профиля пользователя."""
     if isinstance(test_result, str):
@@ -31,9 +31,9 @@ async def test_get_user_info(
 
 @pytest.mark.parametrize(*data_array.CREATE_USERS_PROFILE_TEST_DATA)
 async def test_create_users_profile(
-        profile_uow: ProfileTestUOW,
-        profile_service: ProfileService,
-        test_data: dict[str, Union[str, bool, Optional[int], RoleEnum]]
+    profile_uow: ProfileTestUOW,
+    profile_service: ProfileService,
+    test_data: dict[str, Union[str, bool, Optional[int], RoleEnum]],
 ) -> None:
     """Тест для регистрации пользователя."""
     test_result = test_data.pop("test_result")

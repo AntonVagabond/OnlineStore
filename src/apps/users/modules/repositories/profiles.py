@@ -16,23 +16,24 @@ RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, RoleEnum, NoneTyp
 
 class ProfileRepository(PaginatedPageRepository):
     """Репозиторий профиля пользователя."""
+
     model = User
 
     async def __is_exist_email(self, user_email: str) -> bool:
         """Проверка на существование пользователя с данным email в БД."""
-        stmt = (sa.select(self.model).filter(self.model.email.ilike(user_email)))
+        stmt = sa.select(self.model).filter(self.model.email.ilike(user_email))
         result = (await self.session.execute(stmt)).scalar_one_or_none()
         return bool(result)
 
     async def __is_exist_phone_number(self, phone_number: str) -> bool:
         """Проверка на существование пользователя с данным телефонным номером в БД."""
-        stmt = (sa.select(self.model).filter(self.model.phone_number == phone_number))
+        stmt = sa.select(self.model).filter(self.model.phone_number == phone_number)
         result = (await self.session.execute(stmt)).scalar_one_or_none()
         return bool(result)
 
     async def __get_role_id(self, role: RoleEnum) -> UUID:
         """Получить идентификатор роли."""
-        stmt = (sa.select(Role.id).filter(Role.role == role.value))
+        stmt = sa.select(Role.id).filter(Role.role == role.value)
         return (await self.session.execute(stmt)).scalar_one()
 
     async def add(self, data: RegisterData) -> str:

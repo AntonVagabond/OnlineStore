@@ -29,7 +29,7 @@ async def create_user(
     responses=responses.GET_RESPONSES,
 )
 async def get_user(
-        current_user: UserSchemaDep, uow: ProfileUOWDep, service: ProfileServiceDep,
+        current_user: UserSchemaDep, uow: ProfileUOWDep, service: ProfileServiceDep
 ) -> Response:
     """Контроллер получения информации профиля пользователя."""
     profile_data = await service.get(uow, current_user.id)

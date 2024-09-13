@@ -7,6 +7,7 @@ from core.config import settings
 
 class ExternalServiceConnector:
     """Класс инициализации/закрытия и получения клиента."""
+
     client: Optional[AsyncClient] = None
 
     @classmethod
@@ -20,7 +21,7 @@ class ExternalServiceConnector:
             )
         )
         cls.client = AsyncClient(
-            transport=transport, timeout=Timeout(settings.client.timeout),
+            transport=transport, timeout=Timeout(settings.client.timeout)
         )
 
     @classmethod

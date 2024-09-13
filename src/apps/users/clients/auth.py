@@ -12,7 +12,7 @@ from core.config import settings
 from core.http_connector import ExternalServiceConnector
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=str(settings.auth.token_url), scheme_name="JWT",
+    tokenUrl=str(settings.auth.token_url), scheme_name="JWT"
 )
 
 
@@ -26,15 +26,12 @@ def get_current_user(
             token: str = Depends(oauth2_scheme),
     ) -> CurrentUserSchema:
         """Поиск текущего пользователя."""
-        data = {
-            "access_token": token,
-            "roles": ', '.join(roles) if roles else None
-        }
+        data = {"access_token": token, "roles": ", ".join(roles) if roles else None}
         filter_data = {key: value for key, value in data.items() if value is not None}
 
         try:
             response = await client.get(
-                url=str(settings.auth.auth_endpoint_url), headers=filter_data,
+                url=str(settings.auth.auth_endpoint_url), headers=filter_data
             )
             response.raise_for_status()  # Проверка на HTTP ошибки.
             response_json = response.json()  # Конвертируем ответ в json-формат.

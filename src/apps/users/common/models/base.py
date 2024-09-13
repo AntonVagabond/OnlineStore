@@ -14,11 +14,13 @@ constraint_naming_conventions = {
 
 class BaseDeclarative(DeclarativeBase):
     """Базовая модель SQLAlchemy."""
+
     metadata = MetaData(naming_convention=constraint_naming_conventions)
 
 
 class Base(BaseDeclarative):
     """Базовая модель."""
+
     __abstract__ = True
 
     pattern = re.compile(r"(?<!^)(?=[A-Z])")

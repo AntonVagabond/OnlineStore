@@ -24,6 +24,7 @@ TID = TypeVar("TID", int, UUID)
 
 class BaseRepository(IRepository):
     """Базовый класс репозитория."""
+
     model: type[TModel]
 
     def __init__(self, session: AsyncSession) -> None:
@@ -55,34 +56,37 @@ class BaseRepository(IRepository):
 
     async def delete(self, data_id: TID) -> Optional[TID]:
         """Базовый метод репозитория для обновления статуса данных на "удалено"."""
-        stmt = (update(self.model)
-                .filter(self.model.id == data_id, self.model.deleted.__eq__(False))
-                .values(deleted=True, date_update=datetime.now())
-                .returning(self.model.id))
+        stmt = (
+            update(self.model)
+            .filter(self.model.id == data_id, self.model.deleted.__eq__(False))
+            .values(deleted=True, date_update=datetime.now())
+            .returning(self.model.id)
+        )
         res = await self.session.execute(stmt)
         return res.scalar_one_or_none()
 
     async def delete_db(self, data_id: TID) -> bool:
         """Базовый метод репозитория для удаления данных из базы данных."""
-        stmt = (delete(self.model)
-                .where(self.model.id == data_id)
-                .returning(self.model.id))
+        stmt = delete(self.model).where(self.model.id == data_id).returning(self.model.id)
         res = await self.session.execute(stmt)
         return bool(res.scalar_one_or_none())
 
     async def edit(self, data: EditData) -> Optional[UUID]:
         """Базовый метод репозитория для редактирования данных."""
         data_id: TID = data.pop("id")
-        stmt = (update(self.model)
-                .filter(self.model.id == data_id, self.model.deleted.__eq__(False))
-                .values(**data)
-                .returning(self.model.id))
+        stmt = (
+            update(self.model)
+            .filter(self.model.id == data_id, self.model.deleted.__eq__(False))
+            .values(**data)
+            .returning(self.model.id)
+        )
         res = await self.session.execute(stmt)
         return res.scalar_one_or_none()
 
     async def exist(self, obj_id: TID) -> bool:
         """Базовый метод репозитория для поиска данных."""
-        stmt = (select(self.model)
-                .filter(self.model.id == obj_id, self.model.deleted.__eq__(False)))
+        stmt = select(self.model).filter(
+            self.model.id == obj_id, self.model.deleted.__eq__(False)
+        )
         res = await self.session.execute(stmt)
         return bool(res.scalar_one_or_none())

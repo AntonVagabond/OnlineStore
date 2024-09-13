@@ -18,7 +18,7 @@ GET_RESPONSES = {
 EDIT_RESPONSES = {
     200: {
         "description": "Successful Response",
-        "content": {"application/json": {"example": True}}
+        "content": {"application/json": {"example": True}},
     },
     400: {"model": response.BadRequestResponseSchema},
     401: {"model": response.UnauthorizedResponseSchema},

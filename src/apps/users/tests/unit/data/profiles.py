@@ -8,7 +8,7 @@ GET_USER_INFO_TEST_DATA = (
         # не существующий пользователь
         ("922f323e-abda-4192-b9f8-c9091fd2654d", resp_exc.USER_NOT_FOUND),
         ("922f323e-abda-4192-b9f8-c9091fd2686d", True),
-    )
+    ),
 )
 
 

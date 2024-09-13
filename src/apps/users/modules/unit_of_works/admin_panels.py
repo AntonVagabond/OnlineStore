@@ -6,6 +6,7 @@ from modules.repositories.admin_panels import AdminPanelRepository
 
 class AdminPanelUOW(BaseUnitOfWork):
     """Класс для работы с транзакциями панели администратора."""
+
     repo = AdminPanelRepository
 
     async def __aenter__(self) -> Self:

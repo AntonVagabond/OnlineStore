@@ -9,7 +9,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from pytest_alembic import Config, runner
 from sqlalchemy import URL, Engine, create_engine
 from sqlalchemy.ext.asyncio import (
-    create_async_engine, AsyncEngine, AsyncSession, async_sessionmaker,
+    create_async_engine, AsyncEngine, AsyncSession, async_sessionmaker
 )
 from sqlalchemy.orm import close_all_sessions, Session, sessionmaker
 
@@ -89,7 +89,8 @@ def __create_database(__mock_db_url: None) -> Generator[None, None, None]:
 
 @pytest.fixture(scope="session", autouse=True)
 def __mock_sessions_factories(
-        async_db_engine: AsyncEngine, sync_db_engine: Engine,
+    async_db_engine: AsyncEngine,
+    sync_db_engine: Engine,
 ) -> None:
     """
     Имитирует 'engine_async' и 'engine_sync' из 'core.database'.
@@ -124,9 +125,7 @@ async def async_db_engine(
 
 
 @pytest.fixture(scope="function")
-async def sync_session_factory(
-        sync_db_engine: Engine
-) -> sessionmaker[Session]:
+async def sync_session_factory(sync_db_engine: Engine) -> sessionmaker[Session]:
     """Создание синхронной фабрики сессий."""
     return sessionmaker(sync_db_engine, expire_on_commit=False)
 
@@ -137,6 +136,8 @@ async def async_session_factory(
 ) -> async_sessionmaker[AsyncSession]:
     """Создание асинхронной фабрики сессий."""
     return async_sessionmaker(async_db_engine, expire_on_commit=False)
+
+
 # endregion ------------------------------------------------------------------------------
 
 
@@ -157,7 +158,7 @@ def alembic_engine(sync_db_engine: Engine) -> Engine:
 
 @pytest.fixture(scope="session")
 def alembic_runner(
-        alembic_config: Config, alembic_engine: Engine,
+        alembic_config: Config, alembic_engine: Engine
 ) -> Generator[runner, None, None]:
     """Запуск программы для настройки pytest_alembic."""
     config = Config.from_raw_config(raw_config=alembic_config)
@@ -207,6 +208,7 @@ async def app_fixture(
             ProfileUOW: ProfileTestUOW,
         }
         yield from dict_dep_overrides.items()
+
     for key, value in generator_dependency_override():
         app.dependency_overrides[key] = value
 

@@ -10,20 +10,21 @@ from common.models.mixins import CreatedUpdatedMixin, UUIDMixin
 
 class User(Base, CreatedUpdatedMixin, UUIDMixin):
     """Модель пользователя."""
+
     username: Mapped[Optional[str]] = mapped_column(sa.String(length=100))
     last_name: Mapped[Optional[str]] = mapped_column(sa.String(length=100))
     first_name: Mapped[Optional[str]] = mapped_column(sa.String(length=100))
     second_name: Mapped[Optional[str]] = mapped_column(sa.String(length=100))
     full_name: Mapped[Optional[str]] = mapped_column(sa.String(length=200))
     email: Mapped[Optional[str]] = mapped_column(
-        sa.String(length=256), index=True, unique=True,
+        sa.String(length=256), index=True, unique=True
     )
     password_hash: Mapped[Optional[bytes]] = mapped_column(sa.LargeBinary)
     phone_number: Mapped[Optional[str]] = mapped_column(sa.String(length=18))
     photo: Mapped[Optional[str]] = mapped_column(sa.String(length=100))
     birthday: Mapped[Optional[datetime]] = mapped_column(sa.DateTime)
     role: Mapped["Role"] = relationship(  # type: ignore
-        back_populates="users", lazy="raise",
+        back_populates="users", lazy="raise"
     )
     logged_out: Mapped[bool] = mapped_column(sa.Boolean, default=False, nullable=False)
     deleted: Mapped[bool] = mapped_column(sa.Boolean, default=False, nullable=False)

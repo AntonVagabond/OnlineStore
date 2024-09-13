@@ -22,6 +22,7 @@ EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None]]
 
 class IRepository(ABC):
     """Абстрактная класс репозитория."""
+
     model: type[TModel]
 
     @abstractmethod
