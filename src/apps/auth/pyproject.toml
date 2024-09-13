@@ -11,7 +11,7 @@ python = "^3.11"
 fastapi = "^0.111.0"
 alembic = "^1.13.2"
 asyncpg = "^0.29.0"
-pyjwt = {extras = ["crypto"], version = "^2.9.0"}
+pyjwt = { extras = ["crypto"], version = "^2.9.0" }
 pydantic-settings = "^2.4.0"
 psycopg2-binary = "^2.9.9"
 bcrypt = "^4.2.0"
@@ -29,22 +29,17 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-color=true
+color = true
 line-length = 90
-target-version = [ "py310", "py311" ]
+target-version = ["py310", "py311"]
 include = '\.pyi?$'
-exclude = '''
+extend-exclude = '''
     /(
-        \.git
-        | \._build
-        | \.back.out
-        | \.build
-        | \.coverage
-        | \.dist
         | \.pytest_cache
         | \.env.example
+        | \.env
         | \__pycache__
-        | \migrations
+        | migrations
     )/
 '''
 

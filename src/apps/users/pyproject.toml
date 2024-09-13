@@ -42,30 +42,25 @@ python_functions = ["*_test", "test_*"]
 norecursedirs = [".env", "migrations"]
 asyncio_mode = "auto"
 addopts = '-p no:warnings'
-testpaths=[
+testpaths = [
     "tests/unit/test_admin_panels.py",
     "tests/unit/test_profiles.py",
-    "tests/migrations/test_migrations.py",  # тестирования миграций.
+    "tests/migrations/test_migrations.py", # тестирования миграций.
 ]
 # ---------------------------------------------------------
 
 [tool.black]
-color=true
+color = true
 line-length = 90
-target-version = [ "py310", "py311" ]
+target-version = ["py310", "py311"]
 include = '\.pyi?$'
-exclude = '''
+extend-exclude = '''
     /(
-        \.git
-        | \._build
-        | \.back.out
-        | \.build
-        | \.coverage
-        | \.dist
         | \.pytest_cache
         | \.env.example
+        | \.env
         | \__pycache__
-        | \migrations
+        | migrations
     )/
 '''
 
