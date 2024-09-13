@@ -37,6 +37,7 @@ WORKDIR /usr/src/app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install \
     --only main \
+    --no-dev \
     --no-root \
     --no-interaction \
     --no-ansi \

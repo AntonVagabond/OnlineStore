@@ -37,10 +37,11 @@ WORKDIR /usr/src/app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install \
     --only main \
+    --no-dev \
     --no-root \
     --no-interaction \
     --no-ansi \
-    --without test dev && \
+    --without test && \
     rm -rf ~/.cache/pypoetry
 
 # Этап 2: Финальный образ
