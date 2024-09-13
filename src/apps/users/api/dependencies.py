@@ -24,6 +24,8 @@ ProfileServiceDep = Annotated[ProfileService, Depends(ProfileService)]
 AdminDep = Depends(get_current_user(("admin",)))
 AdminSchemaDep = Annotated[CurrentUserSchema, Depends(get_current_user(("admin",)))]
 AdminPanelUOWDep = Annotated[AdminPanelUOW, Depends(AdminPanelUOW)]
+
+
 AdminPanelServiceDep = Annotated[AdminPanelService, Depends(AdminPanelService)]
 UserByRoleFilterDep = Annotated[UserByRoleFilterSchema, Depends(UserByRoleFilterSchema)]
 # endregion ------------------------------------------------------------------------------
