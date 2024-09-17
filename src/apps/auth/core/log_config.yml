@@ -40,6 +40,8 @@ handlers:
     filename: logs/app.log
     mode: a
     encoding: utf8
+    filters:
+      - message_filter
 
 loggers:
   uvicorn:
