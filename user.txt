@@ -14,5 +14,3 @@
 
         admin: "TestAdmin@gmail.com"
         admin_password: "TestPassword_5555"
-
-name
