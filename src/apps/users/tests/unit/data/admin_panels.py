@@ -142,3 +142,12 @@ UPDATE_USER_ADMIN_TEST_DATA = (
         },
     ),
 )
+
+DELETE_USER_TEST_DATA = (
+    "uuid, test_result",
+    (
+        # не существующий id-ник
+        (UUID("beb247ae-58cc-4e75-b6fc-61e57e10a707"), USER_NOT_FOUND),
+        (UUID("beb247ae-58cc-4e75-b6fc-61e57e10a606"), True),
+    ),
+)

@@ -59,3 +59,20 @@ async def test_update_user_admin(
     else:
         bool_result = await admin_panel_service.edit(admin_panel_uow, model)
         assert bool_result == test_result
+
+
+@pytest.mark.parametrize(*data_array.DELETE_USER_TEST_DATA)
+async def test_delete_user(
+    admin_panel_uow: AdminTestUOW,
+    admin_panel_service: AdminPanelService,
+    uuid: UUID,
+    test_result: Union[bool, str],
+) -> None:
+    """Тест для обновления статуса удаления пользователя."""
+    if test_result == USER_NOT_FOUND:
+        with pytest.raises(exceptions.UserNotFoundException) as exc:
+            await admin_panel_service.delete(admin_panel_uow, uuid)
+        assert exc.value.detail == test_result
+    else:
+        uuid_result = await admin_panel_service.delete(admin_panel_uow, uuid)
+        assert bool(uuid_result) == test_result
