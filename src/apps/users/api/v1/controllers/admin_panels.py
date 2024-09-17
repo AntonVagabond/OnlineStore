@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from fastapi import APIRouter
+from starlette import status
 from starlette.responses import Response
 
 from api.dependencies import (
@@ -66,3 +67,20 @@ async def update_user_admin(
     """Контроллер для редактирования пользователя."""
     bool_result = await service.edit(uow, model)
     return bool_result
+
+
+@admin_panel.patch(
+    path="/delete_user/{user_id}/",
+    summary="Удаление пользователя (admin).",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses=responses.DELETE_RESPONSES,
+    dependencies=(AdminDep,),
+)
+async def delete_user(
+    uow: AdminPanelUOWDep,
+    service: AdminPanelServiceDep,
+    user_id: UUID,
+) -> Response:
+    """Контроллер для обновления статуса удаления пользователя."""
+    await service.delete(uow, user_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -102,3 +102,16 @@ class AdminPanelService(PaginatedPageService):
             return bool(user_instance)
 
     # endregion --------------------------------------------------------------------------
+
+    # region -------------------------------- DELETE -------------------------------------
+    async def delete(self, uow: AdminPanelUOW, obj_id: UUID) -> UUID:
+        """
+        Удаление пользователя Администратором
+        (установка статуса пользователя на "удален").
+        """
+        result = await super().delete(uow=uow, obj_id=obj_id)
+        if result is None:
+            raise exception.UserNotFoundException()
+        return result
+
+    # endregion --------------------------------------------------------------------------
