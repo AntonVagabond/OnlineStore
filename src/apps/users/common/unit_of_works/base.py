@@ -40,6 +40,7 @@ class BaseUnitOfWork(IUnitOfWork):
                 json.dumps(
                     obj={
                         "exception": exc_val.__class__.__name__,
+                        "status_code": getattr(exc_val, "status_code"),
                         "detail": getattr(exc_val, "detail"),
                         "class": (
                             (
@@ -77,6 +78,7 @@ class BaseUnitOfWork(IUnitOfWork):
                 json.dumps(
                     obj={
                         "exception": exc_val.__class__.__name__,
+                        "status_code": 500,
                         "detail": detail_massage,
                         "class": (
                             (
