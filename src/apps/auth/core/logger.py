@@ -103,6 +103,8 @@ class JSONFormatter(logging.Formatter):
             message = self.__uvicorn_access_logs(record.getMessage())
         else:
             message = record.getMessage()
+        if isinstance(message, str):
+            message = self.__convert_to_dict_if_str_is_json_type(message)
         log_record = {
             "timestamp": self.formatTime(record, self.datefmt),
             "level": record.levelname,
