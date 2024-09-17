@@ -59,7 +59,7 @@ class BaseRepository(IRepository):
         stmt = (
             update(self.model)
             .filter(self.model.id == data_id, self.model.deleted.__eq__(False))
-            .values(deleted=True, date_update=datetime.now())
+            .values(deleted=True, updated_at=datetime.now())
             .returning(self.model.id)
         )
         res = await self.session.execute(stmt)
