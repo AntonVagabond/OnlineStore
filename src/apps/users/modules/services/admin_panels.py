@@ -104,7 +104,8 @@ class AdminPanelService(PaginatedPageService):
     # endregion --------------------------------------------------------------------------
 
     # region -------------------------------- DELETE -------------------------------------
-    async def delete(self, uow: AdminPanelUOW, obj_id: UUID) -> UUID:
+    @classmethod
+    async def delete(cls, uow: AdminPanelUOW, obj_id: UUID) -> UUID:
         """
         Удаление пользователя Администратором
         (установка статуса пользователя на "удален").
