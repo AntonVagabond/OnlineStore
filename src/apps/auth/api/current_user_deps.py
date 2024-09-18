@@ -23,7 +23,7 @@ class CurrentUserDep:
 
     @staticmethod
     async def get_data_user(
-        roles: Optional[tuple[str, ...]], token: str,
+        roles: Optional[tuple[str, ...]], token: str
     ) -> UserInfoSchema:
         """Получить данные пользователя."""
         try:

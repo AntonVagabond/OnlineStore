@@ -10,8 +10,8 @@ from .config import settings
 class Security:
     """Класс для работы с безопасностью."""
 
-    @staticmethod
-    def verify_password(password: str, hashed_password: bytes) -> bool:
+    @classmethod
+    def verify_password(cls, password: str, hashed_password: bytes) -> bool:
         """Сравнивает хэшированный пароль с паролем из БД."""
         return bcrypt.checkpw(password=password.encode(), hashed_password=hashed_password)
 
