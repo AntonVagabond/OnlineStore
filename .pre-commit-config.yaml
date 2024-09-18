@@ -19,6 +19,8 @@ repos:
           "--line-length=90",
           "--target-version=py310",
           "--target-version=py311",
+          "--check",
+          "--diff",
         ]
 
   - repo: https://github.com/pycqa/isort
@@ -32,6 +34,8 @@ repos:
         args: [
           "--profile=black",
           "--line-length=90",
+          "--check-only",
+          "--diff",
         ]
 
   - repo: https://github.com/pycqa/flake8
