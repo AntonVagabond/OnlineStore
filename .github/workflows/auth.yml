@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: '${{ env.WORKING_DIR }}/pyproject.toml'
+          python-version: '3.11'
           cache: 'poetry'
       - name: Install dependencies
         working-directory: ${{ env.WORKING_DIR }}
