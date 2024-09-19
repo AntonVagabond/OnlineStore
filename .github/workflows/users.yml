@@ -49,4 +49,5 @@ jobs:
       working-directory: ${{ env.WORKING_DIR }}
       run: poetry install --no-root --no-dev
     - name: Run pytest
+      working-directory: ${{ env.WORKING_DIR }}
       run: poetry run pytest -v
