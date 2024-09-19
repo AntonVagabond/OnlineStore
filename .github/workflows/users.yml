@@ -36,6 +36,12 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    env:
+      PG_HOST: ${{ secrets.PG_HOST }}
+      PG_USER: ${{ secrets.PG_USER }}
+      PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+      PG_DATABASE: ${{ secrets.PG_DATABASE }}
+      PG_PORT: ${{ secrets.PG_PORT }}
     steps:
     - uses: actions/checkout@v3
     - name: Install Poetry
@@ -47,7 +53,7 @@ jobs:
         cache: 'poetry'
     - name: Install dependencies
       working-directory: ${{ env.WORKING_DIR }}
-      run: poetry install --no-root --no-dev
+      run: poetry install --no-root --only main
     - name: Run pytest
       working-directory: ${{ env.WORKING_DIR }}
       run: poetry run pytest -v
