@@ -725,6 +725,9 @@ files = [
     {file = "isort-5.13.2.tar.gz", hash = "sha256:48fdfcb9face5d58a4f6dde2e72a1fb8dcaf8ab26f95ab49fab84c2ddefb0109"},
 ]
 
+[package.dependencies]
+colorama = {version = ">=0.4.6", optional = true, markers = "extra == \"colors\""}
+
 [package.extras]
 colors = ["colorama (>=0.4.6)"]
 
@@ -1782,4 +1785,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "532b745c6949ed9565468b1ea2b6ce51aaf9316a74f75036eccd11b7ebfa2355"
+content-hash = "0fd60d32692cbaa4bf215179b58aa17c57c01c92eee1e9b965597b474c48b626"
