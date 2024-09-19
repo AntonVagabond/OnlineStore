@@ -15,7 +15,7 @@ jobs:
   linters:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Poetry
         uses: snok/install-poetry@v1
       - name: Set up Python
@@ -36,6 +36,20 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ secrets.PG_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.PG_DATABASE }}
+        ports:
+          - ${{ secrets.PG_PORT }}:5432
+        options: >-
+          --health-cmd "pg_isready -U ${{ secrets.PG_DATABASE }}"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       PG_HOST: ${{ secrets.PG_HOST }}
       PG_USER: ${{ secrets.PG_USER }}
@@ -43,7 +57,7 @@ jobs:
       PG_DATABASE: ${{ secrets.PG_DATABASE }}
       PG_PORT: ${{ secrets.PG_PORT }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install Poetry
       uses: snok/install-poetry@v1
     - name: Set up Python
