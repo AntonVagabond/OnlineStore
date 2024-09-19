@@ -24,7 +24,7 @@ class DatabaseSettings(CommonSettings):
     pg_user: str = Field(default="postgres", alias="PG_USER")
 
     pg_password: str = Field(default="postgres", alias="PG_PASSWORD")
-    pg_database: str = Field(default="UserStore", alias="PG_DATABASE")
+    pg_database: str = Field(default="postgres", alias="PG_DATABASE")
     pg_port: int = Field(default=5432, alias="PG_PORT")
     async_database_url: Optional[PostgresDsn] = Field(default=None)
     sync_database_url: Optional[PostgresDsn] = Field(default=None)
