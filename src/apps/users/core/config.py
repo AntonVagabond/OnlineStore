@@ -20,12 +20,12 @@ class CommonSettings(BaseSettings):
 class DatabaseSettings(CommonSettings):
     """Настройки окружения базы данных."""
 
-    pg_host: str = Field(alias="PG_HOST")
-    pg_user: str = Field(alias="PG_USER")
+    pg_host: str = Field(default="localhost", alias="PG_HOST")
+    pg_user: str = Field(default="postgres", alias="PG_USER")
 
-    pg_password: str = Field(alias="PG_PASSWORD")
-    pg_database: str = Field(alias="PG_DATABASE")
-    pg_port: int = Field(alias="PG_PORT")
+    pg_password: str = Field(default="postgres", alias="PG_PASSWORD")
+    pg_database: str = Field(default="UserStore", alias="PG_DATABASE")
+    pg_port: int = Field(default=5432, alias="PG_PORT")
     async_database_url: Optional[PostgresDsn] = Field(default=None)
     sync_database_url: Optional[PostgresDsn] = Field(default=None)
 
@@ -80,9 +80,14 @@ class DatabaseSettings(CommonSettings):
 class AuthSettings(CommonSettings):
     """Настройки окружения для подключения к микросервису Auth."""
 
-    token_url: HttpUrl = Field(alias="TOKEN_URL")
-    auth_url: HttpUrl = Field(alias="AUTH_URL")
-    auth_endpoint_url: HttpUrl = Field(alias="AUTH_ENDPOINT_URL")
+    token_url: HttpUrl = Field(
+        default="http://localhost:6666/api/v1/auth/login/", alias="TOKEN_URL"
+    )
+    auth_url: HttpUrl = Field(default="http://localhost:6666", alias="AUTH_URL")
+    auth_endpoint_url: HttpUrl = Field(
+        default="http://localhost:6666/api/v1/auth/authenticate/",
+        alias="AUTH_ENDPOINT_URL",
+    )
 
 
 class HttpxSettings(CommonSettings):
@@ -101,13 +106,13 @@ class Settings(CommonSettings):
     auth: AuthSettings = AuthSettings()
     client: HttpxSettings = HttpxSettings()
 
-    client_id: str = Field(alias="CLIENT_ID")
-    client_secret: str = Field(alias="CLIENT_SECRET")
+    client_id: str = Field(default="fastapi", alias="CLIENT_ID")
+    client_secret: str = Field(default="fastapi_secret", alias="CLIENT_SECRET")
 
-    port: int = Field(alias="PORT")
-    host: str = Field(alias="HOST")
-    page_size: int = Field(alias="PAGE_SIZE")
-    openapi_url: str = Field(alias="OPENAPI_URL")
+    port: int = Field(default=6665, alias="PORT")
+    host: str = Field(default="localhost", alias="HOST")
+    page_size: int = Field(default=10, alias="PAGE_SIZE")
+    openapi_url: str = Field(default="/swagger/docs/v1.0/users", alias="OPENAPI_URL")
 
 
 @lru_cache
