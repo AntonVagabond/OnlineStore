@@ -6,6 +6,7 @@ services:
       context: ./src/apps/auth
       dockerfile: Dockerfile
     depends_on:
+      - redis.db
       - postgres.db
     restart: always
 
@@ -15,6 +16,7 @@ services:
       context: src/apps/users
       dockerfile: Dockerfile
     depends_on:
+      - redis.db
       - postgres.db
     restart: always
   # end --------------------------------------
