@@ -1,7 +1,5 @@
-version: "3.11"
-
 services:
-  # region --------------- APPS --------------
+  # region --------------- APPS -------------
   auth.api:
     container_name: auth.api
     build:
@@ -19,11 +17,18 @@ services:
     depends_on:
       - postgres.db
     restart: always
-  # end ---------------------------------------
+  # end --------------------------------------
+
+  # region -------------- REDIS --------------
+  redis.db:
+    image: redis:7.0.5-alpine
+    container_name: redis.db
+    restart: always
+  # end --------------------------------------
 
   # region --------------- DB ----------------
   postgres.db:
     image: postgres:14.6-alpine
     container_name: postgres.db
     restart: always
- # end ---------------------------------------
+  # end ---------------------------------------

@@ -1,5 +1,3 @@
-version: "3.11"
-
 services:
   # region --------------- APPS --------------
   auth.api:
