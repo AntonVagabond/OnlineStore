@@ -1,5 +1,3 @@
-version: "3.11"
-
 services:
   # region --------------- APPS --------------
   auth.api:
@@ -62,6 +60,16 @@ services:
 
   # end ---------------------------------------
 
+  redis.db:
+    environment:
+      - REDIS_PASSWORD=online_redis
+    ports:
+      - "6380:6380"
+    volumes:
+      - redis_certs:/certs
+      - redis_data:/data/
+      - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
+
   # region --------------- DB ----------------
   postgres.db:
     environment:
@@ -75,5 +83,9 @@ services:
 volumes:
   online_logs:
     name: online_logs
+  redis_certs:
+    driver: local
+  redis_data:
+    driver: local
   postgres_data:
     driver: local

@@ -45,7 +45,7 @@ RUN poetry install \
     rm -rf ~/.cache/pypoetry
 
 # Этап 2: Финальный образ
-FROM builder as production
+FROM builder AS production
 
 # Указываем рабочий каталог
 WORKDIR /usr/src/app
