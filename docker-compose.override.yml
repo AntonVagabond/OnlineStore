@@ -2,12 +2,20 @@ services:
   # region --------------- APPS --------------
   auth.api:
     environment:
-      # Postgres connection configuration
-      PG_HOST: ${PG_HOST}
-      PG_PORT: ${PG_PORT}
-      PG_USER: ${PG_USER}
-      PG_PASSWORD: ${PG_PASSWORD}
-      PG_DATABASE: ${PG_DATABASE_USER}
+      # Redis connection configuration
+      REDIS_SECURE: ${REDIS_SECURE}
+      REDIS_HOST: redis.db
+      REDIS_PORT: 6380
+      REDIS_USER: ${REDIS_USER}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_DB: ${REDIS_DB}
+      REDIS_DECODE_RESPONSES: ${REDIS_DECODE_RESPONSES}
+      REDIS_ENCODING: ${REDIS_ENCODING}
+      REDIS_POOL_MAX_CONNECTIONS: ${REDIS_POOL_MAX_CONNECTIONS}
+      SSL_KEYFILE: ${SSL_KEYFILE}
+      SSL_CERTFILE: ${SSL_CERTFILE}
+      SSL_CERT_REQS: ${SSL_CERT_REQS}
+      SSL_CA_CERTS: ${SSL_CA_CERTS}
       # Startup configuration
       PORT: ${PORT_AUTH}
       HOST: ${HOST_AUTH}
@@ -15,6 +23,7 @@ services:
       PAGE_SIZE: ${PAGE_SIZE}
       # Auth configuration
       TOKEN_URL: ${TOKEN_URL}
+      USER_ENDPOINT_URL: ${USER_ENDPOINT_URL}
       PRIVATE_KEY_PATH: ${PRIVATE_KEY_PATH}
       PUBLIC_KEY_PATH: ${PUBLIC_KEY_PATH}
       ALGORITHM: ${ALGORITHM}
@@ -27,14 +36,15 @@ services:
       TZ: Europe/Moscow
     volumes:
       - online_logs:/usr/src/app/logs
+      - redis_certs:/usr/src/app/redis/certs
     ports:
       - "1500:80"
 
   user.api:
     environment:
       # Postgres connection configuration
-      PG_HOST: ${PG_HOST}
-      PG_PORT: ${PG_PORT}
+      PG_HOST: postgres.db
+      PG_PORT: 5432
       PG_USER: ${PG_USER}
       PG_PASSWORD: ${PG_PASSWORD}
       PG_DATABASE: ${PG_DATABASE_USER}
@@ -62,13 +72,17 @@ services:
 
   redis.db:
     environment:
-      - REDIS_PASSWORD=online_redis
+      REDIS_ARGS: "user my_redis on >online_redis ~* +@all"
     ports:
-      - "6380:6380"
+      - "6379:6379"
+      - "6380:6380"  # Порт для SSL
+    privileged: true
     volumes:
       - redis_certs:/certs
       - redis_data:/data/
       - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./docker/users.acl:/usr/local/etc/redis/users.acl
+
 
   # region --------------- DB ----------------
   postgres.db:
@@ -77,6 +91,7 @@ services:
     ports:
       - "54330:5432"
     volumes:
+      - ./docker/scripts/db-initializer.sh:/docker-entrypoint-initdb.d/db-initializer.sh
       - postgres_data:/var/lib/postgresql/data/
   # end ---------------------------------------
 

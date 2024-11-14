@@ -64,7 +64,7 @@ class BaseUnitOfWork(IUnitOfWork):
                 )
             )
             await self.close()
-            raise exc_type()
+            raise exc_val
 
         #  Регистрируем и вызываем не отслеживаемые исключения.
         if exc_type:

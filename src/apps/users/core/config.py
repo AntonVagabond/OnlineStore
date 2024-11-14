@@ -109,7 +109,7 @@ class Settings(CommonSettings):
     client_id: str = Field(default="fastapi", alias="CLIENT_ID")
     client_secret: str = Field(default="fastapi_secret", alias="CLIENT_SECRET")
 
-    port: int = Field(default=6665, alias="PORT")
+    port: int = Field(default=1000, alias="PORT")
     host: str = Field(default="localhost", alias="HOST")
     page_size: int = Field(default=10, alias="PAGE_SIZE")
     openapi_url: str = Field(default="/swagger/docs/v1.0/users", alias="OPENAPI_URL")

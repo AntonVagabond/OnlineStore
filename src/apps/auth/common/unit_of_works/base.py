@@ -1,30 +1,30 @@
 import json
 import logging
 from types import TracebackType
-from typing import Generic, Optional, Self, TypeVar
+from typing import Optional, Self, TypeVar
 
 from fastapi import HTTPException
+from redis.asyncio import Redis
 
 from common.interfaces.abstraction_uow import IUnitOfWork
 from common.repositories.base import BaseRepository
-from core.database import async_session_maker
+from core.database import redis_engine
 
 TRepository = TypeVar("TRepository", bound=BaseRepository)
 
 
-class BaseUnitOfWork(IUnitOfWork, Generic[TRepository]):
+class BaseUnitOfWork(IUnitOfWork):
     """Базовый класс для работы с транзакциями."""
 
     repo: Optional[TRepository]
 
     def __init__(self) -> None:
-        self.__session_factory = async_session_maker
-        self.init_repo: type[TRepository] = type(TRepository)
+        self.__session_factory = redis_engine
+        self._session: Optional[Redis] = None
 
     async def __aenter__(self) -> Self:
         """Вход в контекстного менеджера."""
-        self._session = self.__session_factory()
-        self.repo = self.init_repo(self._session)
+        self._session = self.__session_factory.client()
         return self
 
     async def __aexit__(
@@ -37,7 +37,6 @@ class BaseUnitOfWork(IUnitOfWork, Generic[TRepository]):
 
         # Регистрируем и вызываем все кастомные исключения.
         if exc_type is not None and exc_type.__base__ == HTTPException:
-            await self.rollback()
             logging.exception(
                 json.dumps(
                     obj={
@@ -66,11 +65,10 @@ class BaseUnitOfWork(IUnitOfWork, Generic[TRepository]):
                 )
             )
             await self.close()
-            raise exc_type()
+            raise exc_val
 
         #  Регистрируем и вызываем не отслеживаемые исключения.
         if exc_type:
-            await self.rollback()
             detail_massage = (
                 getattr(exc_val, "detail")
                 if getattr(exc_val, "detail", None)
@@ -105,15 +103,8 @@ class BaseUnitOfWork(IUnitOfWork, Generic[TRepository]):
             )
             await self.close()
             raise HTTPException(status_code=500, detail=detail_massage)
-
-    async def commit(self) -> None:
-        """Фиксирование транзакции."""
-        await self._session.commit()
-
-    async def rollback(self) -> None:
-        """Завершение транзакции."""
-        await self._session.rollback()
+        await self.close()
 
     async def close(self) -> None:
         """Базовый метод закрытия транзакции."""
-        await self._session.close()
+        await self._session.aclose()

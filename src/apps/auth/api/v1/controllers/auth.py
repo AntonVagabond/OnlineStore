@@ -16,6 +16,7 @@ from ...dependencies import (
     AuthUserServiceDep,
     OAuth2PasswordDep,
     RefreshDep,
+    UserClientServiceDep,
     UserDep,
 )
 
@@ -30,6 +31,7 @@ auth = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 async def login_user(
     uow: AuthUOWDep,
     service: AuthUserServiceDep,
+    client: UserClientServiceDep,
     form_data: OAuth2PasswordDep,
     response: Response,
 ) -> TokenInfoSchema:
@@ -41,15 +43,10 @@ async def login_user(
 
     * *`password`* - ввод пароля.
     """
-    data_user = await service.get_user_for_create_tokens(uow, form_data)
-    access_token = Security.create_access_token(data_user.email)
-    refresh_token = Security.create_refresh_token(data_user.email)
-    response.set_cookie(
-        key=REFRESH,
-        value=refresh_token,
-        httponly=True,
-        secure=True,
-    )
+    login, now = await service.get_user_for_create_tokens(uow, client, form_data)
+    access_token = Security.create_access_token(login, now)
+    refresh_token = Security.create_refresh_token(login, now)
+    response.set_cookie(key=REFRESH, value=refresh_token, httponly=True, secure=True)
     return TokenInfoSchema(access_token=access_token)
 
 
@@ -61,7 +58,6 @@ async def login_user(
 async def get_new_access_token(
     uow: AuthUOWDep,
     service: AuthUserServiceDep,
-    response: Response,
     refresh: RefreshDep,
 ) -> TokenInfoSchema:
     """
@@ -70,23 +66,21 @@ async def get_new_access_token(
     Аргументы:
     * *`refresh_token`* - токен обновления (*скрытый*).
     """
-    user_info = await service.get_user_for_update_tokens(uow, refresh)
-    access_token = Security.create_access_token(user_info.email)
-    refresh_token = Security.create_refresh_token(user_info.email)
-    response.set_cookie(
-        key=REFRESH,
-        value=refresh_token,
-        httponly=True,
-        secure=True,
-    )
+    login, now = await service.get_user_for_update_tokens(uow, refresh)
+    access_token = Security.create_access_token(login, now)
     return TokenInfoSchema(access_token=access_token)
 
 
 @auth.post(path="/logout/", summary="Выход из учетной записи.")
 async def logout_user(
-    current_user: UserDep, response: Response  # noqa
+    uow: AuthUOWDep,
+    service: AuthUserServiceDep,
+    current_user: UserDep,  # noqa
+    response: Response,
+    refresh: RefreshDep,
 ) -> LogoutResponseSchema:
     """Контроллер для выхода из учетной записи."""
+    await service.delete_device(uow, refresh)
     response.delete_cookie(REFRESH, httponly=True, secure=True)
     return LogoutResponseSchema()
 
@@ -97,6 +91,7 @@ async def logout_user(
     responses=responses.AUTH_RESPONSES,
 )
 async def auth_user(
+    uow: AuthUOWDep,
     request: Request,
     service: AuthUserServiceDep,
 ) -> UserInfoSchema:
@@ -105,5 +100,5 @@ async def auth_user(
     access_token = headers.get("access_token")
     if roles := headers.get("roles") is not None:
         roles = tuple(headers.get("roles").split(", "))
-    response = await service.get_data_user(access_token, roles)
+    response = await service.get_data_user(uow, access_token, roles)
     return response

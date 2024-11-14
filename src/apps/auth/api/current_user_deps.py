@@ -13,8 +13,7 @@ from modules.schemas.auth_schema import UserInfoSchema
 from modules.unit_of_works.auth_uow import AuthUOW
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=str(settings.auth.token_url),
-    scheme_name="JWT",
+    tokenUrl=str(settings.auth.token_url), scheme_name="JWT"
 )
 
 
@@ -23,8 +22,8 @@ class CurrentUserDep:
 
     @staticmethod
     async def get_data_user(
-        roles: Optional[tuple[str, ...]], token: str
-    ) -> UserInfoSchema:
+        roles: Optional[tuple[str, ...]], token: str, uow: AuthUOW = None
+    ) -> dict[str, str]:
         """Получить данные пользователя."""
         try:
             payload = Security.decode_token(token)
@@ -39,20 +38,22 @@ class CurrentUserDep:
 
         if datetime.fromtimestamp(payload.get("exp")) < datetime.now():
             raise error.AuthUnauthorizedException()
-        email = payload.get("sub")
-        if email is None:
+        login = payload.get("sub")
+        if login is None:
             raise error.AuthUnauthorizedException()
 
-        async with AuthUOW() as uow:
-            data_user = await uow.repo.authenticate_user(email)
+        if uow is None:
+            uow = AuthUOW()
+        async with uow:
+            data_user = await uow.repo.get_user_for_authentication(login)
 
         if data_user is None:
             raise error.AuthUnauthorizedException()
-        if data_user.deleted:
+        if data_user["deleted"] == "1":
             raise error.AuthBadRequestException(detail=resp_exc.USER_BAD_REQUEST)
 
         if roles:
-            is_valid_role = any([req_role == data_user.role_name for req_role in roles])
+            is_valid_role = any(req_role == data_user["role_name"] for req_role in roles)
             if not is_valid_role:
                 raise error.AuthForbiddenException(
                     detail=f"Для этого действия требуется одна из "
@@ -71,6 +72,12 @@ class CurrentUserDep:
         ) -> UserInfoSchema:
             """Поиск текущего пользователя."""
             response = await cls.get_data_user(token=token, roles=roles)
-            return response
+            user_info = UserInfoSchema(
+                id=response["id"],
+                email=response["email"],
+                deleted=response["deleted"],
+                role_name=response["role_name"] if response.get("role_name") else None,
+            )
+            return user_info
 
         return current_user

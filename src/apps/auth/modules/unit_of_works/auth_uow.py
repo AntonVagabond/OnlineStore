@@ -1,5 +1,4 @@
-from types import TracebackType
-from typing import Optional, Self
+from typing import Self
 
 from common.unit_of_works.base import BaseUnitOfWork
 from modules.repositories.auth_repository import AuthRepository
@@ -15,13 +14,3 @@ class AuthUOW(BaseUnitOfWork):
         await super().__aenter__()
         self.repo = AuthRepository(self._session)
         return self
-
-    async def __aexit__(
-        self,
-        exc_type: Optional[type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
-    ) -> None:
-        """Выход из контекстного менеджера"""
-        await super().__aexit__(exc_type, exc_val, exc_tb)
-        await self.close()

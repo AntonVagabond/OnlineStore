@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from common.schemas.base import BaseModel
@@ -26,5 +28,4 @@ class UserInfoSchema(BaseModel):
     id: str
     email: str
     deleted: bool
-    password_hash: bytes
-    role_name: str
+    role_name: Optional[str]

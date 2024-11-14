@@ -1,9 +1,6 @@
 import abc
-from typing import TypeVar
-
-from common.repositories.base import BaseRepository
-
-TRepository = TypeVar("TRepository", bound=BaseRepository)
+from types import TracebackType
+from typing import Optional, Self
 
 
 class IUnitOfWork(abc.ABC):
@@ -13,17 +10,18 @@ class IUnitOfWork(abc.ABC):
     def __init__(self) -> None: ...
 
     @abc.abstractmethod
-    async def __aenter__(self) -> TRepository:
+    async def __aenter__(self) -> Self:
         """Абстрактный метод входа в контекстного менеджера."""
 
     @abc.abstractmethod
-    async def __aexit__(self, *args) -> None:
+    async def __aexit__(
+        self,
+        exc_type: Optional[type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
         """Абстрактный метод выхода из контекстного менеджера"""
 
     @abc.abstractmethod
-    async def commit(self) -> None:
-        """Абстрактный метод фиксирования транзакции."""
-
-    @abc.abstractmethod
-    async def rollback(self) -> None:
-        """Абстрактный метод завершения транзакции."""
+    async def close(self) -> None:
+        """Абстрактный метод закрытия транзакции."""
