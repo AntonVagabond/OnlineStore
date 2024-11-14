@@ -4,6 +4,7 @@ from typing import Optional, TypeAlias, Union
 from uuid import UUID
 
 import sqlalchemy as sa
+from sqlalchemy.orm import joinedload
 
 from common.enums.role import RoleEnum
 from common.exceptions import mixins as exception
@@ -52,3 +53,18 @@ class ProfileRepository(PaginatedPageRepository):
     async def get(self, user_id: UUID) -> Optional[User]:
         """Получить профиль пользователя по идентификатору."""
         return await super().get(user_id)
+
+    async def __get_stmt_for_auth(self, username: str) -> sa.Select:
+        """Получить запрос микросервиса авторизации."""
+        stmt = (
+            sa.select(self.model)
+            .options(joinedload(self.model.role).load_only(Role.name))
+            .filter(self.model.deleted.__eq__(False), self.model.email == username)
+        )
+        return stmt
+
+    async def get_user_by_login(self, username: str) -> Optional[User]:
+        """Получить данные по логину пользователя."""
+        stmt = await self.__get_stmt_for_auth(username)
+        record = (await self.session.execute(stmt)).scalar_one_or_none()
+        return record

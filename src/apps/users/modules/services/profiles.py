@@ -9,7 +9,11 @@ from common.schemas.api.mixins import RegisterSchema
 from common.services.base import BaseService
 from core.security import hash_password
 from models.users import User
-from modules.schemas.profiles import ProfileResponseSchema, UpdateUserSchema
+from modules.schemas.profiles import (
+    ProfileResponseSchema,
+    UpdateUserSchema,
+    UserForAuthResponseSchema,
+)
 from modules.unit_of_works.profiles import ProfileUOW
 
 RegisterData: TypeAlias = dict[
@@ -69,6 +73,28 @@ class ProfileService(BaseService):
             if current_user is None:
                 raise exception.UserNotFoundException()
             return cls.__convert_result(current_user)
+
+    @staticmethod
+    def __convert_record_for_auth(record: User):
+        """Конвертировать запись в pydantic-модель для авторизации."""
+        return UserForAuthResponseSchema(
+            id=record.id,
+            login=record.email,
+            role=record.role.name if record.role else None,
+            hash_password=record.password_hash,
+            deleted=record.deleted,
+        )
+
+    async def get_user_for_auth(
+        self, uow: ProfileUOW, username: str
+    ) -> UserForAuthResponseSchema:
+        """Получить пользователя для авторизации."""
+        async with uow:
+            result = await uow.repo.get_user_by_login(username)
+            if result is None:
+                raise exception.UserNotFoundException()
+            response = self.__convert_record_for_auth(result)
+            return response
 
     # endregion --------------------------------------------------------------------------
 
