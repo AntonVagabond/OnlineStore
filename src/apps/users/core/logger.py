@@ -24,7 +24,7 @@ class LoggerConfig:
     def __load_config() -> LoadData:
         """Загрузить конфиги для логирования из yml-файла."""
         with open("core/log_config.yml", "r") as config:
-            return yaml.load(config, Loader=yaml.FullLoader)
+            return yaml.safe_load(config)
 
     @classmethod
     def execute_config(cls) -> LoadData:
