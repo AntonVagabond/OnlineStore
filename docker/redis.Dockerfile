@@ -22,5 +22,9 @@ ARG CERTS_DIR=/certs
 # Копирование сертификатов из предыдущего этапа
 COPY --from=cert-builder "$CERTS_DIR" "$CERTS_DIR"
 
+COPY scripts/init-overcommit-memory.sh /init-overcommit-memory.sh
+
+RUN chmod +x /init-overcommit-memory.sh
+
 # Настройка команд для запуска Redis
-CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]
+CMD ["/bin/sh", "-c", "/init-overcommit-memory.sh && redis-server /usr/local/etc/redis/redis.conf"]

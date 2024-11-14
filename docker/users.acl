@@ -1,0 +1,1 @@
+user my_redis on >online_redis ~* +@all

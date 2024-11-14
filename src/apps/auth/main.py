@@ -8,13 +8,16 @@ from fastapi.openapi.utils import get_openapi
 
 from api.v1.routers import all_routers_v1
 from core.config import settings
+from core.http_connector import ExternalServiceConnector
 from core.logger import LoggerConfig
 
 
 # region ------------------------------ initialize ----------------------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:  # noqa
+    ExternalServiceConnector.start_client()
     yield
+    await ExternalServiceConnector.close_client()
 
 
 # endregion -------------------------------------------------------------------------

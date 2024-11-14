@@ -1,9 +1,14 @@
 from fastapi import APIRouter
+from starlette.requests import Request
 from starlette.responses import Response
 
 from api.dependencies import ProfileServiceDep, ProfileUOWDep, UserSchemaDep
 from modules.responses import profiles as responses
-from modules.schemas.profiles import RegisterUserSchema, UpdateUserSchema
+from modules.schemas.profiles import (
+    RegisterUserSchema,
+    UpdateUserSchema,
+    UserForAuthResponseSchema,
+)
 
 profile = APIRouter(prefix="/api/v1/profile", tags=["Profile"])
 
@@ -50,3 +55,18 @@ async def update_user(
     """Контроллер редактирования профиля пользователя."""
     bool_result = await service.update(uow, model, current_user.id)
     return bool_result
+
+
+@profile.get(
+    path="/user_for_auth/",
+    include_in_schema=False,
+    summary="Скрытый контроллер для получения данных микросервису Auth по httpx.",
+)
+async def auth_user(
+    uow: ProfileUOWDep, request: Request, service: ProfileServiceDep
+) -> UserForAuthResponseSchema:
+    """Контроллер для аутентификации пользователя (скрытый)."""
+    headers = request.headers
+    username = headers.get("username")
+    result = await service.get_user_for_auth(uow, username)
+    return result

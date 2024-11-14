@@ -25,6 +25,18 @@ class AuthForbiddenException(HTTPException):
         )
 
 
+class AuthNotFoundException(HTTPException):
+    """Исключения, при не найденных данных."""
+
+    def __init__(self, detail: str) -> None:
+        self.status_code = 404
+        self.detail = detail
+        self.headers = {"WWW-Authenticate": "Bearer"}
+        super().__init__(
+            status_code=self.status_code, detail=self.detail, headers=self.headers
+        )
+
+
 class AuthBadRequestException(HTTPException):
     """Исключение, при неправильном запросе."""
 

@@ -34,3 +34,13 @@ class RegisterUserSchema(RegisterSchema):
 
 class UpdateUserSchema(UpdateSchema):
     """Схема для обновления пользователя."""
+
+
+class UserForAuthResponseSchema(BaseModel):
+    """Базовая схема человека для авторизации."""
+
+    id: UUID
+    email: EmailStr
+    role_name: Optional[str]
+    hash_password: bytes
+    deleted: bool
