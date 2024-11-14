@@ -14,8 +14,9 @@ repos:
         name: Black
         language_version: python3.11
         files: \.pyi?$
-        exclude: "migrations/.*"
+        exclude: "migrations|.git|__pycache__|.pytest_cache|__init__.py|.env|.env.example"
         args: [
+          "--color",
           "--line-length=90",
           "--target-version=py310",
           "--target-version=py311",
@@ -31,9 +32,11 @@ repos:
         language_version: python3.11
         additional_dependencies:
           - colorama
+        exclude: "migrations|.git|__pycache__|.pytest_cache|__init__.py|.env|.env.example"
         args: [
           "--profile=black",
           "--line-length=90",
+          "--color",
           "--check-only",
           "--diff",
         ]
@@ -44,5 +47,9 @@ repos:
       - id: flake8
         name: Flake8
         language_version: python3.11
-        exclude: "migrations|.git|__pycache__|__init__.py|.env|.env.example"
-        args: [ "--max-line-length=90", "--ignore=F821,E704,W503" ]
+        exclude: "migrations|.git|__pycache__|.pytest_cache|__init__.py|.env|.env.example"
+        args: [
+          "--max-line-length=90",
+          "--ignore=F821,E704,W503",
+          "--count",
+        ]
