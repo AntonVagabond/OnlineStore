@@ -1,10 +1,10 @@
 import os
 from functools import lru_cache
 from pathlib import Path
+from typing import Optional
 
-from pydantic import Field, HttpUrl
+from pydantic import Field, HttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing_extensions import Optional
 
 
 class CommonSettings(BaseSettings):
@@ -39,6 +39,16 @@ class AuthSettings(CommonSettings):
     refresh_token_expire_minutes: int = Field(
         default=10, alias="REFRESH_TOKEN_EXPIRE_MINUTES"
     )
+
+    @field_validator("private_key_path")
+    def specify_full_path_private_key(cls, private_key: Path) -> Path:  # noqa
+        """Указать полный путь к приватному ключу."""
+        return Path(f"{Path(__file__).parent.parent}/{private_key}")
+
+    @field_validator("public_key_path")
+    def specify_full_path_public_key(cls, public_key: Path) -> Path:  # noqa
+        """Указать полный путь к публичному ключу."""
+        return Path(f"{Path(__file__).parent.parent}/{public_key}")
 
 
 class RedisSettings(CommonSettings):
