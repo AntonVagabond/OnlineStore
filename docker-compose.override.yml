@@ -73,6 +73,7 @@ services:
   redis.db:
     environment:
       REDIS_ARGS: "user my_redis on >online_redis ~* +@all"
+      TZ: Europe/Moscow
     ports:
       - "6379:6379"
       - "6380:6380"  # Порт для SSL

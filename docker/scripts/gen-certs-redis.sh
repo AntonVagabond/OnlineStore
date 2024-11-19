@@ -1,50 +1,66 @@
 #!/bin/bash
 
-# Укажите путь к каталогу сертификатов
-CERTS_DIR="/certs"
+# Функция для создания сертификатов
+generate_cert() {
+    local name=$1
+    local cn="$2"
+    local opts="$3"
 
-# Создание каталога сертификатов, если он не существует
-echo "Создание каталога сертификатов..."
-mkdir -p "$CERTS_DIR"
+    local keyfile=certs/${name}.key
+    local certfile=certs/${name}.crt
 
-# Проверьте, существуют ли корневой сертификат и закрытый ключ для Redis
-if [ ! -f "$CERTS_DIR/ca.crt" ] || [ ! -f "$CERTS_DIR/redis.key" ]; then
-  echo "Генерация сертификатов и ключей для Redis..."
+    # Проверка на наличие приватного ключа и создание, если его нет
+    [ -f $keyfile ] || openssl genrsa -out $keyfile 2048
+    echo "Создание сертификата для $name..."
+    openssl req \
+        -new -sha256 \
+        -subj "/O=Redis Test/CN=$cn" \
+        -key $keyfile | \
+        openssl x509 \
+            -req -sha256 \
+            -CA certs/ca.crt \
+            -CAkey certs/ca.key \
+            -CAserial certs/ca.txt \
+            -CAcreateserial \
+            -days 365 \
+            $opts \
+            -out $certfile
+}
 
-  # Генерация корневого сертификата (CA), если он не существует
-  if [ ! -f "$CERTS_DIR/ca.key" ]; then
-    echo "Создаем корневой сертификат (CA)..."
-    openssl genpkey -algorithm RSA -out "$CERTS_DIR/ca.key"
-    openssl req -x509 -new -nodes -key "$CERTS_DIR/ca.key" -sha256 -days 3650 -out "$CERTS_DIR/ca.crt" -subj "/CN=MyRedisRootCA"
-  else
-    echo "Корневой сертификат (CA) уже существует."
-  fi
+# Создание каталога для сертификатов, если его нет
+mkdir -p certs
+echo "Каталог сертификатов создан или уже существует."
 
-  # Генерация закрытого ключа для Redis
-  if [ ! -f "$CERTS_DIR/redis.key" ]; then
-    echo "Создаем закрытый ключ для Redis..."
-    openssl genpkey -algorithm RSA -out "$CERTS_DIR/redis.key"
-    chmod 644 "$CERTS_DIR/redis.key"
-  else
-    echo "Закрытый ключ для Redis уже существует."
-  fi
-
-  # Создание запроса на сертификат для Redis
-  if [ ! -f "$CERTS_DIR/redis.crt" ]; then
-    echo "Создаем запрос на сертификат для Redis..."
-    openssl req -new -key "$CERTS_DIR/redis.key" -out "$CERTS_DIR/redis.csr" -subj "/CN=localhost"
-
-    # Подписываем запрос Redis с корневым сертификатом (CA)
-    echo "Подписываем сертификат Redis корневым сертификатом (CA)..."
-    openssl x509 -req -in "$CERTS_DIR/redis.csr" -CA "$CERTS_DIR/ca.crt" -CAkey "$CERTS_DIR/ca.key" -CAcreateserial -out "$CERTS_DIR/redis.crt" -days 365 -sha256
-  else
-    echo "Сертификат Redis уже существует."
-  fi
-
-  echo "Сертификаты и ключи созданы в каталоге $CERTS_DIR:"
-  ls -l "$CERTS_DIR"
+# Проверка наличия корневого сертификата и ключа
+if [ ! -f certs/ca.key ]; then
+    echo "Создание корневого сертификата..."
+    openssl genrsa -out certs/ca.key 4096
+    openssl req \
+        -x509 -new -nodes -sha256 \
+        -key certs/ca.key \
+        -days 3650 \
+        -subj '/O=Redis Test/CN=Certificate Authority' \
+        -out certs/ca.crt
 else
-  echo "Сертификаты и ключи для Redis уже существуют. Генерация сертификатов пропускается."
+    echo "Корневой сертификат уже существует."
 fi
 
-echo "Настройка завершена!"
+# Генерация конфигурации для сертификатов
+cat > certs/openssl.cnf <<_END_
+[ server_cert ]
+keyUsage = digitalSignature, keyEncipherment
+nsCertType = server
+
+[ client_cert ]
+keyUsage = digitalSignature, keyEncipherment
+nsCertType = client
+_END_
+
+# Генерация сертификатов
+echo "Генерация сертификатов..."
+generate_cert server "redis.db" "-extfile certs/openssl.cnf -extensions server_cert"
+generate_cert client "auth.api" "-extfile certs/openssl.cnf -extensions client_cert"
+
+# Удаление серийного номера, если он не нужен после завершения
+rm -f certs/ca.txt
+echo "Очистка временных файлов завершена."

@@ -24,7 +24,10 @@ COPY --from=cert-builder "$CERTS_DIR" "$CERTS_DIR"
 
 COPY scripts/init-overcommit-memory.sh /init-overcommit-memory.sh
 
-RUN chmod +x /init-overcommit-memory.sh
+RUN chmod +x /init-overcommit-memory.sh && \
+    # Меняем права на этот ключ, чтобы клиент смог его прочитать
+    chmod 644 /certs/client.key
+
 
 # Настройка команд для запуска Redis
 CMD ["/bin/sh", "-c", "/init-overcommit-memory.sh && redis-server /usr/local/etc/redis/redis.conf"]
