@@ -30,9 +30,10 @@ class PaginatedPageService(BaseService):
         filters: TFilter,
     ) -> PageViewSchema:
         """Получите ответ."""
+        total_pages = max(0, (count_records - 1) // filters.page_size)
         return PageViewSchema[schema](
-            page=filters.page_number,
-            max_page_count=math.ceil(count_records / filters.page_size) - 1,
+            page=min(filters.page_number, total_pages),
+            max_page_count=math.ceil(count_records / filters.page_size),
             count_records=count_records,
             records=list_records,
         )

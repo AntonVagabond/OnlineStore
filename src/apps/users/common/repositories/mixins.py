@@ -43,17 +43,15 @@ class PaginatedPageRepository(BaseRepository):
     ) -> Optional[ScalarResult]:
         """Проверка на существование записи."""
         if count_records != 0:
+            total_pages = (count_records - 1) // filters.page_size
+
+            # Устанавливаем page_number в последнюю страницу, если
+            # запрошенная страница превышает количество доступных страниц
+            page_number = min(filters.page_number, total_pages)
             records = (
                 await self.session.execute(
                     stmt.order_by(self.model.updated_at.desc())
-                    .offset(
-                        (
-                            filters.page_number - 1
-                            if filters.page_number > 0
-                            else filters.page_number
-                        )
-                        * filters.page_size
-                    )
+                    .offset(page_number * filters.page_size)
                     .limit(filters.page_size)
                 )
             ).scalars()
