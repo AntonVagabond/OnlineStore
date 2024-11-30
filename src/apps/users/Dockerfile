@@ -18,17 +18,17 @@ ENV LANG=C.UTF-8 \
     POETRY_VIRTUALENVS_CREATE=false \
     POETRY_VIRTUALENVS_IN_PROJECT=false \
     POETRY_NO_INTERACTION=1 \
-    POETRY_VERSION=1.8.0
+    POETRY_VERSION=1.8.3
 
 ENV PATH="$PATH:$POETRY_HOME/bin"
 
 # Обновление пакетов и установка необходимых инструментов
-RUN apk update && \
-    apk add --no-cache expat curl && \
+RUN apk add --no-cache curl && \
     pip install --upgrade pip setuptools && \
     curl -sSL https://install.python-poetry.org | python3 - && \
-    apk del curl expat && \
-    rm -rf ~/.cache/pip /var/cache/apk/*
+    export PATH="/root/.local/bin:$PATH" && \
+    apk del curl
+
 
 # Указываем рабочий каталог
 WORKDIR /usr/src/app
@@ -37,11 +37,9 @@ WORKDIR /usr/src/app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install \
     --only main \
-    --no-dev \
     --no-root \
     --no-interaction \
-    --no-ansi \
-    --without test && \
+    --no-ansi && \
     rm -rf ~/.cache/pypoetry
 
 # Этап 2: Финальный образ

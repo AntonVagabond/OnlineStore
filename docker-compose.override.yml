@@ -75,8 +75,7 @@ services:
       REDIS_ARGS: "user my_redis on >online_redis ~* +@all"
       TZ: Europe/Moscow
     ports:
-      - "6379:6379"
-      - "6380:6380"  # Порт для SSL
+      - "127.0.0.1:6380:6380"  # Порт для SSL
     privileged: true
     volumes:
       - redis_certs:/certs
