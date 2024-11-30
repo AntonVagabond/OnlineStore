@@ -43,22 +43,6 @@ class BaseUnitOfWork(IUnitOfWork):
                         "exception": exc_val.__class__.__name__,
                         "status_code": getattr(exc_val, "status_code"),
                         "detail": getattr(exc_val, "detail"),
-                        "class": (
-                            (
-                                exc_tb.tb_next.tb_frame.f_locals[
-                                    "self"
-                                ].__class__.__name__
-                                if exc_tb.tb_next.tb_frame.f_locals.get("self")
-                                else exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
-                            )
-                            if exc_tb.tb_next
-                            else "Нет класса."
-                        ),
-                        "user_id": (
-                            exc_tb.tb_frame.f_locals["user_uuid"].hex
-                            if exc_tb.tb_frame.f_locals.get("user_uuid")
-                            else "ID пользователя не найден."
-                        ),
                     },
                     ensure_ascii=False,
                     indent=4,
@@ -80,22 +64,6 @@ class BaseUnitOfWork(IUnitOfWork):
                         "exception": exc_val.__class__.__name__,
                         "status_code": 500,
                         "detail": detail_massage,
-                        "class": (
-                            (
-                                exc_tb.tb_next.tb_frame.f_locals[
-                                    "self"
-                                ].__class__.__name__
-                                if exc_tb.tb_next.tb_frame.f_locals.get("self")
-                                else exc_tb.tb_next.tb_frame.f_locals["cls"].__name__
-                            )
-                            if exc_tb.tb_next
-                            else "Нет класса."
-                        ),
-                        "user_id": (
-                            exc_tb.tb_frame.f_locals["user_uuid"].hex
-                            if exc_tb.tb_frame.f_locals.get("user_uuid")
-                            else "ID пользователя не найден."
-                        ),
                     },
                     ensure_ascii=False,
                     indent=4,
