@@ -1,0 +1,19 @@
+.needs:apps:
+  needs:
+    - job: auth-build
+      optional: true
+    - job: users-build
+      optional: true
+
+
+deploy:
+  tags:
+    - docker
+  extends:
+    - .needs:apps
+    - .template:deploy
+    - .script:deploy
+    - .retry:deploy
+  only:
+    - main
+  when: manual

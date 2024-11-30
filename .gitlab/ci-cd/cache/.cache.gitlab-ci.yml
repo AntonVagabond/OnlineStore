@@ -1,0 +1,7 @@
+.cache:lint:
+  cache:
+    key: "${APP_NAME}-cache-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - ${WORKING_DIR}/poetry
+      - ${WORKING_DIR}/.venv
+    policy: pull-push

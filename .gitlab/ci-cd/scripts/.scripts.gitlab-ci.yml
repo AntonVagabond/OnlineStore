@@ -1,0 +1,55 @@
+.script:lint:
+  before_script:
+    - |
+      apk add --no-cache curl
+      cd ${WORKING_DIR}
+      echo "Переход в директорию ${WORKING_DIR}"
+      echo "Скачивание Poetry..."
+      curl -sSL https://install.python-poetry.org | \
+            POETRY_HOME=${CI_PROJECT_DIR}/${WORKING_DIR}/poetry python3 - --version 1.8.3
+      export PATH="${CI_PROJECT_DIR}/${WORKING_DIR}/poetry/bin:$PATH"
+      poetry config virtualenvs.in-project true
+      poetry install --no-root
+  script:
+    - |
+      poetry run black --check --diff \
+                       --extend-exclude="poetry" \
+                       --extend-exclude=".venv" \
+                       --extend-exclude="migrations" .
+      poetry run isort --check-only --diff \
+                       --extend-skip-glob="poetry" \
+                       --extend-skip-glob=".venv" \
+                       --extend-skip-glob="migrations" .
+      poetry run flake8 --exclude="poetry,.venv,migrations" .
+
+
+.script:check-build:
+  script:
+    - /kaniko/executor
+      --context $PATH_WORKING_DIR
+      --dockerfile $PATH_DOCKER_FILE
+      --no-push
+
+
+.script:build:
+  script:
+    - /kaniko/executor
+      --context $PATH_WORKING_DIR
+      --dockerfile $PATH_DOCKER_FILE
+      --destination $APP_IMAGE
+      --destination $APP_IMAGE_LATEST
+
+# Деплой не доделан! Скрипт по проверке ключей не верен и не безопасен!
+.script:deploy:
+  before_script:
+    # SSH_PRIVATE_KEY и CI_PASSWORD нужно занести в переменную окружения на gitlab.
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "${SSH_PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - eval $(ssh-agent -s)
+    - ssh-add ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "$CI_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  script:
+    - ...

@@ -1,0 +1,5 @@
+.template:lint:
+  stage: lint
+  tags:
+    - formatter
+  image: python:3.12-alpine

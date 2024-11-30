@@ -1,0 +1,64 @@
+include:
+  # Если в gitlab возникнет ошибка о конфликте включенного (includes) файла,
+  # говорящая о том, что он уже используется, то у вас старая версия gitlab-а ~14.
+  # (допустим, директория cache, используется в файле: .auth.gitlab-ci.yml,
+  # а вы хотите эту директорию подключить к .users.gitlab-ci.yml)
+  # В новой версии такой синтаксис допускается.
+  # Чтобы исправить данный конфликт, вынесите подключаемые файлы
+  # в корневой файл - .gitlab-ci.yml, тогда дочерние файлы будут
+  # использовать общее подключение.
+
+  # ------------------------------- Extends -------------------------------
+  # cache
+  - local: "/.gitlab/ci-cd/cache/.cache.gitlab-ci.yml"
+  # retry
+  - local: "/.gitlab/ci-cd/retry/.retry.gitlab-ci.yml"
+  # rules
+  - local: "/.gitlab/ci-cd/rules/.rules.gitlab-ci.yml"
+  # scripts
+  - local: "/.gitlab/ci-cd/scripts/.scripts.gitlab-ci.yml"
+  # templates
+  - local: "/.gitlab/ci-cd/templates/.lint-template.gitlab-ci.yml"
+  - local: "/.gitlab/ci-cd/templates/.check-build-template.gitlab-ci.yml"
+  - local: "/.gitlab/ci-cd/templates/.build-template.gitlab-ci.yml"
+  # -------------------------------------------------------------------------
+
+
+users-lint:
+  variables:
+    WORKING_DIR: "src/apps/users"
+    APP_NAME: "users"
+  extends:
+    - .template:lint
+    - .script:lint
+    - .cache:lint
+    - .retry:lint
+    - .rules:lint
+
+
+users-check-build:
+  needs:
+    - job: users-lint
+  variables:
+    WORKING_DIR: "src/apps/users"
+  extends:
+    - .template:check-build
+    - .script:check-build
+    - .retry:check-build
+    - .rules:check-build
+
+
+users-build:
+  needs:
+    - job: users-lint
+    - job: users-check-build
+  variables:
+    WORKING_DIR: "src/apps/users"
+    APP_NAME: "users"
+  extends:
+    - .template:build
+    - .script:build
+    - .retry:build
+  only:
+    - main
+  when: manual

@@ -1,0 +1,12 @@
+.if-commit-branch-main-or-pipeline-source-merge-request-event: &if-commit-branch-main-or-pipeline-source-merge-request-event
+  if: '$CI_COMMIT_BRANCH == "main" || $CI_PIPELINE_SOURCE == "merge_request_event"'
+
+.rules:lint:
+  rules:
+    - <<: *if-commit-branch-main-or-pipeline-source-merge-request-event
+      when: always
+
+.rules:check-build:
+  rules:
+    - <<: *if-commit-branch-main-or-pipeline-source-merge-request-event
+      when: always

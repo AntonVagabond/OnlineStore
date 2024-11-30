@@ -1,0 +1,23 @@
+stages:
+  - lint
+  - check-build
+  - build
+  - deploy
+
+
+  # -------------------------------- Deploy Job -----------------------------
+  - local: "/.gitlab/ci-cd/.deploy.gitlab-ci.yml"
+  # -------------------------------------------------------------------------
+
+
+  # ----------------------------- Application Jobs --------------------------
+  - local: "/.gitlab/ci-cd/apps/.auth.gitlab-ci.yml"
+    rules:
+      - changes:
+          - src/apps/auth/**/*
+
+  - local: "/.gitlab/ci-cd/apps/.users.gitlab-ci.yml"
+    rules:
+      - changes:
+          - src/apps/users/**/*
+  # -------------------------------------------------------------------------

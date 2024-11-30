@@ -1,0 +1,10 @@
+.template:check-build:
+  stage: check-build
+  tags:
+    - docker
+  variables:
+    PATH_WORKING_DIR: "${CI_PROJECT_DIR}/${WORKING_DIR}"
+    PATH_DOCKER_FILE: "${CI_PROJECT_DIR}/${WORKING_DIR}/Dockerfile"
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.0-debug
+    entrypoint: [ "" ]

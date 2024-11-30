@@ -1,0 +1,12 @@
+.template:build:
+  stage: build
+  tags:
+    - docker
+  variables:
+    PATH_WORKING_DIR: "${CI_PROJECT_DIR}/${WORKING_DIR}"
+    PATH_DOCKER_FILE: "${CI_PROJECT_DIR}/${WORKING_DIR}/Dockerfile"
+    APP_IMAGE: "${CI_REGISTRY_IMAGE}/${APP_NAME}:${CI_COMMIT_SHORT_SHA}"
+    APP_IMAGE_LATEST: "${CI_REGISTRY_IMAGE}/${APP_NAME}:latest"
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.0-debug
+    entrypoint: [ "" ]

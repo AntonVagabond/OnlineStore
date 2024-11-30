@@ -1,0 +1,7 @@
+.template:deploy:
+  stage: deploy
+  image: docker:25.0.2-alpine3.19
+  # SERVER_USER - пользователь сервера: root и т.д (переменную занести в gitlab)
+  # SERVER_HOST - хост сервера: 11.222.33.44 (переменную занести в gitlab)
+  variables:
+    DOCKER_HOST: "ssh://${SERVER_USER}@${SERVER_HOST}"
