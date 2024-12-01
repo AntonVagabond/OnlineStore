@@ -1,5 +1,5 @@
 # Этап 1: Сборка зависимостей и приложения
-FROM python:3.11-alpine AS builder
+FROM python:3.12-alpine AS builder
 
 # Установка переменных окружения
 ENV LANG=C.UTF-8 \
