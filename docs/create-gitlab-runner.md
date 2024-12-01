@@ -17,8 +17,8 @@ docker run -d --name gitlab-runner --restart always -v gitlab-runner-config:/etc
 
 -----------------------------------------
 3. Создаем раннеры:
-# Настройка бегунка (runner) не идеальная.
-# Устанавливаете флаг --docker-privileged либо --docker-volumes "/var/run/docker.sock:/var/run/docker.sock".
+Настройка бегунка (runner) не идеальная.
+Устанавливаете флаг --docker-privileged либо --docker-volumes "/var/run/docker.sock:/var/run/docker.sock".
 ```bash
   docker run --rm -it -v gitlab-runner-config:/etc/gitlab-runner gitlab/gitlab-runner:alpine register \
   --non-interactive \
