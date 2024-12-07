@@ -5,3 +5,4 @@
   # SERVER_HOST - хост сервера: 11.222.33.44 (переменную занести в gitlab)
   variables:
     DOCKER_HOST: "ssh://${SERVER_USER}@${SERVER_HOST}"
+    PROJECT_PATH: "/usr/src/apps/online_store"

@@ -39,17 +39,23 @@
       --destination $APP_IMAGE
       --destination $APP_IMAGE_LATEST
 
-# Деплой не доделан! Скрипт по проверке ключей не верен и не безопасен!
+# Деплой не доделан! Нужно реализовать отправку новой версии образа приложения
+# на удаленный сервер. Если в новой версии возникнет ошибка откатить на предыдущую
+# версию приложения.
+# p.s.
+# Откаты версий и всё в этом роде лучше делать с помощью Кубера, но пока что будут костыли.
 .script:deploy:
   before_script:
-    # SSH_PRIVATE_KEY и CI_PASSWORD нужно занести в переменную окружения на gitlab.
+    # Переменная тип File: SSH_PRIVATE_KEY SSH_KNOWN_HOSTS  и CI_PASSWORD.
+    # Переменная тип Variable: CI_PASSWORD.
+    # Эти переменные находятся в GitLab - Settings -> CI/CD -> Variables.
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "${SSH_PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - eval $(ssh-agent -s)
-    - ssh-add ~/.ssh/id_rsa
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - cat "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 400 ~/.ssh/id_ed25519
+    - cat "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - cd $PROJECT_PATH
     - echo "$CI_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
   script:
     - ...
