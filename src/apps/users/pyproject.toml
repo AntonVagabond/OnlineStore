@@ -18,6 +18,7 @@ uvicorn = "^0.32.0"
 httpx = "^0.27.2"
 pydantic = {extras = ["email"], version = "^2.9.2"}
 pyyaml = "^6.0.2"
+dishka = "^1.4.2"
 
 
 [tool.poetry.group.test.dependencies]
