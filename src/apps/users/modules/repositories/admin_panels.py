@@ -7,8 +7,7 @@ from sqlalchemy.orm import joinedload
 
 from common.enums.role import RoleEnum
 from common.repositories.mixins import PaginatedPageRepository
-from models import Role
-from models.users import User
+from models import Role, User
 from modules.schemas.admin_panels import UserByRoleFilterSchema
 
 EditData: TypeAlias = dict[str, Union[UUID, str, bool, datetime, int, None, RoleEnum]]

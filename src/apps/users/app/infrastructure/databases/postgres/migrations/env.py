@@ -6,8 +6,8 @@ from common.models.base import Base
 from core.database import engine_sync
 
 # Обязательная инициализация всех моделей в этом файле.
-from models.roles import Role  # noqa
-from models.users import User  # noqa
+from models import Role  # noqa
+from models import User  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

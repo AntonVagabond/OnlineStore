@@ -8,7 +8,7 @@ from common.exceptions import mixins as exception
 from common.schemas.api.mixins import RegisterSchema
 from common.services.base import BaseService
 from core.security import hash_password
-from models.users import User
+from models import User
 from modules.schemas.profiles import (
     ProfileResponseSchema,
     UpdateUserSchema,

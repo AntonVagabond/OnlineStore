@@ -6,8 +6,7 @@ from sqlalchemy import func, select
 
 from core.database import async_session_maker
 from core.security import hash_password
-from models.roles import Role
-from models.users import User
+from models import Role, User
 
 
 class Initializer(ABC):

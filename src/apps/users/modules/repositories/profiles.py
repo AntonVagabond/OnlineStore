@@ -9,8 +9,7 @@ from sqlalchemy.orm import joinedload
 from common.enums.role import RoleEnum
 from common.exceptions import mixins as exception
 from common.repositories.mixins import PaginatedPageRepository
-from models import Role
-from models.users import User
+from models import Role, User
 
 RegisterData: TypeAlias = dict[str, Union[str, datetime, bool, RoleEnum, NoneType, UUID]]
 
