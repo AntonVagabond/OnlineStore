@@ -19,6 +19,7 @@ httpx = "^0.27.2"
 pydantic = {extras = ["email"], version = "^2.9.2"}
 pyyaml = "^6.0.2"
 dishka = "^1.4.2"
+aio-pika = "^9.5.4"
 
 
 [tool.poetry.group.test.dependencies]
@@ -80,4 +81,4 @@ skip = ["__init__.py", ".env", ".env.example"]
 exclude = ["migrations", ".git", "__pycache__", "__init__.py", ".env", ".env.example"]
 max-line-length = 90
 count = true
-ignore = ["F821", "E704", "W503"]
+ignore = ["F821", "E704", "W503", "W391"]

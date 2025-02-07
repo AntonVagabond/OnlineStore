@@ -1,4 +1,4 @@
-from app.domain.common.exception import DomainError
+from ...common.exception import DomainError
 
 
 class UserAlreadyExistsError(DomainError):

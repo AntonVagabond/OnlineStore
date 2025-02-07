@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from app.domain.common.value_object import ValueObject
-from app.domain.user.exceptions.value_objects import InvalidContactsError
+from ...common.value_object import ValueObject
+from ..exceptions.value_objects import InvalidContactsError
 
 
 @dataclass(frozen=True)

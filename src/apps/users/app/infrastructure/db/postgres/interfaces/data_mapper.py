@@ -1,11 +1,11 @@
-from abc import abstractmethod
-from typing import TYPE_CHECKING, Protocol
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.domain.common.entity import Entity
 
 
-class DataMapper(Protocol):
+class DataMapper(ABC):
     """Протокол преобразователя данных."""
 
     @abstractmethod

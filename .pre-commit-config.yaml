@@ -50,6 +50,6 @@ repos:
         exclude: "migrations|.git|__pycache__|.pytest_cache|__init__.py|.env|.env.example"
         args: [
           "--max-line-length=90",
-          "--ignore=F821,E704,W503",
+          "--ignore=F821,E704,W503,W391",
           "--count",
         ]

@@ -1,8 +1,10 @@
 from abc import ABC
-from typing import TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
-from app.domain.common.entity import Entity
-from app.domain.common.event import Event
+from .entity import Entity
+
+if TYPE_CHECKING:
+    from .event import Event
 
 TEntityID = TypeVar("TEntityID")
 

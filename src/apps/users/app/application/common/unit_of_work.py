@@ -1,11 +1,12 @@
 import abc
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
-from app.domain.common.entity import Entity
+if TYPE_CHECKING:
+    from app.domain.common.entity import Entity
 
 
-class UnitOfWorkTracker(Protocol):
-    """Протокол для отслеживания изменений сущностей."""
+class IUnitOfWork(Protocol):
+    """Протокол для управления транзакциями."""
 
     @abc.abstractmethod
     def register_new(self, entity: Entity) -> None:
@@ -20,4 +21,9 @@ class UnitOfWorkTracker(Protocol):
     @abc.abstractmethod
     def register_deleted(self, entity: Entity) -> None:
         """Регистрация удаления существующей сущности."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def commit(self) -> None:
+        """Метод фиксирования транзакции."""
         raise NotImplementedError

@@ -4,13 +4,12 @@ from uuid import UUID, uuid4
 
 from app.domain.user.entities.user import User
 from app.domain.user.exceptions.entity import UserAlreadyExistsError
-from app.domain.user.value_objects.contacts import Contacts
-from app.domain.user.value_objects.username import Username
 
 if TYPE_CHECKING:
-    from app.application.common.event_bus import EventBus
-    from app.domain.user.repositories.user_repository import UserRepository
-    from app.infrastructure.common.protocols.unit_of_work import UnitOfWork
+    from app.application.common.unit_of_work import IUnitOfWork
+    from app.domain.user.repositories.user_repository import IUserRepository
+
+    from ...common.event_bus import IEventBus
 
 
 @dataclass(frozen=True)
@@ -24,33 +23,37 @@ class CreateUserHandler:
     """Класс-обработчик для создания пользователя."""
 
     def __init__(
-        self, uow: UnitOfWork, user_repository: UserRepository, event_bus: EventBus
+        self, uow: IUnitOfWork, user_repository: IUserRepository, event_bus: IEventBus
     ) -> None:
-        self.uow = uow
-        self.user_repository = user_repository
-        self.event_bus = event_bus
+        self.__uow = uow
+        self.__user_repository = user_repository
+        self.__event_bus = event_bus
 
     async def handle(self, command: CreateUserCommand) -> UUID:
         """Создание пользователя."""
-        if command.email and await self.user_repository.is_exists_email(command.email):
-            raise UserAlreadyExistsError("Пользователь не найден.")
+        if command.email and await self.__user_repository.is_exists_email(command.email):
+            raise ...
 
-        if command.phone_number and await self.user_repository.is_exists_phone_number(
+        if command.phone_number and await self.__user_repository.is_exists_phone_number(
             command.phone_number
         ):
-            raise UserAlreadyExistsError("Пользователь не найден.")
+            raise ...
 
-        if await self.user_repository.is_exists_username(command.username):
+        if await self.__user_repository.is_exists_username(command.username):
             raise UserAlreadyExistsError("Пользователь не найден.")
 
         user_uuid = uuid4()
-        username = Username(value=command.username)
-        contacts = Contacts(phone_number=command.phone_number, email=command.email)
 
-        user = User.create_user(user_id=user_uuid, username=username, contacts=contacts)
+        user = User.create_user(
+            user_id=user_uuid,
+            username=command.username,
+            phone_number=command.phone_number,
+            email=command.email,
+        )
+        events = user.raise_events()
 
-        self.uow.register_new(user)
-        await self.event_bus.publish(user.raise_events())
-        await self.uow.commit()
+        self.__uow.register_new(user)
+        await self.__event_bus.publish(events=events)
+        await self.__uow.commit()
 
         return user_uuid

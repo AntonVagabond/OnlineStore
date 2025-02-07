@@ -3,11 +3,11 @@ from datetime import datetime
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.infrastructure.common.models.base import Base
-from app.infrastructure.common.models.mixins import CreatedUpdatedMixin, UUIDMixin
+from .base import Base
+from .mixins import CreatedUpdatedMixin, UUIDMixin
 
 
-class Profile(Base, CreatedUpdatedMixin, UUIDMixin):
+class ProfileModel(Base, CreatedUpdatedMixin, UUIDMixin):
     """Модель профиля пользователя."""
 
     user_id: Mapped[sa.UUID] = mapped_column(

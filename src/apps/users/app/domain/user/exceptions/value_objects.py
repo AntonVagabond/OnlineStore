@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.domain.common.exception import DomainError
+from ...common.exception import DomainError
 
 
 @dataclass(eq=False)

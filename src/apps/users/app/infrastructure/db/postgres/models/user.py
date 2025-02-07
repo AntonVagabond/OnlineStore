@@ -1,11 +1,11 @@
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.infrastructure.common.models.base import Base
-from app.infrastructure.common.models.mixins import CreatedUpdatedMixin, UUIDMixin
+from .base import Base
+from .mixins import CreatedUpdatedMixin, UUIDMixin
 
 
-class User(Base, CreatedUpdatedMixin, UUIDMixin):
+class UserModel(Base, CreatedUpdatedMixin, UUIDMixin):
     """Модель пользователя."""
 
     username: Mapped[str | None] = mapped_column(

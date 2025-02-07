@@ -1,11 +1,13 @@
 from abc import abstractmethod
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
-from app.domain.common.entity import Entity
-from app.infrastructure.databases.postgres.interfaces.data_mapper import DataMapper
+if TYPE_CHECKING:
+    from app.domain.common.entity import Entity
+
+    from .data_mapper import DataMapper
 
 
-class Registry(Protocol):
+class IRegistry(Protocol):
     """Протокол регистрации преобразователей данных для сущностей."""
 
     @abstractmethod

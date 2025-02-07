@@ -3,17 +3,17 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncConnection
 
+from app.application.common.unit_of_work import IUnitOfWork
 from app.domain.common.entity import Entity
 
 if TYPE_CHECKING:
-    from app.infrastructure.common.protocols.unit_of_work import UnitOfWork
-    from app.infrastructure.databases.postgres.interfaces.registry import Registry
+    from app.infrastructure.db.postgres.interfaces.registry import IRegistry
 
 
-class UnitOfWorkImpl(UnitOfWork):
+class UnitOfWork(IUnitOfWork):
     """Класс реализующий UnitOfWork."""
 
-    def __init__(self, registry: Registry, connection: AsyncConnection) -> None:
+    def __init__(self, registry: IRegistry, connection: AsyncConnection) -> None:
         self.__new: dict[UUID, Entity] = {}
         self.__dirty: dict[UUID, Entity] = {}
         self.__deleted: dict[UUID, Entity] = {}
@@ -41,16 +41,16 @@ class UnitOfWorkImpl(UnitOfWork):
 
     async def __flush(self) -> None:
         """Реализация фиксации изменений."""
-        for entity_type, entity in self.new.items():
-            mapper = self.registry.get_mapper(entity_type)
+        for entity in self.__new.values():
+            mapper = self.__registry.get_mapper(entity=type(entity))
             await mapper.add(entity)
 
-        for entity_type, entity in self.dirty.items():
-            mapper = self.registry.get_mapper(entity_type)
+        for entity in self.__dirty.values():
+            mapper = self.__registry.get_mapper(entity=type(entity))
             await mapper.update(entity)
 
-        for entity_type, entity in self.deleted.items():
-            mapper = self.registry.get_mapper(entity_type)
+        for entity in self.__deleted.values():
+            mapper = self.__registry.get_mapper(entity=type(entity))
             await mapper.delete(entity)
 
     async def commit(self) -> None:
