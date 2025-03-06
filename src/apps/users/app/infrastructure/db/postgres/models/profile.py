@@ -7,11 +7,11 @@ from .base import Base
 from .mixins import CreatedUpdatedMixin, UUIDMixin
 
 
-class ProfileModel(Base, CreatedUpdatedMixin, UUIDMixin):
+class ProfileTable(Base, CreatedUpdatedMixin, UUIDMixin):
     """Модель профиля пользователя."""
 
     user_id: Mapped[sa.UUID] = mapped_column(
-        sa.UUID, sa.ForeignKey(column="user.id", ondelete="CASCADE")
+        sa.UUID, sa.ForeignKey(column="user_table.id", ondelete="CASCADE")
     )
     last_name: Mapped[str | None] = mapped_column(sa.String(length=100))
     first_name: Mapped[str | None] = mapped_column(sa.String(length=100))

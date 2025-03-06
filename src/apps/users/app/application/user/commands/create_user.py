@@ -2,8 +2,11 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
+from app.domain.common.const import exceptions as text
 from app.domain.user.entities.user import User
-from app.domain.user.exceptions.entity import UserAlreadyExistsError
+from app.domain.user.exceptions import entity as exc
+
+from ...common.handler import Handler
 
 if TYPE_CHECKING:
     from app.application.common.unit_of_work import IUnitOfWork
@@ -19,7 +22,7 @@ class CreateUserCommand:
     phone_number: str | None
 
 
-class CreateUserHandler:
+class CreateUserHandler(Handler[CreateUserCommand, UUID]):
     """Класс-обработчик для создания пользователя."""
 
     def __init__(
@@ -32,15 +35,15 @@ class CreateUserHandler:
     async def handle(self, command: CreateUserCommand) -> UUID:
         """Создание пользователя."""
         if command.email and await self.__user_repository.is_exists_email(command.email):
-            raise ...
+            raise exc.EmailAlreadyExistsError(text.EMAIL_CONFLICT)
 
         if command.phone_number and await self.__user_repository.is_exists_phone_number(
             command.phone_number
         ):
-            raise ...
+            raise exc.PhoneNumberAlreadyExistsError(text.PHONE_NUMBER_CONFLICT)
 
         if await self.__user_repository.is_exists_username(command.username):
-            raise UserAlreadyExistsError("Пользователь не найден.")
+            raise exc.UserAlreadyExistsError(text.USER_CONFLICT)
 
         user_uuid = uuid4()
 
@@ -52,7 +55,7 @@ class CreateUserHandler:
         )
         events = user.raise_events()
 
-        self.__uow.register_new(user)
+        self.__user_repository.add(user)
         await self.__event_bus.publish(events=events)
         await self.__uow.commit()
 

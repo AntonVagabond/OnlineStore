@@ -14,6 +14,7 @@ services:
     build:
       context: src/apps/users
       dockerfile: Dockerfile
+#    command: ['./scripts/entrypoint.sh']
     depends_on:
       - postgres.db
     restart: unless-stopped

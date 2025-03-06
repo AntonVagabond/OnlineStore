@@ -1,8 +1,9 @@
 import re
 from dataclasses import dataclass
 
+from ...common.const import exceptions as text
 from ...common.value_object import ValueObject
-from ..exceptions.value_objects import InvalidUsernameError
+from ..exceptions import value_objects as exc
 
 
 @dataclass(frozen=True)
@@ -19,14 +20,8 @@ class Username(ValueObject):
         if self.value is None:
             return
         if len(self.value) == 0:
-            raise InvalidUsernameError("Никнейм пользователя не может быть пустым.")
+            raise exc.EmptyUsernameError(text.EMPTY_USERNAME)
         if len(self.value) > self.__MAX_LENGTH:
-            raise InvalidUsernameError(
-                "Никнейм пользователя не может быть длиннее "
-                f"{self.__MAX_LENGTH} символов."
-            )
+            raise exc.TooLongUsernameError(text.TOO_LONG_USER_NAME(self.__MAX_LENGTH))
         if not self.__PATTERN.match(self.value):
-            raise InvalidUsernameError(
-                "Никнейм пользователя должен начинаться с буквы и содержать "
-                "только латинские буквы, цифры, и знак подчеркивания."
-            )
+            raise exc.WrongUsernameFormatError(text.WRONG_USERNAME_FORMAT)

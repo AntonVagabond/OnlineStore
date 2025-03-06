@@ -1,6 +1,11 @@
 from collections.abc import AsyncGenerator
 
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from app.infrastructure.db.postgres.config import PostgresConfig
 
@@ -12,7 +17,7 @@ async def setup_engine(config: PostgresConfig) -> AsyncGenerator[AsyncEngine, No
     await engine.dispose()
 
 
-async def setup_connection(engine: AsyncEngine) -> AsyncGenerator[AsyncConnection, None]:
+async def setup_session(engine: AsyncEngine) -> AsyncGenerator[AsyncSession, None]:
     """Создание асинхронного подключения к PostgreSQL."""
-    async with engine.begin() as connection:
-        yield connection
+    async with async_sessionmaker(engine) as session:
+        yield session

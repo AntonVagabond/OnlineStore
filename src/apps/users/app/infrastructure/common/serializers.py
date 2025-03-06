@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 from uuid import UUID
 
@@ -11,8 +11,10 @@ class CustomJsonEncoder(json.JSONEncoder):
         """Метод для изменения типов перед сериализацией в json."""
         if isinstance(obj, UUID):
             return str(obj)
-        if isinstance(obj, datetime):
+        if isinstance(obj, datetime | date):
             return obj.isoformat()
+        elif isinstance(obj, bytes):
+            return obj.decode("ascii")
 
 
 def json_dumps(data: Any) -> bytes | str:

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncConnection
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.common.unit_of_work import IUnitOfWork
 from app.domain.common.entity import Entity
@@ -13,12 +13,12 @@ if TYPE_CHECKING:
 class UnitOfWork(IUnitOfWork):
     """Класс реализующий UnitOfWork."""
 
-    def __init__(self, registry: IRegistry, connection: AsyncConnection) -> None:
+    def __init__(self, registry: IRegistry, session: AsyncSession) -> None:
         self.__new: dict[UUID, Entity] = {}
         self.__dirty: dict[UUID, Entity] = {}
         self.__deleted: dict[UUID, Entity] = {}
         self.__registry = registry
-        self.__connection = connection
+        self.__session = session
 
     def register_new(self, entity: Entity) -> None:
         """Реализация регистрации новой сущности."""
@@ -56,4 +56,4 @@ class UnitOfWork(IUnitOfWork):
     async def commit(self) -> None:
         """Реализация фиксирования транзакции."""
         await self.__flush()
-        await self.__connection.commit()
+        await self.__session.commit()

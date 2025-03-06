@@ -1,2 +1,2 @@
-from .role import Role
-from .user import User
+from app.infrastructure.db.postgres.models.profile import ProfileTable
+from app.infrastructure.db.postgres.models.user import UserTable

@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 import converters as convert
 
+from ..brokers.rabbit.config import Exchanges
 from ..brokers.rabbit.interfaces.publisher import IMessagePublisher
 
 if TYPE_CHECKING:
@@ -22,5 +23,7 @@ class EventBus(IEventBus):
             integration_event = convert.domain_event_to_integration_event(domain_event)
             message = convert.integration_event_to_message(integration_event)
             await self.message_publisher.publish(
-                message=message, key=integration_event.event_type
+                message=message,
+                exchange=Exchanges.USER_EXCHANGE,
+                routing_key=integration_event.event_type,
             )

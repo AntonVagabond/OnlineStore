@@ -8,6 +8,6 @@ class IMessagePublisher(Protocol):
     """Протокол для публикации сообщений."""
 
     @abstractmethod
-    async def publish(self, message: Message, key: str) -> None:
+    async def publish(self, message: Message, exchange: str, routing_key: str) -> None:
         """Публикация сообщения."""
         raise NotImplementedError

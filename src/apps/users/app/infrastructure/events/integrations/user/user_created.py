@@ -17,6 +17,7 @@ class UserCreatedIntegrationEvent(IntegrationEvent):
 def user_created_to_integration(
     event: UserCreatedDomainEvent,
 ) -> UserCreatedIntegrationEvent:
+    """Преобразовать событие создания пользователя в интеграционное событие."""
     return UserCreatedIntegrationEvent(
         event_id=event.event_uuid,
         event_type=event.event_type,

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
+from ...common.const import exceptions as text
 from ...common.value_object import ValueObject
-from ..exceptions.value_objects import InvalidContactsError
+from ..exceptions import value_objects as exc
 
 
 @dataclass(frozen=True)
@@ -14,17 +15,13 @@ class Contacts(ValueObject):
     def _validate(self) -> None:
         """Проверка валидности контактных данных."""
         if self.phone_number is None and self.email is None:
-            raise InvalidContactsError(
-                "Необходимо указать хотя бы один контактный номер."
-            )
+            raise exc.EmptyContactError(text.EMPTY_CONTACT)
 
         if self.phone_number and not isinstance(self.phone_number, str):
-            raise InvalidContactsError(
-                "Телефонный номер должен быть указан в строковом значении."
-            )
+            raise exc.WrongPhoneNumberFormatError(text.WRONG_PHONE_NUMBER_FORMAT)
 
         if self.email and not isinstance(self.email, str):
-            raise InvalidContactsError("Почта должна быть указана в строковом значении.")
+            raise exc.WrongEmailFormatError(text.WRONG_EMAIL_FORMAT)
 
     def __str__(self) -> str:
         """Преобразование в строковое представление."""

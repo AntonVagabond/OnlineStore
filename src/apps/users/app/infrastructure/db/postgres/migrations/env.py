@@ -1,23 +1,27 @@
 from logging.config import fileConfig
 
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
-from common.models.base import Base
-from core.database import engine_sync
+from app.infrastructure.db.postgres.config import PostgresConfig
 
 # Обязательная инициализация всех моделей в этом файле.
-from models import Role  # noqa
-from models import User  # noqa
+from app.infrastructure.db.postgres.models import ProfileTable  # noqa
+from app.infrastructure.db.postgres.models import UserTable  # noqa
+from app.infrastructure.db.postgres.models.base import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
+pg_config = PostgresConfig()
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
 
+
+config.set_main_option("sqlalchemy.url", pg_config.postgres_dsn + "?async_fallback=True")
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
@@ -61,20 +65,14 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = context.config.attributes.get("connection", None)  # для pytest-alembic
-
-    if connectable is None:  # без pytest-alembic
-        connectable = engine_sync
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section, {}),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata,
-            compare_type=True,
-            compare_server_default=True,
-            include_schemas=True,
-            dialect_name="postgresql",
-        )
+        context.configure(connection=connection, target_metadata=target_metadata,)
 
         with context.begin_transaction():
             context.run_migrations()

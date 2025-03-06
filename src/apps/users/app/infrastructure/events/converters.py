@@ -1,9 +1,9 @@
 from app.domain.user.events.user_created import UserCreated
 
 from ..brokers.rabbit.message import Message
-from .events.integration_event import IntegrationEvent
-from .events.user.user_created import user_created_to_integration
-from .serializers import json_dumps
+from ..common.serializers import json_dumps
+from .integrations.integration_event import IntegrationEvent
+from .integrations.user.user_created import user_created_to_integration
 
 DomainEvents = UserCreated | ...
 

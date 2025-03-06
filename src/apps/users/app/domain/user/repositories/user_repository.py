@@ -10,7 +10,22 @@ class IUserRepository(Protocol):
     """Протокол для репозитория пользователей."""
 
     @abstractmethod
-    async def load(self, user_id: UUID) -> User | None:
+    def add(self, user: User) -> None:
+        """Добавить пользователя."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(self, user: User) -> None:
+        """Обновить данные пользователя."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete(self, user: User) -> None:
+        """Удалить пользователя по идентификатору."""
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_by_id(self, user_id: UUID) -> User | None:
         """Получить пользователя по идентификатору."""
         raise NotImplementedError
 

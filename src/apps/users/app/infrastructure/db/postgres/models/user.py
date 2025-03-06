@@ -5,7 +5,7 @@ from .base import Base
 from .mixins import CreatedUpdatedMixin, UUIDMixin
 
 
-class UserModel(Base, CreatedUpdatedMixin, UUIDMixin):
+class UserTable(Base, CreatedUpdatedMixin, UUIDMixin):
     """Модель пользователя."""
 
     username: Mapped[str | None] = mapped_column(

@@ -26,12 +26,11 @@ ENV PATH="$PATH:$POETRY_HOME/bin"
 RUN apk add --no-cache curl && \
     pip install --upgrade pip setuptools && \
     curl -sSL https://install.python-poetry.org | python3 - && \
-    export PATH="/root/.local/bin:$PATH" && \
-    apk del curl
+    export PATH="/root/.local/bin:$PATH"
 
 
 # Указываем рабочий каталог
-WORKDIR /usr/src/app
+WORKDIR "/usr/src/app"
 
 # Копируем зависимости проекта и устанавливаем их
 COPY pyproject.toml poetry.lock ./
@@ -43,22 +42,28 @@ RUN poetry install \
     rm -rf ~/.cache/pypoetry
 
 # Этап 2: Финальный образ
-FROM builder AS production
+FROM python:3.12-alpine AS production
+
+ARG WORKDIR="/usr/src/app"
 
 # Указываем рабочий каталог
-WORKDIR /usr/src/app
+WORKDIR ${WORKDIR}
 
 # Копируем установленные зависимости из этапа сборки
-COPY --from=builder /usr/src/app /usr/src/app
+COPY --from=builder ${WORKDIR} ${WORKDIR}
 
 # Создаем нового пользователя
-RUN adduser -D user
+# RUN #adduser -D user
 
 # Переключаемся на пользователя
-USER user
+# USER user
 
 # Копирование кода в контейнер
-COPY --chown=user:user . .
+COPY . .
 
 # Команда для запуска сервера с помощью Uvicorn
-ENTRYPOINT ["/bin/sh", "-c", "alembic upgrade head && python main.py"]
+RUN chmod +x scripts/app/run_migrations.sh && \
+    chmod +x scripts/app/run_api.sh && \
+    chmod +x scripts/entrypoint.sh
+
+ENTRYPOINT ["/bin/sh", "-c", "scripts/entrypoint.sh"]
