@@ -42,7 +42,7 @@ RUN poetry install \
     rm -rf ~/.cache/pypoetry
 
 # Этап 2: Финальный образ
-FROM python:3.12-alpine AS production
+FROM builder AS production
 
 ARG WORKDIR="/usr/src/app"
 
@@ -53,17 +53,15 @@ WORKDIR ${WORKDIR}
 COPY --from=builder ${WORKDIR} ${WORKDIR}
 
 # Создаем нового пользователя
-# RUN #adduser -D user
+RUN adduser -D user
 
 # Переключаемся на пользователя
-# USER user
+USER user
 
 # Копирование кода в контейнер
-COPY . .
+COPY --chown=user:user . .
 
 # Команда для запуска сервера с помощью Uvicorn
 RUN chmod +x scripts/app/run_migrations.sh && \
     chmod +x scripts/app/run_api.sh && \
     chmod +x scripts/entrypoint.sh
-
-ENTRYPOINT ["/bin/sh", "-c", "scripts/entrypoint.sh"]
