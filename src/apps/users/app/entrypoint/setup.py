@@ -1,4 +1,4 @@
-# import asyncio
+import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -57,16 +57,13 @@ def custom_openapi(app: FastAPI) -> dict[str, Any]:
 
 def setup_app() -> FastAPI:
     """Настройка приложения."""
-    # settings = asyncio.run(get_app_config(async_container=container))
+    settings = asyncio.run(get_app_config(async_container=container))
     app = FastAPI(
         lifespan=lifespan,
-        # openapi_url=settings.openapi_url,
-        openapi_url="/swagger/docs/v1.0/users",
+        openapi_url=settings.openapi_url,
         swagger_ui_init_oauth={
-            # "clientId": settings.client_id,
-            "clientId": "fastapi",
-            # "clientSecret": settings.client_secret,
-            "clientSecret": "fastapi_secret",
+            "clientId": settings.client_id,
+            "clientSecret": settings.client_secret,
         },
         swagger_ui_parameters={
             "displayRequestDuration": True,
