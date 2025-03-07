@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -7,7 +7,7 @@ APP_NAME="users_service_api"
 LOG_DIR="logs"
 LOG_FILE="${LOG_DIR}/api_$(date +%Y%m%d_%H%M%S).log"
 GUNICORN_CONFIG="config/gunicorn.py"
-APP_MODULE="app.entrypoint.main:app_factory"
+APP_MODULE="app.entrypoint.main:app_factory()"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
