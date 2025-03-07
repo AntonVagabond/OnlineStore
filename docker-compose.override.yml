@@ -48,6 +48,13 @@ services:
       PG_USER: ${PG_USER}
       PG_PASSWORD: ${PG_PASSWORD}
       PG_DATABASE: ${PG_DATABASE_USER}
+
+      # Broker connection configuration
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+
       # Startup configuration
       PORT: ${PORT_USER}
       HOST: ${HOST_USER}
@@ -93,7 +100,30 @@ services:
     volumes:
       - ./docker/scripts/db-initializer.sh:/docker-entrypoint-initdb.d/db-initializer.sh
       - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   # end ---------------------------------------
+
+  # region ------------- BROKER ---------------
+  rabbitmq:
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  # end --------------------------------------
 
 volumes:
   online_logs:
@@ -103,4 +133,8 @@ volumes:
   redis_data:
     driver: local
   postgres_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  rabbitmq_logs:
     driver: local

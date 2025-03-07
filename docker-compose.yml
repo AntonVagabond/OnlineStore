@@ -14,7 +14,7 @@ services:
     build:
       context: src/apps/users
       dockerfile: Dockerfile
-#    command: ['./scripts/entrypoint.sh']
+    command: ['./scripts/entrypoint.sh']
     depends_on:
       - postgres.db
     restart: unless-stopped
@@ -36,3 +36,9 @@ services:
     container_name: postgres.db
     restart: unless-stopped
   # end ---------------------------------------
+
+  # region ------------- BROKER ---------------
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq.broker
+  # end --------------------------------------
