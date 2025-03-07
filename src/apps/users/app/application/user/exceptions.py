@@ -1,17 +1,17 @@
-from ...common.exception import DomainError
+from ..common.exception import ApplicationError
 
 
-class UserAlreadyExistsError(DomainError):
+class UserAlreadyExistsError(ApplicationError):
     """Такой пользователь уже существует."""
 
 
-class EmailAlreadyExistsError(DomainError):
+class EmailAlreadyExistsError(ApplicationError):
     """Этот email уже используется."""
 
 
-class PhoneNumberAlreadyExistsError(DomainError):
+class PhoneNumberAlreadyExistsError(ApplicationError):
     """Этот номер телефона уже используется."""
 
 
-class UserNotFoundError(DomainError):
+class UserNotFoundError(ApplicationError):
     """Пользователь не найден."""

@@ -1,10 +1,8 @@
 from abc import ABC
-from typing import TYPE_CHECKING, TypeVar
+from typing import TypeVar
 
 from .entity import Entity
-
-if TYPE_CHECKING:
-    from .event import Event
+from .event import Event
 
 TEntityID = TypeVar("TEntityID")
 

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from ...common.const import exceptions as text
 from ...common.value_object import ValueObject
-from ..exceptions import value_objects as exc
+from .. import exceptions as exc
 
 
 @dataclass(frozen=True)
@@ -22,6 +22,6 @@ class Username(ValueObject):
         if len(self.value) == 0:
             raise exc.EmptyUsernameError(text.EMPTY_USERNAME)
         if len(self.value) > self.__MAX_LENGTH:
-            raise exc.TooLongUsernameError(text.TOO_LONG_USER_NAME(self.__MAX_LENGTH))
+            raise exc.TooLongUsernameError(text.TOO_LONG_USERNAME(self.__MAX_LENGTH))
         if not self.__PATTERN.match(self.value):
             raise exc.WrongUsernameFormatError(text.WRONG_USERNAME_FORMAT)

@@ -1,19 +1,16 @@
-from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.application.common.unit_of_work import IUnitOfWork
+from app.application.common.unit_of_work import UnitOfWork
 from app.domain.common.entity import Entity
-
-if TYPE_CHECKING:
-    from app.infrastructure.db.postgres.interfaces.registry import IRegistry
+from app.infrastructure.db.postgres.interfaces.registry import Registry
 
 
-class UnitOfWork(IUnitOfWork):
+class UnitOfWorkImpl(UnitOfWork):
     """Класс реализующий UnitOfWork."""
 
-    def __init__(self, registry: IRegistry, session: AsyncSession) -> None:
+    def __init__(self, registry: Registry, session: AsyncSession) -> None:
         self.__new: dict[UUID, Entity] = {}
         self.__dirty: dict[UUID, Entity] = {}
         self.__deleted: dict[UUID, Entity] = {}

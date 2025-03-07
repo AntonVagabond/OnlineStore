@@ -1,13 +1,10 @@
-from typing import TYPE_CHECKING, Self
+from typing import Self
+from uuid import UUID
 
 from ...common.aggregate_root import AggregateRoot
 from ..events.user_created import UserCreated
-
-if TYPE_CHECKING:
-    from uuid import UUID
-
-    from ..value_objects.contacts import Contacts
-    from ..value_objects.username import Username
+from ..value_objects.contacts import Contacts
+from ..value_objects.username import Username
 
 
 class User(AggregateRoot[UUID]):

@@ -1,9 +1,9 @@
 from app.domain.common.entity import Entity
 from app.infrastructure.db.postgres.interfaces.data_mapper import DataMapper
-from app.infrastructure.db.postgres.interfaces.registry import IRegistry
+from app.infrastructure.db.postgres.interfaces.registry import Registry
 
 
-class Registry(IRegistry):
+class RegistryImpl(Registry):
     """Класс реализующий регистрацию преобразователей данных для сущностей."""
 
     def __init__(self) -> None:

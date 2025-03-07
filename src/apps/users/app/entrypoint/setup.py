@@ -1,3 +1,4 @@
+# import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -14,6 +15,12 @@ from app.infrastructure.brokers.rabbit.setup import (
     declare_exchange,
     declare_queues,
 )
+
+
+async def get_app_config(async_container: AsyncContainer) -> AppConfig:
+    """Получить настройки приложения."""
+    async with async_container() as request_container:
+        return await request_container.get(AppConfig)
 
 
 async def declare_amqp_bindings(async_container: AsyncContainer) -> None:
@@ -50,18 +57,21 @@ def custom_openapi(app: FastAPI) -> dict[str, Any]:
 
 def setup_app() -> FastAPI:
     """Настройка приложения."""
-    settings: AppConfig = container.get(AppConfig)
+    # settings = asyncio.run(get_app_config(async_container=container))
     app = FastAPI(
         lifespan=lifespan,
-        openapi_url=settings.openapi_url,
+        # openapi_url=settings.openapi_url,
+        openapi_url="/swagger/docs/v1.0/users",
         swagger_ui_init_oauth={
-            "clientId": settings.client_id,
-            "clientSecret": settings.client_secret,
+            # "clientId": settings.client_id,
+            "clientId": "fastapi",
+            # "clientSecret": settings.client_secret,
+            "clientSecret": "fastapi_secret",
         },
         swagger_ui_parameters={
             "displayRequestDuration": True,
             "persistAuthorization": True,
         },
     )
-    app.openapi = custom_openapi(app)
+    app.openapi = lambda: custom_openapi(app)
     return app

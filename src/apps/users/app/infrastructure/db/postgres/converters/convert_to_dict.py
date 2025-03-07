@@ -1,9 +1,6 @@
-from typing import TYPE_CHECKING
+from uuid import UUID
 
 from app.domain.user.entities.user import User
-
-if TYPE_CHECKING:
-    from uuid import UUID
 
 
 def user_entity_to_dict(user: User) -> dict[str, UUID | str]:

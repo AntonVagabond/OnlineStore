@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from ...common.const import exceptions as text
 from ...common.value_object import ValueObject
-from ..exceptions import value_objects as exc
+from .. import exceptions as exc
 
 
 @dataclass(frozen=True)

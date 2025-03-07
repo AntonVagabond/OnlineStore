@@ -1,23 +1,20 @@
-from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.application.common.unit_of_work import IUnitOfWork
-from app.domain.user.repositories.user_repository import IUserRepository
+from app.application.common.unit_of_work import UnitOfWork
+from app.domain.user.entities.user import User
+from app.domain.user.repositories.user_repository import UserRepository
 
 from ...converters import convert_to_entity as convert
 from ...models.user import UserTable
 
-if TYPE_CHECKING:
-    from app.domain.user.entities.user import User
 
-
-class UserRepository(IUserRepository):
+class UserRepositoryImpl(UserRepository):
     """Класс реализации репозитория пользователя."""
 
-    def __init__(self, uow: IUnitOfWork, session: AsyncSession) -> None:
+    def __init__(self, uow: UnitOfWork, session: AsyncSession) -> None:
         self.__uow = uow
         self.__session = session
 
@@ -43,7 +40,7 @@ class UserRepository(IUserRepository):
             return convert.result_to_user_entity(result)
 
     async def get_by_id(self, user_id: UUID) -> User | None:
-        """Получить пользователя по идентификатору."""
+        """Реализация получения пользователя по идентификатору."""
         query = select(UserTable).where(UserTable.id == user_id)
         return await self.__get_convert_result_or_none(query)
 

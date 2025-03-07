@@ -3,18 +3,20 @@ from typing import AsyncGenerator
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
-from app.application.common.unit_of_work import IUnitOfWork
+from app.application.common.persistence.user_reader import UserReader
+from app.application.common.unit_of_work import UnitOfWork
 from app.domain.user.entities.user import User
-from app.domain.user.repositories.user_repository import IUserRepository
+from app.domain.user.repositories.user_repository import UserRepository
 from app.infrastructure.db.postgres.config import PostgresConfig
 from app.infrastructure.db.postgres.engine import setup_engine, setup_session
 from app.infrastructure.db.postgres.gateways.mappers.user_mapper import UserDataMapper
+from app.infrastructure.db.postgres.gateways.readers.user_reader import UserReaderImpl
 from app.infrastructure.db.postgres.gateways.repositories.user_repository import (
-    UserRepository,
+    UserRepositoryImpl,
 )
-from app.infrastructure.db.postgres.interfaces.registry import IRegistry
-from app.infrastructure.db.postgres.registry import Registry
-from app.infrastructure.db.postgres.unit_of_work import UnitOfWork
+from app.infrastructure.db.postgres.interfaces.registry import Registry
+from app.infrastructure.db.postgres.registry import RegistryImpl
+from app.infrastructure.db.postgres.unit_of_work import UnitOfWorkImpl
 
 
 class PostgresDatabaseProvider(Provider):
@@ -40,25 +42,32 @@ class PostgresDatabaseProvider(Provider):
         return setup_session(engine)
 
     @provide(scope=Scope.REQUEST)
-    def provide_user_repository(self, session: AsyncSession) -> IUserRepository:
-        """Получение репозитория пользователями для работы с CUD-операциями."""
-        return UserRepository(session)
+    def provide_user_repository(
+        self, uow: UnitOfWork, session: AsyncSession
+    ) -> UserRepository:
+        """Внедрение зависимости для репозитория пользователей."""
+        return UserRepositoryImpl(uow, session)
+
+    @provide(scope=Scope.REQUEST)
+    def provide_user_reader(self, session: AsyncSession) -> UserReader:
+        """Внедрение зависимости для чтения пользователей."""
+        return UserReaderImpl(session)
 
     @provide(scope=Scope.REQUEST)
     def provide_user_data_mapper(self, session: AsyncSession) -> UserDataMapper:
-        """Получение преобразователя данных для сущности User."""
+        """Внедрение зависимости преобразователя данных для сущности User."""
         return UserDataMapper(session)
 
     @provide(scope=Scope.REQUEST)
-    def provide_registry(self, user_data_mapper: UserDataMapper) -> IRegistry:
+    def provide_registry(self, user_data_mapper: UserDataMapper) -> Registry:
         """Регистрируем у каждой сущности свой преобразователь данных."""
-        registry = Registry()
+        registry = RegistryImpl()
         registry.register_mapper(User, user_data_mapper)
         return registry
 
     @provide(scope=Scope.REQUEST)
     def provide_unit_of_work(
-        self, session: AsyncSession, registry: IRegistry
-    ) -> IUnitOfWork:
-        """Получение UnitOfWork для работы с транзакциями."""
-        return UnitOfWork(registry, session)
+        self, session: AsyncSession, registry: Registry
+    ) -> UnitOfWork:
+        """Внедрение зависимости UnitOfWork для работы с транзакциями."""
+        return UnitOfWorkImpl(registry, session)

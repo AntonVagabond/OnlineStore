@@ -1,18 +1,14 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
-from app.domain.common.const import exceptions as text
+from app.application.common.unit_of_work import UnitOfWork
 from app.domain.user.entities.user import User
-from app.domain.user.exceptions import entity as exc
+from app.domain.user.repositories.user_repository import UserRepository
 
-from ...common.handler import Handler
-
-if TYPE_CHECKING:
-    from app.application.common.unit_of_work import IUnitOfWork
-    from app.domain.user.repositories.user_repository import IUserRepository
-
-    from ...common.event_bus import IEventBus
+from ...common.const import exceptions as text
+from ...common.event_bus import EventBus
+from ...common.handler import CommandHandler
+from .. import exceptions as exc
 
 
 @dataclass(frozen=True)
@@ -22,11 +18,11 @@ class CreateUserCommand:
     phone_number: str | None
 
 
-class CreateUserHandler(Handler[CreateUserCommand, UUID]):
+class CreateUserHandler(CommandHandler[CreateUserCommand, UUID]):
     """Класс-обработчик для создания пользователя."""
 
     def __init__(
-        self, uow: IUnitOfWork, user_repository: IUserRepository, event_bus: IEventBus
+        self, uow: UnitOfWork, user_repository: UserRepository, event_bus: EventBus
     ) -> None:
         self.__uow = uow
         self.__user_repository = user_repository

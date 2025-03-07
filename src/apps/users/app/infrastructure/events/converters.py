@@ -1,11 +1,14 @@
+from typing import TypeAlias
+
 from app.domain.user.events.user_created import UserCreated
 
+from ...domain.common.event import Event
 from ..brokers.rabbit.message import Message
 from ..common.serializers import json_dumps
 from .integrations.integration_event import IntegrationEvent
 from .integrations.user.user_created import user_created_to_integration
 
-DomainEvents = UserCreated | ...
+DomainEvents: TypeAlias = UserCreated | Event
 
 
 def domain_event_to_integration_event(event: DomainEvents) -> IntegrationEvent:

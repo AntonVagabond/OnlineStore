@@ -1,11 +1,10 @@
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
-if TYPE_CHECKING:
-    from app.domain.common.event import Event
+from app.domain.common.event import Event
 
 
-class IEventBus(Protocol):
+class EventBus(Protocol):
     """Протокол для ведения журнала событий."""
 
     @abstractmethod

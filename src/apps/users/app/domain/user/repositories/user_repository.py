@@ -1,12 +1,11 @@
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 from uuid import UUID
 
-if TYPE_CHECKING:
-    from ..entities.user import User
+from ..entities.user import User
 
 
-class IUserRepository(Protocol):
+class UserRepository(Protocol):
     """Протокол для репозитория пользователей."""
 
     @abstractmethod

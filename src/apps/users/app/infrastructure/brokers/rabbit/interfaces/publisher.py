@@ -4,7 +4,7 @@ from typing import Protocol
 from ..message import Message
 
 
-class IMessagePublisher(Protocol):
+class MessagePublisher(Protocol):
     """Протокол для публикации сообщений."""
 
     @abstractmethod

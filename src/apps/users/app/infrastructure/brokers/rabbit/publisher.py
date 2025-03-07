@@ -1,11 +1,11 @@
 import aio_pika
 
 from ...common.serializers import json_dumps
-from .interfaces.publisher import IMessagePublisher
+from .interfaces.publisher import MessagePublisher
 from .message import Message
 
 
-class MessagePublisher(IMessagePublisher):
+class MessagePublisherImpl(MessagePublisher):
     def __init__(self, channel: aio_pika.abc.AbstractChannel) -> None:
         self.__channel = channel
 

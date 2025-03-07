@@ -1,13 +1,12 @@
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
-if TYPE_CHECKING:
-    from app.domain.common.entity import Entity
+from app.domain.common.entity import Entity
 
-    from .data_mapper import DataMapper
+from .data_mapper import DataMapper
 
 
-class IRegistry(Protocol):
+class Registry(Protocol):
     """Протокол регистрации преобразователей данных для сущностей."""
 
     @abstractmethod

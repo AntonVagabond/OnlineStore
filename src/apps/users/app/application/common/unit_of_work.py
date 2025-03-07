@@ -1,11 +1,10 @@
 import abc
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
-if TYPE_CHECKING:
-    from app.domain.common.entity import Entity
+from app.domain.common.entity import Entity
 
 
-class IUnitOfWork(Protocol):
+class UnitOfWork(Protocol):
     """Протокол для управления транзакциями."""
 
     @abc.abstractmethod

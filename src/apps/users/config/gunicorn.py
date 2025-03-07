@@ -6,7 +6,7 @@ worker_class = "uvicorn.workers.UvicornWorker"
 worker_connections = 1000
 
 # Binding
-bind = "0.0.0.0:1000"
+bind = "0.0.0.0:80"
 
 # Logging
 accesslog = "-"

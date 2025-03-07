@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from app.domain.common.entity import Entity
+from app.domain.common.entity import Entity
 
 
 class DataMapper(ABC):
