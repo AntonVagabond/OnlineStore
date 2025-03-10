@@ -1,5 +1,6 @@
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from typing import Self
 
 from dotenv import load_dotenv
 
@@ -10,17 +11,24 @@ load_dotenv()
 class PostgresConfig:
     """Класс конфигурации для PostgreSQL."""
 
-    user: str = os.getenv("PG_USER", "postgres")
-    password: str = os.getenv("PG_PASSWORD", "postgres")
-    host: str = os.getenv("PG_HOST", "localhost")
-    port: int = int(os.getenv("PG_PORT", 5432))
-    database: str = os.getenv("PG_DATABASE", "postgres")
-    echo: bool = field(default=False)
+    host: str
+    port: int
+    user: str
+    password: str
+    db: str
 
-    @property
-    def postgres_dsn(self) -> str:
-        """Возвращает DSN для подключения к PostgreSQL."""
-        return (
-            f"postgresql+asyncpg://{self.user}:{self.password}@"
-            f"{self.host}:{self.port}/{self.database}"
-        )
+    uri: str
+
+    @classmethod
+    def from_env(cls) -> Self:
+        """Возвращает настройки PostgreSQL."""
+
+        host = os.getenv("PG_HOST", "localhost")
+        port = int(os.getenv("PG_PORT", 5432))
+        user = os.getenv("PG_USER", "postgres")
+        password = os.getenv("PG_PASSWORD", "postgres")
+        db = os.getenv("PG_DATABASE", "postgres")
+
+        uri = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}"
+
+        return cls(host=host, port=port, user=user, password=password, db=db, uri=uri)

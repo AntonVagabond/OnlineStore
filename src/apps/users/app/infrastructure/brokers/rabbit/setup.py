@@ -10,14 +10,14 @@ from aio_pika.abc import (
 )
 from aio_pika.pool import Pool
 
-from .config import AMQPConfig, Exchanges, Queues
+from .config import Exchanges, Queues, RabbitMQConfig
 
 # ------------------------------ Not include in the DI -----------------------------------
 
 
-async def amqp_connection(config: AMQPConfig) -> AbstractRobustConnection:
+async def amqp_connection(config: RabbitMQConfig) -> AbstractRobustConnection:
     """Подключение к rabbitmq."""
-    return await connect_robust(url=config.amqp_dsn)
+    return await connect_robust(url=config.dsn)
 
 
 async def amqp_channel(connection_pool: Pool[AbstractConnection]) -> AbstractChannel:
@@ -30,7 +30,7 @@ async def amqp_channel(connection_pool: Pool[AbstractConnection]) -> AbstractCha
 
 
 async def amqp_conn_pool(
-    config: AMQPConfig,
+    config: RabbitMQConfig,
 ) -> AsyncGenerator[Pool[AbstractConnection], None]:
     """Подключение к пулу соединений для создания каналов."""
     async with Pool(lambda: amqp_connection(config), max_size=15) as conn_pool:

@@ -1,11 +1,16 @@
-from dishka import Provider, Scope, provide
+from dishka import Provider, Scope
 
 from app.application.user.commands.create_user import CreateUserHandler
 
+# class HandlersProvider(Provider):
+#     """Провайдер для Обработчиков."""
+#
+#     scope = Scope.REQUEST
+#
+#     create_user = provide(CreateUserHandler)
 
-class HandlersProvider(Provider):
-    """Провайдер для Обработчиков."""
 
-    scope = Scope.REQUEST
+def provide_application_handlers(provider: Provider) -> None:
+    """Провайдер для обработчиков приложения."""
 
-    create_user = provide(CreateUserHandler)
+    provider.provide(CreateUserHandler, scope=Scope.REQUEST)

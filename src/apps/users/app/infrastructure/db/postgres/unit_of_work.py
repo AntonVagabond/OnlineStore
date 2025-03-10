@@ -40,6 +40,7 @@ class UnitOfWorkImpl(UnitOfWork):
         """Реализация фиксации изменений."""
         for entity in self.__new.values():
             mapper = self.__registry.get_mapper(entity=type(entity))
+
             await mapper.add(entity)
 
         for entity in self.__dirty.values():
