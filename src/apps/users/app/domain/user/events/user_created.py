@@ -5,7 +5,7 @@ from ...common.event import Event
 
 
 @dataclass(frozen=True)
-class UserCreated(Event["UserCreated"]):
+class UserCreated(Event):
     """Событие создания пользователя."""
 
     user_id: UUID

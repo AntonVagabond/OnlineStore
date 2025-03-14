@@ -12,9 +12,9 @@ class EventBusImpl(EventBus):
     def __init__(self, message_publisher: MessagePublisher) -> None:
         self.message_publisher = message_publisher
 
-    async def publish(self, domain_events: list[Event]) -> None:
+    async def publish(self, events: list[Event]) -> None:
         """Отправить события в очередь."""
-        for domain_event in domain_events:
+        for domain_event in events:
             # Конвертируем событие доменной модели в событие интеграционной модели
             integration_event = domain_event_to_integration_event(domain_event)
             message = integration_event_to_message(integration_event)

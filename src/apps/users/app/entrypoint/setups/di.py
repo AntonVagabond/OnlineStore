@@ -12,10 +12,12 @@ def setup_provider() -> Provider:
 
     provider = Provider()
 
-    providers.provide_configs(provider)
+    providers.provide_application_handlers(provider)
     providers.provide_db_gateways(provider)
     providers.provide_db_connections(provider)
     providers.provide_db_unit_of_work(provider)
+    providers.provide_rabbitmq_factories(provider)
+    providers.provide_configs(provider)
 
     return provider
 

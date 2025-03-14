@@ -19,6 +19,6 @@ class UserTable(Base, CreatedUpdatedMixin, UUIDMixin):
     )
     phone_number: Mapped[str | None] = mapped_column(sa.String(length=18), nullable=False)
 
-    profile: Mapped["Profile"] = relationship(  # type: ignore
+    profile: Mapped["ProfileTable"] = relationship(  # type: ignore
         uselist=False, back_populates="user", lazy="raise"
     )

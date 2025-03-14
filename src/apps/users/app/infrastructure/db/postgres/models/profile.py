@@ -21,6 +21,6 @@ class ProfileTable(Base, CreatedUpdatedMixin, UUIDMixin):
     bio: Mapped[bool] = mapped_column(sa.Boolean, default=False, nullable=False)
     status: Mapped[str] = mapped_column(sa.String(length=25), nullable=False)
 
-    user: Mapped["User"] = relationship(  # type: ignore
+    user: Mapped["UserTable"] = relationship(  # type: ignore
         back_populates="profile", lazy="raise"
     )

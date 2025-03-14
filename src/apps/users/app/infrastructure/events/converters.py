@@ -1,4 +1,4 @@
-from typing import TypeAlias
+from typing import TypeVar
 
 from app.domain.user.events.user_created import UserCreated
 
@@ -8,10 +8,10 @@ from ..common.serializers import json_dumps
 from .integrations.integration_event import IntegrationEvent
 from .integrations.user.user_created import user_created_to_integration
 
-DomainEvents: TypeAlias = UserCreated | Event
+TDomainEvents = TypeVar("TDomainEvents", bound=Event)
 
 
-def domain_event_to_integration_event(event: DomainEvents) -> IntegrationEvent:
+def domain_event_to_integration_event(event: TDomainEvents) -> IntegrationEvent:
     """Преобразовать событие доменной модели в событие интеграции."""
     match event:
         case UserCreated():

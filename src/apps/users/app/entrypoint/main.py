@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 
 from aio_pika.abc import AbstractChannel
 from dishka import AsyncContainer

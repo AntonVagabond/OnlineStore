@@ -1,13 +1,17 @@
 from typing import Type
 
 from dishka import Provider, Scope
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from app.application.common.persistence.user_reader import UserReader
 from app.application.common.unit_of_work import UnitOfWork
 from app.domain.user.entities.user import User
 from app.domain.user.repositories.user_repository import UserRepository
-from app.infrastructure.db.postgres.engine import setup_engine, setup_session_maker
+from app.infrastructure.db.postgres.engine import (
+    setup_engine,
+    setup_session,
+    setup_session_maker,
+)
 from app.infrastructure.db.postgres.gateways.mappers.user_mapper import UserDataMapper
 from app.infrastructure.db.postgres.gateways.readers.user_reader import UserReaderImpl
 from app.infrastructure.db.postgres.gateways.repositories.user_repository import (
@@ -16,60 +20,6 @@ from app.infrastructure.db.postgres.gateways.repositories.user_repository import
 from app.infrastructure.db.postgres.interfaces.registry import Registry
 from app.infrastructure.db.postgres.registry import RegistryImpl
 from app.infrastructure.db.postgres.unit_of_work import UnitOfWorkImpl
-
-# class PostgresDatabaseProvider(Provider):
-#     """Провайдер для PostgreSQL."""
-
-# @provide(scope=Scope.APP, provides=AsyncEngine)
-# def provide_postgres_engine(
-#     self, config: Config
-# ) -> AsyncEngine:
-#     """Создание асинхронного движка для PostgreSQL."""
-#     return create_async_engine(config.postgres_config.uri)
-#
-# @provide(scope=Scope.APP, provides=AsyncSession)
-# def provide_session_maker(
-#     self, engine: AsyncEngine
-# ) -> async_sessionmaker[AsyncSession]:
-#     """Создание асинхронного сеанса с PostgreSQL."""
-#     return async_sessionmaker(engine)
-#
-# @provide(scope=Scope.REQUEST, provides=AsyncSession)
-# async def provide_session(
-#     self, session_maker: async_sessionmaker[AsyncSession]
-# ) -> AsyncIterable[AsyncSession]:
-#     """Создание асинхронной сессии."""
-#     async with session_maker() as session:
-#         yield session
-
-# @provide(scope=Scope.REQUEST)
-# def provide_user_repository(
-#     self, uow: UnitOfWork, session: AsyncSession
-# ) -> UserRepository:
-#     """Внедрение зависимости для репозитория пользователей."""
-#     return UserRepositoryImpl(uow, session)
-#
-# user_reader = provide(
-#     UserReaderImpl, scope=Scope.REQUEST, provides=UserReader
-# )
-# user_data_mapper = provide(
-#     UserDataMapper, scope=Scope.REQUEST, provides=UserDataMapper
-# )
-#
-# @provide(scope=Scope.REQUEST)
-# def provide_registry(self, user_data_mapper: UserDataMapper) -> Registry:
-#     """Регистрируем у каждой сущности свой преобразователь данных."""
-#     registry = RegistryImpl()
-#     registry.register_mapper(User, user_data_mapper)
-#     return registry
-#
-# @provide(scope=Scope.REQUEST)
-# def provide_unit_of_work(
-#     self, session: AsyncSession, registry: Registry
-# ) -> UnitOfWork:
-#     """Внедрение зависимости UnitOfWork для работы с транзакциями."""
-#     return UnitOfWorkImpl(registry, session)
-#
 
 
 def setup_data_mappers() -> Registry:
@@ -90,8 +40,11 @@ def provide_db_gateways(provider: Provider) -> None:
 
 def provide_db_connections(provider: Provider) -> None:
     """Создание асинхронного движка и создание сессии PostgreSQL."""
-    provider.provide(setup_engine, scope=Scope.REQUEST, provides=AsyncEngine)
-    provider.provide(setup_session_maker, scope=Scope.REQUEST, provides=AsyncSession)
+    provider.provide(setup_engine, scope=Scope.APP, provides=AsyncEngine)
+    provider.provide(
+        setup_session_maker, scope=Scope.APP, provides=async_sessionmaker[AsyncSession]
+    )
+    provider.provide(setup_session, scope=Scope.REQUEST, provides=AsyncSession)
 
 
 def provide_db_unit_of_work(provider: Provider) -> None:
