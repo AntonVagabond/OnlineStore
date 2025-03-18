@@ -1,10 +1,10 @@
 from dishka import AsyncContainer, Provider, make_async_container
 
 from app.infrastructure.brokers.rabbit.config import RabbitMQConfig
+from app.infrastructure.common.config import Config
 from app.infrastructure.db.postgres.config import PostgresConfig
 
-from ..config import Config
-from ..di import providers
+from . import providers
 
 
 def setup_provider() -> Provider:
@@ -17,6 +17,7 @@ def setup_provider() -> Provider:
     providers.provide_db_connections(provider)
     providers.provide_db_unit_of_work(provider)
     providers.provide_rabbitmq_factories(provider)
+    providers.provide_domain_ports(provider)
     providers.provide_configs(provider)
 
     return provider

@@ -4,7 +4,7 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from ..config import AppConfig
+from app.infrastructure.common.config import AppConfig
 
 
 def custom_openapi(app: FastAPI) -> dict[str, Any]:
