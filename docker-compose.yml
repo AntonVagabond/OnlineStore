@@ -16,7 +16,10 @@ services:
       dockerfile: Dockerfile
     command: ['./scripts/entrypoint.sh']
     depends_on:
-      - postgres.db
+      postgres.db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     restart: unless-stopped
   # end --------------------------------------
 
