@@ -22,4 +22,6 @@ def domain_event_to_integration_event(event: TDomainEvents) -> IntegrationEvent:
 
 def integration_event_to_message(event: IntegrationEvent) -> Message:
     """Преобразовать событие интеграции в сообщение."""
-    return Message(message_id=event.event_id, data=json_dumps(event))
+    return Message(
+        message_id=event.event_id, event_type=event.event_type, data=json_dumps(event)
+    )

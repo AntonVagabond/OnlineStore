@@ -3,12 +3,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from app.entrypoint.config import create_config
-
-# Обязательная инициализация всех моделей в этом файле.
-from app.infrastructure.db.postgres.models import ProfileTable  # noqa
-from app.infrastructure.db.postgres.models import UserTable  # noqa
-from app.infrastructure.db.postgres.models.base import Base
+from app.infrastructure.common.config import create_config
+from app.infrastructure.db.postgres.tables.base import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,18 +16,10 @@ pg_config = create_config().postgres_config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# add your model's MetaData object here
+target_metadata = metadata
 
 config.set_main_option("sqlalchemy.url", pg_config.uri + "?async_fallback=True")
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def run_migrations_offline() -> None:

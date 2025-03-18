@@ -1,6 +1,4 @@
-from typing import Type
-
-from dishka import Provider, Scope
+from dishka import AsyncContainer, Provider, Scope
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from app.application.common.persistence.user_reader import UserReader
@@ -26,9 +24,14 @@ def setup_data_mappers() -> Registry:
     """Создание регистра для преобразователей данных."""
     registry = RegistryImpl()
 
-    registry.register_mapper(User, Type[UserDataMapper])
+    registry.register_mapper(User, UserDataMapper)  # type: ignore
 
     return registry
+
+
+def provide_resolver(provider: Provider) -> None:
+    """Внедрение распознавателя зависимости."""
+    provider.provide(AsyncContainer, scope=Scope.REQUEST)
 
 
 def provide_db_gateways(provider: Provider) -> None:

@@ -16,6 +16,8 @@ class GetUserQuery:
 class GetUserHandler(QueryHandler[GetUserQuery, UserDto]):
     """Класс-обработчик для получения пользователя."""
 
+    __slots__ = ("user_reader",)
+
     def __init__(self, user_reader: UserReader) -> None:
         self.user_reader = user_reader
 

@@ -10,9 +10,9 @@ class Registry(Protocol):
     """Протокол регистрации преобразователей данных для сущностей."""
 
     @abstractmethod
-    def register_mapper(self, entity: type[Entity], mapper: DataMapper) -> None:
+    def register_mapper(self, entity: type[Entity], mapper: type[DataMapper]) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def get_mapper(self, entity: type[Entity]) -> DataMapper:
+    def get_mapper_type(self, entity: type[Entity]) -> type[DataMapper]:
         raise NotImplementedError

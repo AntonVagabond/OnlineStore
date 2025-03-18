@@ -6,16 +6,17 @@ from dishka import AsyncContainer
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
-from app.entrypoint.config import create_config
-from app.entrypoint.setups.app import setup_app
-from app.entrypoint.setups.di import setup_container, setup_provider
 from app.infrastructure.brokers.rabbit.setup import (
     bind_queue_to_exchange,
     declare_exchange,
     declare_queues,
 )
+from app.infrastructure.common.config import create_config
 from app.presentation.api.setups.exception import setup_exception_handlers
 from app.presentation.api.setups.routers import setup_routers
+
+from .di.setup import setup_container, setup_provider
+from .setup import setup_app
 
 
 async def declare_amqp_bindings(async_container: AsyncContainer) -> None:

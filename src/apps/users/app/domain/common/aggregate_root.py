@@ -10,17 +10,19 @@ TEntityID = TypeVar("TEntityID")
 class AggregateRoot(Entity[TEntityID], ABC):
     """Класс для взаимодействия сущностей с объектами значений и записи их событий."""
 
+    __slots__ = ("entity_id", "__events")
+
     def __init__(self, entity_id: TEntityID):
         super().__init__(entity_id=entity_id)
-        self._events: list[Event] = []
+        self.__events: list[Event] = []
 
     def record_event(self, event: Event) -> None:
         """Записать событие в историю событий."""
-        self._events.append(event)
+        self.__events.append(event)
 
     def raise_events(self) -> list[Event]:
         """Получить и очистить события."""
-        events = self._events.copy()
-        self._events.clear()
+        events = self.__events.copy()
+        self.__events.clear()
 
         return events

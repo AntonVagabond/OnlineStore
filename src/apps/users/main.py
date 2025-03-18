@@ -1,5 +1,6 @@
 import uvicorn
 
+# Точка для локального запуска.
 if __name__ == "__main__":
     uvicorn.run(
         app="app.entrypoint.main:app_factory",

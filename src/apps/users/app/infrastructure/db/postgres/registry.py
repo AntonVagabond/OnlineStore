@@ -7,17 +7,17 @@ class RegistryImpl(Registry):
     """Класс реализующий регистрацию преобразователей данных для сущностей."""
 
     def __init__(self) -> None:
-        self.__mappers: dict[type[Entity], DataMapper] = {}
+        self.__mappers: dict[type[Entity], type[DataMapper]] = {}
 
-    def register_mapper(self, entity: type[Entity], mapper: DataMapper) -> None:
+    def register_mapper(self, entity: type[Entity], mapper: type[DataMapper]) -> None:
         """Регистрируем сущность и его преобразователь данных в словарь."""
         self.__mappers[entity] = mapper
 
-    def get_mapper(self, entity: type[Entity]) -> DataMapper:
+    def get_mapper_type(self, entity: type[Entity]) -> type[DataMapper]:
         """Получить преобразователь данных для сущности, которую укажем."""
-        mapper = self.__mappers.get(entity)
-        if not mapper:
+        mapper_type = self.__mappers.get(entity)
+        if not mapper_type:
             raise ValueError(
                 f"Преобразователь данных для сущности {entity} не зарегистрирован!"
             )
-        return mapper
+        return mapper_type

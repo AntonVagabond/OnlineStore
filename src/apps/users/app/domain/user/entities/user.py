@@ -10,6 +10,8 @@ from ..value_objects.username import Username
 class User(AggregateRoot[UUID]):
     """Класс для определения пользователя."""
 
+    __slots__ = ("username", "contacts")
+
     def __init__(self, user_id: UUID, username: Username, contacts: Contacts) -> None:
         super().__init__(entity_id=user_id)
         self.username = username
