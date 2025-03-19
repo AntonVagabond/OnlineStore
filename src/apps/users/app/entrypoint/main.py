@@ -28,13 +28,14 @@ async def declare_amqp_bindings(async_container: AsyncContainer) -> None:
         await bind_queue_to_exchange(queue, exchange)
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa
+    await declare_amqp_bindings(async_container=app.state.dishka_container)
+    yield
+
+
 def app_factory() -> FastAPI:
     """Точка старта приложения."""
-
-    @asynccontextmanager
-    async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa
-        await declare_amqp_bindings(async_container=container)
-        yield
 
     config = create_config()
     provider = setup_provider()
