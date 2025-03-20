@@ -3,12 +3,12 @@ from uuid import UUID
 from sqlalchemy import Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.application.common.unit_of_work import UnitOfWork
+from app.application.common.ports.unit_of_work import UnitOfWork
 from app.domain.user.entities.user import User
 from app.domain.user.repositories.user_repository import UserRepository
 
-from ...converters import convert_to_entity as convert
-from ...tables.user import users_table
+from ....converters import convert_to_entity as convert
+from ....tables import users_table
 
 
 class UserRepositoryImpl(UserRepository):

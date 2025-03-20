@@ -9,6 +9,6 @@ class UserReader(Protocol):
     """Протокол для чтения пользователей."""
 
     @abstractmethod
-    async def get_user(self, user_id: UUID) -> UserDto | None:
+    async def get_user_by_id(self, user_id: UUID) -> UserDto | None:
         """Получить пользователя."""
         raise NotImplementedError

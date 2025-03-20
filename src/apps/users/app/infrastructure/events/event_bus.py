@@ -1,8 +1,8 @@
-from app.application.common.event_bus import EventBus
+from app.application.common.ports.event_bus import EventBus
 from app.domain.common.event import Event
+from app.infrastructure.brokers.rabbit.publisher import MessagePublisher
 
 from ..brokers.rabbit.config import Exchanges
-from ..brokers.rabbit.interfaces.publisher import MessagePublisher
 from .converters import domain_event_to_integration_event, integration_event_to_message
 
 

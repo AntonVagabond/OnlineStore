@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from app.application.common.unit_of_work import UnitOfWork
-from app.domain.common.id_generator import IdGenerator
 from app.domain.user.entities.user import User
 from app.domain.user.repositories.user_repository import UserRepository
 
 from ...common.const import exceptions as text
-from ...common.event_bus import EventBus
 from ...common.handler import CommandHandler
+from ...common.ports.commiter import Commiter
+from ...common.ports.event_bus import EventBus
+from ...common.ports.id_generator import IdGenerator
 from .. import exceptions as exc
 
 
@@ -22,16 +22,16 @@ class CreateUserCommand:
 class CreateUserHandler(CommandHandler[CreateUserCommand, UUID]):
     """Класс-обработчик для создания пользователя."""
 
-    __slots__ = ("__unit_of_work", "__id_generator", "__user_repository", "__event_bus")
+    __slots__ = ("__commiter", "__id_generator", "__user_repository", "__event_bus")
 
     def __init__(
         self,
-        unit_of_work: UnitOfWork,
+        commiter: Commiter,
         id_generator: IdGenerator,
         user_repository: UserRepository,
         event_bus: EventBus,
     ) -> None:
-        self.__unit_of_work = unit_of_work
+        self.__commiter = commiter
         self.__id_generator = id_generator
         self.__user_repository = user_repository
         self.__event_bus = event_bus
@@ -61,6 +61,6 @@ class CreateUserHandler(CommandHandler[CreateUserCommand, UUID]):
 
         self.__user_repository.add(user)
         await self.__event_bus.publish(events=events)
-        await self.__unit_of_work.commit()
+        await self.__commiter.commit()
 
         return user_uuid

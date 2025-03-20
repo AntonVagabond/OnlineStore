@@ -1,6 +1,6 @@
 from app.domain.common.entity import Entity
-from app.infrastructure.db.postgres.interfaces.data_mapper import DataMapper
-from app.infrastructure.db.postgres.interfaces.registry import Registry
+from app.infrastructure.db.postgres.persistence.data_mapper import DataMapper
+from app.infrastructure.db.postgres.persistence.registry import Registry
 
 
 class RegistryImpl(Registry):

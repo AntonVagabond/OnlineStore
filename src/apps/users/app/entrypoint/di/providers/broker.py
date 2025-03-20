@@ -2,12 +2,10 @@ from typing import AsyncGenerator
 
 from aio_pika.abc import AbstractChannel, AbstractConnection
 from aio_pika.pool import Pool
-from dishka import Provider, Scope, provide
+from dishka import Provider, Scope, WithParents, provide
 
-from app.application.common.event_bus import EventBus
+from app.infrastructure.brokers.rabbit.adapters.publisher import MessagePublisherImpl
 from app.infrastructure.brokers.rabbit.config import RabbitMQConfig
-from app.infrastructure.brokers.rabbit.interfaces.publisher import MessagePublisher
-from app.infrastructure.brokers.rabbit.publisher import MessagePublisherImpl
 from app.infrastructure.brokers.rabbit.setup import (
     amqp_channel_pool,
     amqp_conn_pool,
@@ -43,14 +41,5 @@ class RabbitMQProvider(Provider):
         async for channel in setup_channel(channel_pool):
             yield channel
 
-    @provide(scope=Scope.REQUEST)
-    async def provide_message_publisher(
-        self, channel: AbstractChannel
-    ) -> MessagePublisher:
-        """Подключение к издателю сообщений."""
-        return MessagePublisherImpl(channel)
-
-    @provide(scope=Scope.REQUEST)
-    async def provide_event_bus(self, message_publisher: MessagePublisher) -> EventBus:
-        """Подключение к шине событий."""
-        return EventBusImpl(message_publisher)
+    message_publisher = provide(WithParents[MessagePublisherImpl], scope=Scope.REQUEST)
+    event_bus = provide(WithParents[EventBusImpl], scope=Scope.REQUEST)

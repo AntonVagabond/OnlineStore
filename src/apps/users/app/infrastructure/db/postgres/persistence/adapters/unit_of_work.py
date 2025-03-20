@@ -1,11 +1,11 @@
-from app.application.common.unit_of_work import UnitOfWork
+from app.application.common.ports.commiter import Commiter
+from app.application.common.ports.unit_of_work import UnitOfWork
 from app.domain.common.entity import Entity
-from app.infrastructure.db.postgres.interfaces.transaction import Transaction
+from app.infrastructure.db.postgres.persistence.registry import Registry
+from app.infrastructure.db.postgres.persistence.transaction import Transaction
 
-from .interfaces.registry import Registry
 
-
-class UnitOfWorkImpl(UnitOfWork):
+class UnitOfWorkImpl(Commiter, UnitOfWork):
     """Класс реализующий UnitOfWork."""
 
     def __init__(self, registry: Registry, transaction: Transaction) -> None:
@@ -46,6 +46,12 @@ class UnitOfWorkImpl(UnitOfWork):
             mapper = self.__registry.get_mapper(entity=type(entity))
             await mapper.delete(entity)
 
+    def __clear_lists_entities(self):
+        """Очистить списки сущностей."""
+        self.__new_entities.clear()
+        self.__dirty_entities.clear()
+        self.__deleted_entities.clear()
+
     async def commit(self) -> None:
         """Реализация фиксирования транзакции."""
         try:
@@ -57,3 +63,5 @@ class UnitOfWorkImpl(UnitOfWork):
         except Exception as exc:
             await self.__transaction.rollback()
             raise exc
+        finally:
+            self.__clear_lists_entities()

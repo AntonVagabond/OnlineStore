@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.user.entities.user import User
 
-from ...converters import convert_to_dict as convert
-from ...interfaces.data_mapper import DataMapper
-from ...tables.user import users_table
+from ....converters import convert_to_dict as convert
+from ....tables import users_table
+from ...data_mapper import DataMapper
 
 
 class UserDataMapper(DataMapper):

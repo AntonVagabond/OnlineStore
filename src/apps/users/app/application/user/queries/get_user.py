@@ -4,7 +4,7 @@ from uuid import UUID
 from ...common.const import exceptions as text
 from ...common.dto.user_dto import UserDto
 from ...common.handler import QueryHandler
-from ...common.persistence.user_reader import UserReader
+from ...common.ports.user_reader import UserReader
 from .. import exceptions as exc
 
 
@@ -23,7 +23,7 @@ class GetUserHandler(QueryHandler[GetUserQuery, UserDto]):
 
     async def handle(self, query: GetUserQuery) -> UserDto:
         """Получение пользователя."""
-        user = await self.__user_reader.get_user(query.user_id)
+        user = await self.__user_reader.get_user_by_id(query.user_id)
         if user is None:
             raise exc.UserNotFoundError(text.USER_NOT_FOUND)
         return user

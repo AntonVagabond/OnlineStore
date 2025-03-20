@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class Transaction(ABC):
-    """Псевдоним для Сессии БД."""
+    """Псевдоним для AsyncSession."""
 
     @abstractmethod
     async def commit(self) -> None: ...

@@ -29,7 +29,7 @@ async def declare_amqp_bindings(async_container: AsyncContainer) -> None:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:  # noqa
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     await declare_amqp_bindings(async_container=app.state.dishka_container)
     yield
 

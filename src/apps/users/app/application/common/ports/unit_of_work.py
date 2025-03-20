@@ -21,8 +21,3 @@ class UnitOfWork(Protocol):
     def register_deleted(self, entity: Entity) -> None:
         """Регистрация удаления существующей сущности."""
         raise NotImplementedError
-
-    @abc.abstractmethod
-    async def commit(self) -> None:
-        """Метод фиксирования транзакции."""
-        raise NotImplementedError
