@@ -1,10 +1,13 @@
-from dishka import Provider, Scope
+from dishka import Provider, Scope, from_context
 
 from app.infrastructure.brokers.rabbit.config import RabbitMQConfig
 from app.infrastructure.db.postgres.config import PostgresConfig
 
 
-def provide_configs(provider: Provider):
+class ConfigsProvider(Provider):
     """Провайдер конфигураций."""
-    provider.from_context(RabbitMQConfig, scope=Scope.APP)
-    provider.from_context(PostgresConfig, scope=Scope.APP)
+
+    scope = Scope.APP
+
+    rabbit_config = from_context(RabbitMQConfig)
+    postgres_config = from_context(PostgresConfig)

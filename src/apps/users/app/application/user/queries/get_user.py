@@ -16,14 +16,14 @@ class GetUserQuery:
 class GetUserHandler(QueryHandler[GetUserQuery, UserDto]):
     """Класс-обработчик для получения пользователя."""
 
-    __slots__ = ("user_reader",)
+    __slots__ = ("__user_reader",)
 
     def __init__(self, user_reader: UserReader) -> None:
-        self.user_reader = user_reader
+        self.__user_reader = user_reader
 
     async def handle(self, query: GetUserQuery) -> UserDto:
         """Получение пользователя."""
-        user = await self.user_reader.get_user(query.user_id)
+        user = await self.__user_reader.get_user(query.user_id)
         if user is None:
             raise exc.UserNotFoundError(text.USER_NOT_FOUND)
         return user

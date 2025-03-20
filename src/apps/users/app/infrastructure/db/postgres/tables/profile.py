@@ -2,7 +2,7 @@ from sqlalchemy import UUID, Column, DateTime, ForeignKey, String, Table
 
 from .base import metadata
 
-profile_table = Table(
+profiles_table = Table(
     "profiles",
     metadata,
     Column("profile_id", UUID, primary_key=True),

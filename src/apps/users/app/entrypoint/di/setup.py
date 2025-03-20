@@ -1,32 +1,23 @@
-from dishka import AsyncContainer, Provider, make_async_container
+from dishka import AsyncContainer, make_async_container
 
+from app.entrypoint.di.providers.adapters import AdaptersProvider
+from app.entrypoint.di.providers.broker import RabbitMQProvider
+from app.entrypoint.di.providers.config import ConfigsProvider
+from app.entrypoint.di.providers.database import PostgresDatabaseProvider
+from app.entrypoint.di.providers.handlers import HandlersProvider
 from app.infrastructure.brokers.rabbit.config import RabbitMQConfig
 from app.infrastructure.common.config import Config
 from app.infrastructure.db.postgres.config import PostgresConfig
 
-from . import providers
 
-
-def setup_provider() -> Provider:
-    """Создание провайдера."""
-
-    provider = Provider()
-
-    providers.provide_application_handlers(provider)
-    providers.provide_db_gateways(provider)
-    providers.provide_db_connections(provider)
-    providers.provide_db_unit_of_work(provider)
-    providers.provide_rabbitmq_factories(provider)
-    providers.provide_domain_ports(provider)
-    providers.provide_configs(provider)
-
-    return provider
-
-
-def setup_container(provider: Provider, config: Config) -> AsyncContainer:
+def setup_container(config: Config) -> AsyncContainer:
     """Создание DI-контейнера."""
     return make_async_container(
-        provider,
+        ConfigsProvider(),
+        AdaptersProvider(),
+        RabbitMQProvider(),
+        PostgresDatabaseProvider(),
+        HandlersProvider(),
         context={
             RabbitMQConfig: config.rabbitmq_config,
             PostgresConfig: config.postgres_config,

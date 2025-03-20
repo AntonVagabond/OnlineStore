@@ -27,7 +27,6 @@ class User(AggregateRoot[UUID]):
 
         user = cls(user_id=user_id, username=username, contacts=contacts)
         event = UserCreated(
-            event_type="UserCreated",
             user_id=user.entity_id,
             username=user.username.value,
             email=user.contacts.email,

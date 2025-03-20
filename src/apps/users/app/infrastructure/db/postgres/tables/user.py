@@ -2,7 +2,7 @@ from sqlalchemy import UUID, Column, String, Table
 
 from .base import metadata
 
-user_table = Table(
+users_table = Table(
     "users",
     metadata,
     Column("user_id", UUID(as_uuid=True), primary_key=True),

@@ -6,6 +6,9 @@ from .message import Message
 
 
 class MessagePublisherImpl(MessagePublisher):
+
+    __slots__ = ("__channel",)
+
     def __init__(self, channel: aio_pika.abc.AbstractChannel) -> None:
         self.__channel = channel
 

@@ -22,7 +22,7 @@ class CreateUserCommand:
 class CreateUserHandler(CommandHandler[CreateUserCommand, UUID]):
     """Класс-обработчик для создания пользователя."""
 
-    __slots__ = ("unit_of_work", "id_generator", "user_repository", "event_bus")
+    __slots__ = ("__unit_of_work", "__id_generator", "__user_repository", "__event_bus")
 
     def __init__(
         self,
@@ -31,25 +31,25 @@ class CreateUserHandler(CommandHandler[CreateUserCommand, UUID]):
         user_repository: UserRepository,
         event_bus: EventBus,
     ) -> None:
-        self.unit_of_work = unit_of_work
-        self.id_generator = id_generator
-        self.user_repository = user_repository
-        self.event_bus = event_bus
+        self.__unit_of_work = unit_of_work
+        self.__id_generator = id_generator
+        self.__user_repository = user_repository
+        self.__event_bus = event_bus
 
     async def handle(self, command: CreateUserCommand) -> UUID:
         """Создание пользователя."""
-        if command.email and await self.user_repository.is_exists_email(command.email):
+        if command.email and await self.__user_repository.is_exists_email(command.email):
             raise exc.EmailAlreadyExistsError(text.EMAIL_CONFLICT)
 
-        if command.phone_number and await self.user_repository.is_exists_phone_number(
+        if command.phone_number and await self.__user_repository.is_exists_phone_number(
             command.phone_number
         ):
             raise exc.PhoneNumberAlreadyExistsError(text.PHONE_NUMBER_CONFLICT)
 
-        if await self.user_repository.is_exists_username(command.username):
+        if await self.__user_repository.is_exists_username(command.username):
             raise exc.UserAlreadyExistsError(text.USER_CONFLICT)
 
-        user_uuid = self.id_generator.generate()
+        user_uuid = self.__id_generator.generate()
 
         user = User.create_user(
             user_id=user_uuid,
@@ -59,8 +59,8 @@ class CreateUserHandler(CommandHandler[CreateUserCommand, UUID]):
         )
         events = user.raise_events()
 
-        self.user_repository.add(user)
-        await self.event_bus.publish(events=events)
-        await self.unit_of_work.commit()
+        self.__user_repository.add(user)
+        await self.__event_bus.publish(events=events)
+        await self.__unit_of_work.commit()
 
         return user_uuid

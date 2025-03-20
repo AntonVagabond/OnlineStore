@@ -11,7 +11,11 @@ class Event:
     event_date: datetime = field(
         default_factory=lambda: datetime.now(UTC), init=False, kw_only=True
     )
-    event_type: str = field(kw_only=True)
+
+    @property
+    def event_type(self) -> str:
+        """Возвращает имя класса события."""
+        return self.__class__.__name__
 
     def __str__(self) -> str:
         """Возвращает строковое представление события."""
